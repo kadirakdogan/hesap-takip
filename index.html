@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hesap Takip — Kişisel Finans Yönetimi</title>
+    <meta name="description" content="26 Ağustos - 30 Ekim 2026 dönemi kişisel bütçe takip ve finans yönetim uygulaması.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: ['selector', '[data-theme="dark"]'],
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc',
+                            400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
+                            800: '#3730a3', 900: '#312e81'
+                        },
+                        surface: {
+                            50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1',
+                            700: '#1e293b', 800: '#0f172a', 900: '#020617', 950: '#010313'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
+
+        /* Light theme */
+        [data-theme="light"] body { background: #f1f5f9; color: #1e293b; }
+        [data-theme="light"] .glass-card {
+            background: rgba(255,255,255,0.75);
+            border: 1px solid rgba(255,255,255,0.9);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+            backdrop-filter: blur(12px);
+        }
+        [data-theme="light"] .nav-glass {
+            background: rgba(255,255,255,0.8);
+            border-bottom: 1px solid rgba(226,232,240,0.8);
+            backdrop-filter: blur(16px);
+        }
+        [data-theme="light"] .input-field {
+            background: #fff; border: 1px solid #e2e8f0; color: #1e293b;
+        }
+        [data-theme="light"] .input-field:focus {
+            border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+        }
+        [data-theme="light"] .table-row:hover { background: rgba(99,102,241,0.04); }
+        [data-theme="light"] .modal-overlay { background: rgba(0,0,0,0.3); }
+        [data-theme="light"] .modal-content {
+            background: #fff; border: 1px solid #e2e8f0;
+        }
+
+        /* Dark theme */
+        [data-theme="dark"] body {
+            background: #020617;
+            background-image: radial-gradient(ellipse at top, rgba(99,102,241,0.08) 0%, transparent 60%);
+            color: #e2e8f0;
+        }
+        [data-theme="dark"] .glass-card {
+            background: rgba(30,41,59,0.55);
+            border: 1px solid rgba(99,102,241,0.12);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04);
+            backdrop-filter: blur(12px);
+        }
+        [data-theme="dark"] .nav-glass {
+            background: rgba(2,6,23,0.8);
+            border-bottom: 1px solid rgba(99,102,241,0.15);
+            backdrop-filter: blur(16px);
+        }
+        [data-theme="dark"] .input-field {
+            background: rgba(15,23,42,0.8); border: 1px solid rgba(99,102,241,0.2); color: #e2e8f0;
+        }
+        [data-theme="dark"] .input-field:focus {
+            border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+        }
+        [data-theme="dark"] .table-row:hover { background: rgba(99,102,241,0.08); }
+        [data-theme="dark"] .modal-overlay { background: rgba(0,0,0,0.6); }
+        [data-theme="dark"] .modal-content {
+            background: #1e293b; border: 1px solid rgba(99,102,241,0.2);
+        }
+
+        /* Shared */
+        .glass-card { border-radius: 16px; transition: all 0.3s ease; }
+        .glass-card:hover { transform: translateY(-2px); }
+        .input-field {
+            border-radius: 10px; padding: 10px 14px; font-size: 14px;
+            transition: all 0.2s ease; outline: none; width: 100%;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: #fff; border: none; border-radius: 10px; padding: 10px 20px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(99,102,241,0.3);
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,0.4); }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff; border: none; border-radius: 8px; padding: 6px 12px;
+            font-size: 12px; cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-danger:hover { box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
+        .btn-secondary {
+            background: rgba(99,102,241,0.1); color: #818cf8;
+            border: 1px solid rgba(99,102,241,0.2); border-radius: 8px;
+            padding: 6px 12px; font-size: 12px; cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-secondary:hover { background: rgba(99,102,241,0.2); }
+
+        .progress-bar-bg {
+            background: rgba(99,102,241,0.15); border-radius: 999px; overflow: hidden; height: 10px;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #6366f1, #a78bfa);
+            height: 100%; border-radius: 999px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .progress-bar-fill.over-budget {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+
+        .table-row { transition: background 0.15s ease; border-radius: 8px; }
+
+        .badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .badge-income { background: rgba(16,185,129,0.15); color: #10b981; }
+        .badge-expense { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 100;
+            display: none; align-items: center; justify-content: center;
+            padding: 16px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            border-radius: 16px; padding: 24px; width: 100%; max-width: 500px;
+            max-height: 90vh; overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .kpi-icon-wrap {
+            width: 48px; height: 48px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+        }
+
+        .fade-in { animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+        .pulse-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: #10b981;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 999px; }
+
+        /* Tab Active */
+        .tab-btn { position: relative; padding-bottom: 8px; }
+        .tab-btn.active::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+            height: 3px; background: linear-gradient(90deg, #6366f1, #a78bfa);
+            border-radius: 999px;
+        }
+
+        /* Mobile nav */
+        .mobile-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+            padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+        }
+        @media (min-width: 768px) { .mobile-nav { display: none; } }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+            padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 500;
+            z-index: 200; animation: toastIn 0.3s ease, toastOut 0.3s ease 2.5s forwards;
+            white-space: nowrap;
+        }
+        .toast-success { background: rgba(16,185,129,0.9); color: #fff; }
+        .toast-error { background: rgba(239,68,68,0.9); color: #fff; }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        @keyframes toastOut { to { opacity: 0; transform: translateX(-50%) translateY(20px); } }
+
+        select.input-field { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236366f1' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+    </style>
+</head>
+<body class="min-h-screen pb-24 md:pb-8">
+
+    <!-- Navbar -->
+    <nav class="nav-glass sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-lg shadow-brand-500/20">
+                    <i class="fa-solid fa-wallet text-white text-sm"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold bg-gradient-to-r from-brand-400 to-purple-400 bg-clip-text text-transparent">Hesap Takip</h1>
+                    <p class="text-[10px] opacity-50">26 Ağu — 30 Eki 2026</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="openImportExportModal()" class="btn-secondary text-xs hidden sm:flex items-center gap-1.5" title="İçe/Dışa Aktar">
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                    <span>Veri</span>
+                </button>
+                <button onclick="toggleTheme()" id="themeToggle" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:bg-brand-500/10" title="Tema Değiştir">
+                    <i class="fa-solid fa-moon text-brand-400"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+        <!-- KPI Cards -->
+        <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 fade-in" id="kpiSection">
+            <!-- Toplam Gelir -->
+            <div class="glass-card p-4 sm:p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="kpi-icon-wrap bg-emerald-500/10">
+                        <i class="fa-solid fa-arrow-trend-up text-emerald-400"></i>
+                    </div>
+                    <div class="pulse-dot"></div>
+                </div>
+                <p class="text-xs opacity-50 mb-1">Toplam Gelir</p>
+                <p class="text-lg sm:text-2xl font-bold text-emerald-400" id="kpiIncome">₺0</p>
+            </div>
+            <!-- Toplam Gider -->
+            <div class="glass-card p-4 sm:p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="kpi-icon-wrap bg-red-500/10">
+                        <i class="fa-solid fa-arrow-trend-down text-red-400"></i>
+                    </div>
+                    <span class="text-[10px] opacity-40"><i class="fa-solid fa-chart-pie"></i></span>
+                </div>
+                <p class="text-xs opacity-50 mb-1">Toplam Gider</p>
+                <p class="text-lg sm:text-2xl font-bold text-red-400" id="kpiExpense">₺0</p>
+            </div>
+            <!-- Net Bakiye -->
+            <div class="glass-card p-4 sm:p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="kpi-icon-wrap bg-brand-500/10">
+                        <i class="fa-solid fa-sack-dollar text-brand-400"></i>
+                    </div>
+                    <span class="text-[10px] opacity-40"><i class="fa-solid fa-scale-balanced"></i></span>
+                </div>
+                <p class="text-xs opacity-50 mb-1">Net Bakiye</p>
+                <p class="text-lg sm:text-2xl font-bold" id="kpiBalance">₺0</p>
+            </div>
+            <!-- Bütçe Kullanım -->
+            <div class="glass-card p-4 sm:p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="kpi-icon-wrap bg-amber-500/10">
+                        <i class="fa-solid fa-gauge-high text-amber-400"></i>
+                    </div>
+                    <span class="text-xs font-bold" id="kpiBudgetPct">0%</span>
+                </div>
+                <p class="text-xs opacity-50 mb-1">Bütçe Kullanımı</p>
+                <div class="progress-bar-bg mt-2">
+                    <div class="progress-bar-fill" id="kpiBudgetBar" style="width:0%"></div>
+                </div>
+                <p class="text-[10px] opacity-40 mt-1.5" id="kpiBudgetLabel">Gelire göre harcama oranı</p>
+            </div>
+        </section>
+
+        <!-- Charts + Form Row -->
+        <section class="grid lg:grid-cols-3 gap-4 sm:gap-6">
+            <!-- Charts -->
+            <div class="lg:col-span-2 space-y-4 sm:space-y-6">
+                <!-- Doughnut Chart -->
+                <div class="glass-card p-4 sm:p-6 fade-in">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-sm font-semibold flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-brand-400"></i>
+                            Kategori Dağılımı
+                        </h2>
+                        <div class="flex gap-1">
+                            <button onclick="setChartType('doughnut')" class="tab-btn active text-xs px-2 py-1 rounded-lg transition-all" id="tabDoughnut">Pasta</button>
+                            <button onclick="setChartType('bar')" class="tab-btn text-xs px-2 py-1 rounded-lg transition-all" id="tabBar">Sütun</button>
+                        </div>
+                    </div>
+                    <div class="relative" style="max-height:320px">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                <!-- Trend Chart -->
+                <div class="glass-card p-4 sm:p-6 fade-in">
+                    <h2 class="text-sm font-semibold flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-chart-line text-brand-400"></i>
+                        Gelir/Gider Trendi
+                    </h2>
+                    <div class="relative" style="max-height:300px">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Transaction Form -->
+            <div class="glass-card p-4 sm:p-6 fade-in self-start sticky top-20" id="formCard">
+                <h2 class="text-sm font-semibold flex items-center gap-2 mb-5">
+                    <i class="fa-solid fa-plus-circle text-brand-400"></i>
+                    <span id="formTitle">Yeni İşlem Ekle</span>
+                </h2>
+                <form id="transactionForm" class="space-y-3" onsubmit="return handleFormSubmit(event)">
+                    <input type="hidden" id="editId" value="">
+                    <div>
+                        <label class="text-xs opacity-60 mb-1 block">Tarih</label>
+                        <input type="date" id="txDate" class="input-field" required>
+                    </div>
+                    <div>
+                        <label class="text-xs opacity-60 mb-1 block">İşlem Tipi</label>
+                        <select id="txType" class="input-field" required>
+                            <option value="expense">Gider</option>
+                            <option value="income">Gelir</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs opacity-60 mb-1 block">Kategori</label>
+                        <select id="txCategory" class="input-field" required>
+                            <option value="Maaş/Gelir">Maaş / Gelir</option>
+                            <option value="Kredi/Borç">Kredi / Borç</option>
+                            <option value="Eski Ev Masrafı">Eski Ev Masrafı</option>
+                            <option value="Temel Yaşam">Temel Yaşam</option>
+                            <option value="Sosyal/Sigara/Kahvaltı">Sosyal / Sigara / Kahvaltı</option>
+                            <option value="Faturalar/Abonelik">Faturalar / Abonelik</option>
+                            <option value="Diğer">Diğer</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs opacity-60 mb-1 block">Açıklama</label>
+                        <input type="text" id="txDesc" class="input-field" placeholder="Açıklama girin..." required>
+                    </div>
+                    <div>
+                        <label class="text-xs opacity-60 mb-1 block">Tutar (₺)</label>
+                        <input type="number" id="txAmount" class="input-field" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                    <button type="submit" class="btn-primary w-full flex items-center justify-center gap-2 mt-2">
+                        <i class="fa-solid fa-check"></i>
+                        <span id="formSubmitText">Kaydet</span>
+                    </button>
+                    <button type="button" id="cancelEdit" class="w-full text-center text-xs opacity-50 hover:opacity-100 cursor-pointer py-2 hidden" onclick="cancelEditMode()">
+                        <i class="fa-solid fa-xmark"></i> Düzenlemeyi İptal Et
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Transaction History -->
+        <section class="glass-card p-4 sm:p-6 fade-in" id="historySection">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                <h2 class="text-sm font-semibold flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-brand-400"></i>
+                    İşlem Geçmişi
+                    <span class="badge badge-income text-[10px]" id="txCount">0</span>
+                </h2>
+                <div class="flex flex-wrap gap-2">
+                    <div class="relative flex-1 min-w-[140px]">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-xs opacity-40"></i>
+                        <input type="text" id="searchInput" class="input-field pl-8 text-xs" placeholder="Ara..." oninput="renderTransactions()">
+                    </div>
+                    <select id="filterCategory" class="input-field text-xs w-auto" onchange="renderTransactions()">
+                        <option value="">Tüm Kategoriler</option>
+                        <option value="Maaş/Gelir">Maaş / Gelir</option>
+                        <option value="Kredi/Borç">Kredi / Borç</option>
+                        <option value="Eski Ev Masrafı">Eski Ev Masrafı</option>
+                        <option value="Temel Yaşam">Temel Yaşam</option>
+                        <option value="Sosyal/Sigara/Kahvaltı">Sosyal / Sigara / Kahvaltı</option>
+                        <option value="Faturalar/Abonelik">Faturalar / Abonelik</option>
+                        <option value="Diğer">Diğer</option>
+                    </select>
+                    <select id="filterType" class="input-field text-xs w-auto" onchange="renderTransactions()">
+                        <option value="">Tümü</option>
+                        <option value="income">Gelir</option>
+                        <option value="expense">Gider</option>
+                    </select>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs sm:text-sm">
+                    <thead>
+                        <tr class="text-left opacity-50 text-[11px] uppercase tracking-wider">
+                            <th class="pb-3 px-2 sm:px-3">Tarih</th>
+                            <th class="pb-3 px-2 sm:px-3">Tip</th>
+                            <th class="pb-3 px-2 sm:px-3">Kategori</th>
+                            <th class="pb-3 px-2 sm:px-3 hidden sm:table-cell">Açıklama</th>
+                            <th class="pb-3 px-2 sm:px-3 text-right">Tutar</th>
+                            <th class="pb-3 px-2 sm:px-3 text-right">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="txTableBody"></tbody>
+                </table>
+            </div>
+            <div id="emptyState" class="hidden text-center py-12 opacity-40">
+                <i class="fa-solid fa-inbox text-4xl mb-3 block"></i>
+                <p class="text-sm">Henüz işlem yok</p>
+            </div>
+            <!-- Pagination -->
+            <div class="flex items-center justify-between mt-4 pt-4 border-t border-white/5" id="paginationArea">
+                <p class="text-[11px] opacity-40" id="paginationInfo"></p>
+                <div class="flex gap-1" id="paginationBtns"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="mobile-nav nav-glass">
+        <div class="flex items-center justify-around">
+            <button onclick="scrollToSection('kpiSection')" class="flex flex-col items-center gap-0.5 text-[10px] opacity-60 hover:opacity-100 transition-all px-3 py-1">
+                <i class="fa-solid fa-chart-simple text-base text-brand-400"></i>
+                <span>Özet</span>
+            </button>
+            <button onclick="scrollToSection('formCard')" class="flex flex-col items-center gap-0.5 text-[10px] opacity-60 hover:opacity-100 transition-all px-3 py-1">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-lg shadow-brand-500/30 -mt-5 mb-0.5">
+                    <i class="fa-solid fa-plus text-white text-lg"></i>
+                </div>
+                <span>Ekle</span>
+            </button>
+            <button onclick="scrollToSection('historySection')" class="flex flex-col items-center gap-0.5 text-[10px] opacity-60 hover:opacity-100 transition-all px-3 py-1">
+                <i class="fa-solid fa-list text-base text-brand-400"></i>
+                <span>Geçmiş</span>
+            </button>
+            <button onclick="openImportExportModal()" class="flex flex-col items-center gap-0.5 text-[10px] opacity-60 hover:opacity-100 transition-all px-3 py-1">
+                <i class="fa-solid fa-arrow-right-arrow-left text-base text-brand-400"></i>
+                <span>Veri</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Import/Export Modal -->
+    <div class="modal-overlay" id="importExportModal">
+        <div class="modal-content">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-sm font-semibold flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-right-arrow-left text-brand-400"></i>
+                    Veri Yönetimi
+                </h3>
+                <button onclick="closeModal('importExportModal')" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-brand-500/10 transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="space-y-3">
+                <button onclick="exportJSON()" class="w-full btn-primary flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-download"></i> JSON Olarak Dışa Aktar
+                </button>
+                <button onclick="exportCSV()" class="w-full btn-primary flex items-center justify-center gap-2 text-sm" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <i class="fa-solid fa-file-csv"></i> CSV Olarak Dışa Aktar
+                </button>
+                <div class="relative">
+                    <input type="file" id="importFile" accept=".json,.csv" class="hidden" onchange="importData(event)">
+                    <button onclick="document.getElementById('importFile').click()" class="w-full text-sm py-3 rounded-xl border-2 border-dashed border-brand-500/30 text-brand-400 hover:bg-brand-500/5 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-upload"></i> JSON / CSV İçe Aktar
+                    </button>
+                </div>
+                <div class="pt-3 border-t border-white/5">
+                    <button onclick="confirmResetData()" class="w-full text-xs py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-trash-can"></i> Tüm Verileri Sıfırla
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-content text-center">
+            <i class="fa-solid fa-triangle-exclamation text-3xl text-amber-400 mb-3"></i>
+            <h3 class="text-sm font-semibold mb-2" id="confirmTitle">Emin misiniz?</h3>
+            <p class="text-xs opacity-50 mb-5" id="confirmMessage">Bu işlem geri alınamaz.</p>
+            <div class="flex gap-2">
+                <button onclick="closeModal('confirmModal')" class="flex-1 btn-secondary py-2.5">İptal</button>
+                <button id="confirmAction" class="flex-1 btn-danger py-2.5">Sil</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ============================================================
+    // CONSTANTS & STATE
+    // ============================================================
+    const STORAGE_KEY = 'hesapTakipTransactions';
+    const THEME_KEY = 'hesapTakipTheme';
+    const PER_PAGE = 15;
+    let currentPage = 1;
+    let categoryChart = null;
+    let trendChart = null;
+    let currentCategoryChartType = 'doughnut';
+
+    const CATEGORY_COLORS = {
+        'Maaş/Gelir':              { bg: '#10b981', light: 'rgba(16,185,129,0.15)' },
+        'Kredi/Borç':              { bg: '#ef4444', light: 'rgba(239,68,68,0.15)' },
+        'Eski Ev Masrafı':         { bg: '#f59e0b', light: 'rgba(245,158,11,0.15)' },
+        'Temel Yaşam':             { bg: '#3b82f6', light: 'rgba(59,130,246,0.15)' },
+        'Sosyal/Sigara/Kahvaltı':  { bg: '#8b5cf6', light: 'rgba(139,92,246,0.15)' },
+        'Faturalar/Abonelik':      { bg: '#ec4899', light: 'rgba(236,72,153,0.15)' },
+        'Diğer':                   { bg: '#6b7280', light: 'rgba(107,114,128,0.15)' }
+    };
+
+    const CATEGORY_ICONS = {
+        'Maaş/Gelir':             'fa-solid fa-briefcase',
+        'Kredi/Borç':             'fa-solid fa-credit-card',
+        'Eski Ev Masrafı':        'fa-solid fa-house',
+        'Temel Yaşam':            'fa-solid fa-basket-shopping',
+        'Sosyal/Sigara/Kahvaltı': 'fa-solid fa-mug-hot',
+        'Faturalar/Abonelik':     'fa-solid fa-file-invoice',
+        'Diğer':                  'fa-solid fa-ellipsis'
+    };
+
+    // ============================================================
+    // INITIAL DATA
+    // ============================================================
+    function getInitialData() {
+        return [
+            // Gelirler - 3x Maaş
+            { id: genId(), date: '2026-08-26', type: 'income', category: 'Maaş/Gelir', description: 'Ağustos Maaşı', amount: 45000 },
+            { id: genId(), date: '2026-09-26', type: 'income', category: 'Maaş/Gelir', description: 'Eylül Maaşı', amount: 45000 },
+            { id: genId(), date: '2026-10-26', type: 'income', category: 'Maaş/Gelir', description: 'Ekim Maaşı', amount: 45000 },
+            // Depozito İadesi
+            { id: genId(), date: '2026-09-01', type: 'income', category: 'Maaş/Gelir', description: 'Depozito İadesi', amount: 7500 },
+            // Krediler
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Kredi/Borç', description: 'Krediler Toplamı (Ağu-Eki)', amount: 19860 },
+            // Eski Ev Masrafı
+            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Eski Ev Masrafı', description: 'Eylül Kira + Aidat', amount: 16200 },
+            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Eski Ev Masrafı', description: 'Ekim Kira + Aidat', amount: 16200 },
+            // Temel Yaşam
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Yol / Ulaşım', amount: 5000 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Market / Yemek', amount: 7000 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Kişisel Harcama', amount: 4000 },
+            // Faturalar / Abonelik
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Faturalar/Abonelik', description: 'Telefon + İnternet', amount: 3470 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Faturalar/Abonelik', description: 'Abonelikler (Netflix vb.)', amount: 600 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Faturalar/Abonelik', description: 'Su Faturası', amount: 800 },
+            // Sosyal / Sigara / Kahvaltı
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Sigara (60 gün x 120₺)', amount: 7200 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Sabah Kahvaltısı', amount: 2700 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Buluşma / Sosyal Aktivite', amount: 5000 },
+            // Diğer
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Diğer', description: 'Sürpriz Harcama Rezervi', amount: 2000 },
+        ];
+    }
+
+    // ============================================================
+    // HELPERS
+    // ============================================================
+    function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+    function formatCurrency(n) {
+        return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
+    }
+
+    function formatDate(d) {
+        return new Date(d).toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function showToast(msg, type = 'success') {
+        const el = document.createElement('div');
+        el.className = `toast toast-${type}`;
+        el.textContent = msg;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3000);
+    }
+
+    function scrollToSection(id) {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    // ============================================================
+    // DATA LAYER (LocalStorage)
+    // ============================================================
+    function loadTransactions() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+            const initial = getInitialData();
+            saveTransactions(initial);
+            return initial;
+        }
+        try { return JSON.parse(raw); }
+        catch { return []; }
+    }
+
+    function saveTransactions(data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function getTransactions() { return loadTransactions(); }
+
+    function addTransaction(tx) {
+        const all = getTransactions();
+        all.push(tx);
+        saveTransactions(all);
+    }
+
+    function updateTransaction(id, updated) {
+        let all = getTransactions();
+        all = all.map(t => t.id === id ? { ...t, ...updated } : t);
+        saveTransactions(all);
+    }
+
+    function deleteTransaction(id) {
+        let all = getTransactions();
+        all = all.filter(t => t.id !== id);
+        saveTransactions(all);
+    }
+
+    // ============================================================
+    // THEME
+    // ============================================================
+    function initTheme() {
+        const saved = localStorage.getItem(THEME_KEY) || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+        updateThemeIcon(saved);
+    }
+
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem(THEME_KEY, next);
+        updateThemeIcon(next);
+        // Re-render charts for theme colors
+        renderCharts();
+    }
+
+    function updateThemeIcon(theme) {
+        const icon = document.querySelector('#themeToggle i');
+        icon.className = theme === 'dark' ? 'fa-solid fa-sun text-amber-400' : 'fa-solid fa-moon text-brand-400';
+    }
+
+    function getChartTextColor() {
+        return document.documentElement.getAttribute('data-theme') === 'dark' ? '#94a3b8' : '#64748b';
+    }
+
+    function getChartGridColor() {
+        return document.documentElement.getAttribute('data-theme') === 'dark' ? 'rgba(148,163,184,0.08)' : 'rgba(100,116,139,0.1)';
+    }
+
+    // ============================================================
+    // KPI RENDERING
+    // ============================================================
+    function renderKPIs() {
+        const all = getTransactions();
+        const totalIncome = all.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+        const totalExpense = all.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+        const balance = totalIncome - totalExpense;
+        const budgetPct = totalIncome > 0 ? Math.round((totalExpense / totalIncome) * 100) : 0;
+
+        document.getElementById('kpiIncome').textContent = formatCurrency(totalIncome);
+        document.getElementById('kpiExpense').textContent = formatCurrency(totalExpense);
+
+        const balEl = document.getElementById('kpiBalance');
+        balEl.textContent = formatCurrency(balance);
+        balEl.className = `text-lg sm:text-2xl font-bold ${balance >= 0 ? 'text-emerald-400' : 'text-red-400'}`;
+
+        document.getElementById('kpiBudgetPct').textContent = budgetPct + '%';
+        const bar = document.getElementById('kpiBudgetBar');
+        bar.style.width = Math.min(budgetPct, 100) + '%';
+        bar.className = `progress-bar-fill ${budgetPct > 100 ? 'over-budget' : ''}`;
+
+        if (budgetPct > 100) {
+            document.getElementById('kpiBudgetLabel').textContent = '⚠️ Bütçe aşıldı!';
+            document.getElementById('kpiBudgetPct').classList.add('text-red-400');
+        } else if (budgetPct > 80) {
+            document.getElementById('kpiBudgetLabel').textContent = '⚡ Bütçe sınırına yaklaşılıyor';
+            document.getElementById('kpiBudgetPct').classList.remove('text-red-400');
+        } else {
+            document.getElementById('kpiBudgetLabel').textContent = 'Gelire göre harcama oranı';
+            document.getElementById('kpiBudgetPct').classList.remove('text-red-400');
+        }
+    }
+
+    // ============================================================
+    // CHARTS
+    // ============================================================
+    function renderCharts() {
+        renderCategoryChart();
+        renderTrendChart();
+    }
+
+    function setChartType(type) {
+        currentCategoryChartType = type;
+        document.getElementById('tabDoughnut').classList.toggle('active', type === 'doughnut');
+        document.getElementById('tabBar').classList.toggle('active', type === 'bar');
+        renderCategoryChart();
+    }
+
+    function renderCategoryChart() {
+        const all = getTransactions();
+        const expenses = all.filter(t => t.type === 'expense');
+        const grouped = {};
+        expenses.forEach(t => {
+            grouped[t.category] = (grouped[t.category] || 0) + t.amount;
+        });
+
+        const labels = Object.keys(grouped);
+        const data = Object.values(grouped);
+        const colors = labels.map(l => CATEGORY_COLORS[l]?.bg || '#6b7280');
+
+        if (categoryChart) categoryChart.destroy();
+
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        const isDoughnut = currentCategoryChartType === 'doughnut';
+
+        categoryChart = new Chart(ctx, {
+            type: isDoughnut ? 'doughnut' : 'bar',
+            data: {
+                labels,
+                datasets: [{
+                    data,
+                    backgroundColor: isDoughnut ? colors : colors.map(c => c + '33'),
+                    borderColor: colors,
+                    borderWidth: isDoughnut ? 0 : 2,
+                    borderRadius: isDoughnut ? 0 : 8,
+                    hoverOffset: isDoughnut ? 12 : 0,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                cutout: isDoughnut ? '65%' : undefined,
+                plugins: {
+                    legend: {
+                        position: isDoughnut ? 'bottom' : 'top',
+                        labels: { color: getChartTextColor(), padding: 12, font: { size: 11, family: 'Inter' }, usePointStyle: true, pointStyle: 'circle' }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15,23,42,0.9)',
+                        titleFont: { family: 'Inter', weight: '600' },
+                        bodyFont: { family: 'Inter' },
+                        padding: 12,
+                        cornerRadius: 10,
+                        callbacks: {
+                            label: ctx => ` ${ctx.label}: ${formatCurrency(ctx.raw)}`
+                        }
+                    }
+                },
+                scales: isDoughnut ? {} : {
+                    x: { ticks: { color: getChartTextColor(), font: { size: 10 } }, grid: { display: false } },
+                    y: { ticks: { color: getChartTextColor(), font: { size: 10 }, callback: v => formatCurrency(v) }, grid: { color: getChartGridColor() } }
+                }
+            }
+        });
+    }
+
+    function renderTrendChart() {
+        const all = getTransactions();
+        // Group by month
+        const months = {};
+        all.forEach(t => {
+            const key = t.date.slice(0, 7); // YYYY-MM
+            if (!months[key]) months[key] = { income: 0, expense: 0 };
+            months[key][t.type] += t.amount;
+        });
+
+        const sortedKeys = Object.keys(months).sort();
+        const monthLabels = sortedKeys.map(k => {
+            const [y, m] = k.split('-');
+            const names = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+            return names[parseInt(m) - 1] + ' ' + y;
+        });
+
+        if (trendChart) trendChart.destroy();
+
+        const ctx = document.getElementById('trendChart').getContext('2d');
+        trendChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: monthLabels,
+                datasets: [
+                    {
+                        label: 'Gelir',
+                        data: sortedKeys.map(k => months[k].income),
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16,185,129,0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: '#10b981',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        borderWidth: 3,
+                    },
+                    {
+                        label: 'Gider',
+                        data: sortedKeys.map(k => months[k].expense),
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239,68,68,0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: '#ef4444',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        borderWidth: 3,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: { color: getChartTextColor(), padding: 16, font: { size: 12, family: 'Inter' }, usePointStyle: true, pointStyle: 'circle' }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15,23,42,0.9)',
+                        titleFont: { family: 'Inter', weight: '600' },
+                        bodyFont: { family: 'Inter' },
+                        padding: 12,
+                        cornerRadius: 10,
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: ctx => ` ${ctx.dataset.label}: ${formatCurrency(ctx.raw)}`
+                        }
+                    }
+                },
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    x: { ticks: { color: getChartTextColor(), font: { size: 11 } }, grid: { display: false } },
+                    y: { ticks: { color: getChartTextColor(), font: { size: 11 }, callback: v => formatCurrency(v) }, grid: { color: getChartGridColor() } }
+                }
+            }
+        });
+    }
+
+    // ============================================================
+    // TRANSACTION TABLE
+    // ============================================================
+    function getFilteredTransactions() {
+        let all = getTransactions();
+        const search = document.getElementById('searchInput').value.toLowerCase().trim();
+        const catFilter = document.getElementById('filterCategory').value;
+        const typeFilter = document.getElementById('filterType').value;
+
+        if (search) {
+            all = all.filter(t =>
+                t.description.toLowerCase().includes(search) ||
+                t.category.toLowerCase().includes(search) ||
+                t.amount.toString().includes(search)
+            );
+        }
+        if (catFilter) all = all.filter(t => t.category === catFilter);
+        if (typeFilter) all = all.filter(t => t.type === typeFilter);
+
+        // Sort by date descending
+        all.sort((a, b) => new Date(b.date) - new Date(a.date));
+        return all;
+    }
+
+    function renderTransactions() {
+        const filtered = getFilteredTransactions();
+        const tbody = document.getElementById('txTableBody');
+        const emptyState = document.getElementById('emptyState');
+        const txCount = document.getElementById('txCount');
+
+        txCount.textContent = filtered.length;
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = '';
+            emptyState.classList.remove('hidden');
+            document.getElementById('paginationArea').classList.add('hidden');
+            return;
+        }
+
+        emptyState.classList.add('hidden');
+        document.getElementById('paginationArea').classList.remove('hidden');
+
+        const totalPages = Math.ceil(filtered.length / PER_PAGE);
+        if (currentPage > totalPages) currentPage = totalPages;
+        const start = (currentPage - 1) * PER_PAGE;
+        const paged = filtered.slice(start, start + PER_PAGE);
+
+        tbody.innerHTML = paged.map(t => {
+            const icon = CATEGORY_ICONS[t.category] || 'fa-solid fa-ellipsis';
+            const color = CATEGORY_COLORS[t.category]?.bg || '#6b7280';
+            const isIncome = t.type === 'income';
+            return `
+                <tr class="table-row border-b border-white/5 last:border-0">
+                    <td class="py-3 px-2 sm:px-3 whitespace-nowrap">${formatDate(t.date)}</td>
+                    <td class="py-3 px-2 sm:px-3">
+                        <span class="badge ${isIncome ? 'badge-income' : 'badge-expense'}">
+                            <i class="fa-solid ${isIncome ? 'fa-arrow-up' : 'fa-arrow-down'} text-[9px]"></i>
+                            ${isIncome ? 'Gelir' : 'Gider'}
+                        </span>
+                    </td>
+                    <td class="py-3 px-2 sm:px-3">
+                        <span class="flex items-center gap-1.5">
+                            <i class="${icon} text-[10px]" style="color:${color}"></i>
+                            <span class="text-xs">${t.category}</span>
+                        </span>
+                    </td>
+                    <td class="py-3 px-2 sm:px-3 hidden sm:table-cell opacity-70 max-w-[200px] truncate">${t.description}</td>
+                    <td class="py-3 px-2 sm:px-3 text-right font-semibold whitespace-nowrap ${isIncome ? 'text-emerald-400' : 'text-red-400'}">
+                        ${isIncome ? '+' : '-'}${formatCurrency(t.amount)}
+                    </td>
+                    <td class="py-3 px-2 sm:px-3 text-right whitespace-nowrap">
+                        <button onclick="editTransaction('${t.id}')" class="btn-secondary mr-1" title="Düzenle">
+                            <i class="fa-solid fa-pen text-[10px]"></i>
+                        </button>
+                        <button onclick="promptDelete('${t.id}')" class="btn-danger" title="Sil">
+                            <i class="fa-solid fa-trash text-[10px]"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        // Pagination
+        document.getElementById('paginationInfo').textContent = `${start + 1}-${Math.min(start + PER_PAGE, filtered.length)} / ${filtered.length} işlem`;
+        const btnsEl = document.getElementById('paginationBtns');
+        let btnsHtml = '';
+        for (let i = 1; i <= totalPages; i++) {
+            btnsHtml += `<button onclick="goToPage(${i})" class="w-7 h-7 rounded-lg text-[11px] font-semibold transition-all ${i === currentPage ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30' : 'hover:bg-brand-500/10'}">${i}</button>`;
+        }
+        btnsEl.innerHTML = btnsHtml;
+    }
+
+    function goToPage(p) {
+        currentPage = p;
+        renderTransactions();
+        scrollToSection('historySection');
+    }
+
+    // ============================================================
+    // FORM HANDLING
+    // ============================================================
+    function initForm() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('txDate').value = today;
+    }
+
+    function handleFormSubmit(e) {
+        e.preventDefault();
+        const editId = document.getElementById('editId').value;
+        const data = {
+            date: document.getElementById('txDate').value,
+            type: document.getElementById('txType').value,
+            category: document.getElementById('txCategory').value,
+            description: document.getElementById('txDesc').value,
+            amount: parseFloat(document.getElementById('txAmount').value),
+        };
+
+        if (editId) {
+            updateTransaction(editId, data);
+            showToast('İşlem güncellendi!');
+            cancelEditMode();
+        } else {
+            data.id = genId();
+            addTransaction(data);
+            showToast('İşlem eklendi!');
+        }
+
+        document.getElementById('transactionForm').reset();
+        initForm();
+        refreshAll();
+    }
+
+    function editTransaction(id) {
+        const all = getTransactions();
+        const tx = all.find(t => t.id === id);
+        if (!tx) return;
+
+        document.getElementById('editId').value = tx.id;
+        document.getElementById('txDate').value = tx.date;
+        document.getElementById('txType').value = tx.type;
+        document.getElementById('txCategory').value = tx.category;
+        document.getElementById('txDesc').value = tx.description;
+        document.getElementById('txAmount').value = tx.amount;
+
+        document.getElementById('formTitle').textContent = 'İşlemi Düzenle';
+        document.getElementById('formSubmitText').textContent = 'Güncelle';
+        document.getElementById('cancelEdit').classList.remove('hidden');
+
+        scrollToSection('formCard');
+    }
+
+    function cancelEditMode() {
+        document.getElementById('editId').value = '';
+        document.getElementById('formTitle').textContent = 'Yeni İşlem Ekle';
+        document.getElementById('formSubmitText').textContent = 'Kaydet';
+        document.getElementById('cancelEdit').classList.add('hidden');
+        document.getElementById('transactionForm').reset();
+        initForm();
+    }
+
+    function promptDelete(id) {
+        document.getElementById('confirmTitle').textContent = 'İşlemi Sil';
+        document.getElementById('confirmMessage').textContent = 'Bu işlem kalıcı olarak silinecek. Devam etmek istiyor musunuz?';
+        document.getElementById('confirmAction').onclick = () => {
+            deleteTransaction(id);
+            closeModal('confirmModal');
+            showToast('İşlem silindi!', 'error');
+            refreshAll();
+        };
+        openModal('confirmModal');
+    }
+
+    // ============================================================
+    // IMPORT / EXPORT
+    // ============================================================
+    function openImportExportModal() { openModal('importExportModal'); }
+
+    function exportJSON() {
+        const data = getTransactions();
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        downloadFile(blob, `hesap-takip-${new Date().toISOString().slice(0,10)}.json`);
+        showToast('JSON dosyası indirildi!');
+        closeModal('importExportModal');
+    }
+
+    function exportCSV() {
+        const data = getTransactions();
+        const headers = ['Tarih', 'Tip', 'Kategori', 'Açıklama', 'Tutar'];
+        const rows = data.map(t => [t.date, t.type === 'income' ? 'Gelir' : 'Gider', t.category, `"${t.description}"`, t.amount]);
+        const csv = '\uFEFF' + [headers.join(';'), ...rows.map(r => r.join(';'))].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        downloadFile(blob, `hesap-takip-${new Date().toISOString().slice(0,10)}.csv`);
+        showToast('CSV dosyası indirildi!');
+        closeModal('importExportModal');
+    }
+
+    function downloadFile(blob, name) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = name; a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function importData(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            try {
+                let imported;
+                if (file.name.endsWith('.json')) {
+                    imported = JSON.parse(ev.target.result);
+                } else if (file.name.endsWith('.csv')) {
+                    imported = parseCSV(ev.target.result);
+                } else {
+                    showToast('Desteklenmeyen dosya formatı!', 'error');
+                    return;
+                }
+                if (!Array.isArray(imported) || imported.length === 0) {
+                    showToast('Geçerli veri bulunamadı!', 'error');
+                    return;
+                }
+                // Merge with existing
+                const existing = getTransactions();
+                const merged = [...existing, ...imported.map(t => ({ ...t, id: t.id || genId() }))];
+                saveTransactions(merged);
+                showToast(`${imported.length} işlem içe aktarıldı!`);
+                closeModal('importExportModal');
+                refreshAll();
+            } catch {
+                showToast('Dosya okunamadı!', 'error');
+            }
+        };
+        reader.readAsText(file);
+        e.target.value = '';
+    }
+
+    function parseCSV(text) {
+        const lines = text.trim().split('\n');
+        if (lines.length < 2) return [];
+        return lines.slice(1).map(line => {
+            const parts = line.split(';');
+            if (parts.length < 5) return null;
+            return {
+                id: genId(),
+                date: parts[0].trim(),
+                type: parts[1].trim().toLowerCase() === 'gelir' ? 'income' : 'expense',
+                category: parts[2].trim(),
+                description: parts[3].trim().replace(/"/g, ''),
+                amount: parseFloat(parts[4].trim()) || 0
+            };
+        }).filter(Boolean);
+    }
+
+    function confirmResetData() {
+        document.getElementById('confirmTitle').textContent = 'Tüm Verileri Sıfırla';
+        document.getElementById('confirmMessage').textContent = 'Tüm işlemler silinecek ve varsayılan veriler yüklenecek. Emin misiniz?';
+        document.getElementById('confirmAction').textContent = 'Sıfırla';
+        document.getElementById('confirmAction').onclick = () => {
+            localStorage.removeItem(STORAGE_KEY);
+            closeModal('confirmModal');
+            closeModal('importExportModal');
+            showToast('Veriler sıfırlandı!');
+            refreshAll();
+        };
+        closeModal('importExportModal');
+        openModal('confirmModal');
+    }
+
+    // ============================================================
+    // REFRESH ALL
+    // ============================================================
+    function refreshAll() {
+        renderKPIs();
+        renderCharts();
+        renderTransactions();
+    }
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', () => {
+        initTheme();
+        initForm();
+        refreshAll();
+    });
+    </script>
+</body>
+</html>
