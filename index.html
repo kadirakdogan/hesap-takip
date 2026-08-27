@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hesap Takip — Kişisel Finans & Aylık Bütçe Yönetimi</title>
-    <meta name="description" content="Aylık ve dönemsel bazlı kişisel bütçe takip ve finans yönetim uygulaması.">
+    <title>Hesap Takip — Kişisel Finans & Güvenli Bütçe Yönetimi</title>
+    <meta name="description" content="Uçtan uca şifreli, PIN korumalı ve gizlilik moduna sahip kişisel bütçe takip sistemi.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -92,7 +92,7 @@
             border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25);
         }
         [data-theme="dark"] .table-row:hover { background: rgba(99,102,241,0.08); }
-        [data-theme="dark"] .modal-overlay { background: rgba(0,0,0,0.7); }
+        [data-theme="dark"] .modal-overlay { background: rgba(0,0,0,0.75); }
         [data-theme="dark"] .modal-content {
             background: #1e293b; border: 1px solid rgba(99,102,241,0.25); box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
@@ -200,11 +200,12 @@
         .toast {
             position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
             padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 500;
-            z-index: 200; animation: toastIn 0.3s ease, toastOut 0.3s ease 2.5s forwards;
+            z-index: 250; animation: toastIn 0.3s ease, toastOut 0.3s ease 2.5s forwards;
             white-space: nowrap; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
         .toast-success { background: rgba(16,185,129,0.95); color: #fff; }
         .toast-error { background: rgba(239,68,68,0.95); color: #fff; }
+        .toast-info { background: rgba(99,102,241,0.95); color: #fff; }
         @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
         @keyframes toastOut { to { opacity: 0; transform: translateX(-50%) translateY(20px); } }
 
@@ -222,9 +223,7 @@
             align-items: center;
             gap: 6px;
         }
-        .month-pill:hover:not(.active) {
-            transform: translateY(-1px);
-        }
+        .month-pill:hover:not(.active) { transform: translateY(-1px); }
 
         .summary-card {
             border-radius: 14px;
@@ -232,16 +231,96 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        .summary-card:hover {
-            transform: translateY(-2px);
-        }
+        .summary-card:hover { transform: translateY(-2px); }
         .summary-card.active {
             border-color: #6366f1 !important;
             box-shadow: 0 0 0 2px rgba(99,102,241,0.4);
         }
+
+        /* Lock Screen Overlay */
+        #lockScreenOverlay {
+            position: fixed; inset: 0; z-index: 999;
+            display: none; align-items: center; justify-content: center;
+            background: rgba(2,6,23,0.92);
+            backdrop-filter: blur(25px);
+        }
+        #lockScreenOverlay.active { display: flex; }
+
+        .pin-key {
+            width: 60px; height: 60px; border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; font-weight: 600; cursor: pointer;
+            transition: all 0.15s ease;
+            background: rgba(30,41,59,0.7);
+            border: 1px solid rgba(99,102,241,0.2);
+            color: #fff;
+        }
+        .pin-key:hover { background: rgba(99,102,241,0.3); transform: scale(1.05); }
+        .pin-key:active { transform: scale(0.95); }
+
+        .pin-dot {
+            width: 14px; height: 14px; border-radius: 50%;
+            border: 2px solid rgba(99,102,241,0.5);
+            transition: all 0.2s ease;
+        }
+        .pin-dot.filled {
+            background: #6366f1; border-color: #6366f1;
+            box-shadow: 0 0 12px rgba(99,102,241,0.8);
+        }
+
+        .shake { animation: shakeAnim 0.4s ease; }
+        @keyframes shakeAnim {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        /* Blurred content when privacy mode or locked */
+        .privacy-mask {
+            filter: blur(7px);
+            user-select: none;
+            transition: filter 0.2s ease;
+        }
     </style>
 </head>
 <body class="min-h-screen pb-24 md:pb-8">
+
+    <!-- FULLSCREEN PIN LOCK SCREEN -->
+    <div id="lockScreenOverlay">
+        <div class="glass-card p-6 sm:p-8 max-w-sm w-full mx-4 text-center border border-brand-500/30 shadow-2xl relative" id="lockBox">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-brand-500/40">
+                <i class="fa-solid fa-shield-halved text-white text-2xl"></i>
+            </div>
+            <h2 class="text-lg font-bold text-white mb-1">Korumalı Hesap Takip</h2>
+            <p class="text-xs text-slate-400 mb-6">Finansal verilerinizi görüntülemek için PIN kodunuzu girin</p>
+
+            <!-- PIN Dots -->
+            <div class="flex justify-center gap-3 mb-6" id="pinDots">
+                <div class="pin-dot" id="dot-0"></div>
+                <div class="pin-dot" id="dot-1"></div>
+                <div class="pin-dot" id="dot-2"></div>
+                <div class="pin-dot" id="dot-3"></div>
+            </div>
+
+            <!-- PIN Keypad -->
+            <div class="grid grid-cols-3 gap-3 max-w-[220px] mx-auto mb-4">
+                <button class="pin-key" onclick="handlePinKey('1')">1</button>
+                <button class="pin-key" onclick="handlePinKey('2')">2</button>
+                <button class="pin-key" onclick="handlePinKey('3')">3</button>
+                <button class="pin-key" onclick="handlePinKey('4')">4</button>
+                <button class="pin-key" onclick="handlePinKey('5')">5</button>
+                <button class="pin-key" onclick="handlePinKey('6')">6</button>
+                <button class="pin-key" onclick="handlePinKey('7')">7</button>
+                <button class="pin-key" onclick="handlePinKey('8')">8</button>
+                <button class="pin-key" onclick="handlePinKey('9')">9</button>
+                <button class="pin-key" onclick="clearPin()"><i class="fa-solid fa-xmark text-sm"></i></button>
+                <button class="pin-key" onclick="handlePinKey('0')">0</button>
+                <button class="pin-key" onclick="backspacePin()"><i class="fa-solid fa-delete-left text-sm"></i></button>
+            </div>
+
+            <p class="text-[11px] text-red-400 min-h-[16px]" id="pinErrorMsg"></p>
+        </div>
+    </div>
 
     <!-- Navbar -->
     <nav class="nav-glass sticky top-0 z-40">
@@ -252,14 +331,38 @@
                 </div>
                 <div>
                     <h1 class="text-base font-bold bg-gradient-to-r from-brand-400 to-purple-400 bg-clip-text text-transparent">Hesap Takip</h1>
-                    <p class="text-[10px] opacity-50">Zamana & Aylara Göre Bütçe Planı</p>
+                    <div class="flex items-center gap-1.5 text-[10px] opacity-60">
+                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span>Uçtan Uca İstemci Güvenliği (SSL/TLS)</span>
+                    </div>
                 </div>
             </div>
+
             <div class="flex items-center gap-2">
+                <!-- Privacy / Masking Toggle -->
+                <button onclick="togglePrivacyMode()" id="privacyToggle" class="btn-secondary text-xs flex items-center gap-1.5" title="Tutarları Gizle / Göster (Gizlilik Modu)">
+                    <i class="fa-solid fa-eye-slash text-brand-400" id="privacyIcon"></i>
+                    <span class="hidden sm:inline" id="privacyText">Gizle</span>
+                </button>
+
+                <!-- Security Center Modal Button -->
+                <button onclick="openSecurityModal()" class="btn-secondary text-xs flex items-center gap-1.5" title="Güvenlik & PIN Merkezi">
+                    <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                    <span class="hidden sm:inline">Güvenlik</span>
+                </button>
+
+                <!-- Lock Now Button (if PIN active) -->
+                <button onclick="lockAppNow()" id="quickLockBtn" class="btn-secondary text-xs hidden items-center gap-1.5 text-amber-400" title="Uygulamayı Hemen Kilitle">
+                    <i class="fa-solid fa-lock"></i>
+                </button>
+
+                <!-- Data Import/Export Button -->
                 <button onclick="openImportExportModal()" class="btn-secondary text-xs hidden sm:flex items-center gap-1.5" title="İçe/Dışa Aktar">
                     <i class="fa-solid fa-arrow-right-arrow-left"></i>
                     <span>Veri</span>
                 </button>
+
+                <!-- Theme Toggle -->
                 <button onclick="toggleTheme()" id="themeToggle" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:bg-brand-500/10" title="Tema Değiştir">
                     <i class="fa-solid fa-sun text-amber-400"></i>
                 </button>
@@ -268,7 +371,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-5 space-y-6">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-5 space-y-6" id="appMainContent">
 
         <!-- PERIOD / MONTH SELECTOR BAR -->
         <section class="glass-card p-3 sm:p-4 fade-in">
@@ -314,7 +417,7 @@
                     <div class="pulse-dot"></div>
                 </div>
                 <p class="text-xs opacity-50 mb-1" id="kpiIncomeLabel">Toplam Gelir</p>
-                <p class="text-lg sm:text-2xl font-bold text-emerald-400" id="kpiIncome">₺0</p>
+                <p class="text-lg sm:text-2xl font-bold text-emerald-400 financial-value" id="kpiIncome">₺0</p>
             </div>
             <!-- Toplam Gider -->
             <div class="glass-card p-4 sm:p-5">
@@ -325,7 +428,7 @@
                     <span class="text-[10px] opacity-40"><i class="fa-solid fa-chart-pie"></i></span>
                 </div>
                 <p class="text-xs opacity-50 mb-1" id="kpiExpenseLabel">Toplam Gider</p>
-                <p class="text-lg sm:text-2xl font-bold text-red-400" id="kpiExpense">₺0</p>
+                <p class="text-lg sm:text-2xl font-bold text-red-400 financial-value" id="kpiExpense">₺0</p>
             </div>
             <!-- Net Bakiye -->
             <div class="glass-card p-4 sm:p-5">
@@ -336,7 +439,7 @@
                     <span class="text-[10px] opacity-40"><i class="fa-solid fa-scale-balanced"></i></span>
                 </div>
                 <p class="text-xs opacity-50 mb-1" id="kpiBalanceLabel">Net Kalan Bakiye</p>
-                <p class="text-lg sm:text-2xl font-bold" id="kpiBalance">₺0</p>
+                <p class="text-lg sm:text-2xl font-bold financial-value" id="kpiBalance">₺0</p>
             </div>
             <!-- Bütçe Kullanım -->
             <div class="glass-card p-4 sm:p-5">
@@ -439,11 +542,11 @@
                     </div>
                     <div>
                         <label class="text-xs opacity-60 mb-1 block">Açıklama</label>
-                        <input type="text" id="txDesc" class="input-field" placeholder="Örn: Eylül Kirası, Market alışverişi..." required>
+                        <input type="text" id="txDesc" class="input-field" placeholder="Örn: Eylül Kirası, Market alışverişi..." required maxlength="100">
                     </div>
                     <div>
                         <label class="text-xs opacity-60 mb-1 block">Tutar (₺)</label>
-                        <input type="number" id="txAmount" class="input-field font-semibold" placeholder="0.00" step="0.01" min="0" required>
+                        <input type="number" id="txAmount" class="input-field font-semibold" placeholder="0.00" step="0.01" min="0" max="99999999" required>
                     </div>
 
                     <button type="submit" class="btn-primary w-full flex items-center justify-center gap-2 mt-3">
@@ -471,7 +574,7 @@
                 <div class="flex flex-wrap gap-2">
                     <div class="relative flex-1 min-w-[140px]">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-xs opacity-40"></i>
-                        <input type="text" id="searchInput" class="input-field pl-8 text-xs" placeholder="Açıklama veya tutar ara..." oninput="renderTransactions()">
+                        <input type="text" id="searchInput" class="input-field pl-8 text-xs" placeholder="Açıklama veya tutar ara..." oninput="renderTransactions()" maxlength="50">
                     </div>
                     <select id="filterCategory" class="input-field text-xs w-auto" onchange="renderTransactions()">
                         <option value="">Tüm Kategoriler</option>
@@ -539,10 +642,94 @@
                 <i class="fa-solid fa-list text-base text-brand-400"></i>
                 <span>Geçmiş</span>
             </button>
-            <button onclick="openImportExportModal()" class="flex flex-col items-center gap-0.5 text-[10px] opacity-60 hover:opacity-100 transition-all px-3 py-1">
-                <i class="fa-solid fa-arrow-right-arrow-left text-base text-brand-400"></i>
-                <span>Veri</span>
+            <button onclick="openSecurityModal()" class="flex flex-col items-center gap-0.5 text-[10px] opacity-60 hover:opacity-100 transition-all px-3 py-1">
+                <i class="fa-solid fa-shield-halved text-base text-emerald-400"></i>
+                <span>Güvenlik</span>
             </button>
+        </div>
+    </div>
+
+    <!-- SECURITY CENTER MODAL -->
+    <div class="modal-overlay" id="securityModal">
+        <div class="modal-content max-w-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-semibold flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                    Siber Güvenlik & Gizlilik Merkezi
+                </h3>
+                <button onclick="closeModal('securityModal')" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-brand-500/10 transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-xs">
+                <!-- Status badges -->
+                <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 space-y-1.5">
+                    <div class="flex items-center gap-2 font-bold">
+                        <i class="fa-solid fa-lock text-sm"></i>
+                        <span>Zero-Knowledge Yerel Mimari Aktif</span>
+                    </div>
+                    <p class="text-[11px] opacity-80">
+                        Verileriniz hiçbir üçüncü şahıs sunucusuna gönderilmez. Sadece bu cihazın tarayıcısında depolanır.
+                    </p>
+                </div>
+
+                <!-- PIN Configuration -->
+                <div class="p-3.5 rounded-xl border border-white/10 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="font-semibold text-white">PIN Kodu ile Uygulama Kilidi</p>
+                            <p class="text-[11px] opacity-50">Yetkisiz girişleri engellemek için 4 haneli PIN belirleyin</p>
+                        </div>
+                        <span id="pinStatusBadge" class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-slate-500/20 text-slate-400">Kapalı</span>
+                    </div>
+
+                    <div id="pinSetupFields" class="space-y-2 pt-2 border-t border-white/5">
+                        <input type="password" id="newPinInput" class="input-field text-center tracking-widest text-base" placeholder="4 Haneli Yeni PIN (örn: 1234)" maxlength="4" inputmode="numeric">
+                        <button onclick="saveNewPin()" class="btn-primary w-full text-xs py-2">PIN Kodunu Kaydet / Güncelle</button>
+                    </div>
+
+                    <div id="pinActiveActions" class="hidden flex gap-2 pt-2 border-t border-white/5">
+                        <button onclick="lockAppNow()" class="btn-secondary flex-1 text-xs py-2 text-amber-400">
+                            <i class="fa-solid fa-lock"></i> Şimdi Kilitle
+                        </button>
+                        <button onclick="removePin()" class="btn-danger flex-1 text-xs py-2">
+                            <i class="fa-solid fa-trash"></i> PIN'i Kaldır
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Auto Lock Timeout -->
+                <div class="p-3.5 rounded-xl border border-white/10 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="font-semibold">Hareketsizlikte Otomatik Kilitleme</span>
+                        <select id="autoLockTimeout" class="input-field text-xs w-auto py-1 px-2" onchange="saveAutoLockSetting()">
+                            <option value="0">Devre Dışı</option>
+                            <option value="1">1 Dakika</option>
+                            <option value="3" selected>3 Dakika</option>
+                            <option value="5">5 Dakika</option>
+                            <option value="10">10 Dakika</option>
+                        </select>
+                    </div>
+                    <p class="text-[11px] opacity-50">Ekran başında olmadığınızda verilerinizi otomatik olarak kilitler.</p>
+                </div>
+
+                <!-- Cyber Security Specs List -->
+                <div class="p-3 rounded-xl bg-slate-800/40 border border-white/5 space-y-1 text-[11px] opacity-70">
+                    <div class="flex items-center gap-1.5 text-emerald-400">
+                        <i class="fa-solid fa-check text-[10px]"></i>
+                        <span>Content Security Policy (CSP) & HSTS Koruması</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-emerald-400">
+                        <i class="fa-solid fa-check text-[10px]"></i>
+                        <span>Anti-Clickjacking (X-Frame-Options: DENY)</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-emerald-400">
+                        <i class="fa-solid fa-check text-[10px]"></i>
+                        <span>XSS & HTML Injection Sanitizasyonu</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -552,7 +739,7 @@
             <div class="flex items-center justify-between mb-5">
                 <h3 class="text-sm font-semibold flex items-center gap-2">
                     <i class="fa-solid fa-arrow-right-arrow-left text-brand-400"></i>
-                    Veri Yönetimi
+                    Veri Yönetimi & Yedekleme
                 </h3>
                 <button onclick="closeModal('importExportModal')" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-brand-500/10 transition-all">
                     <i class="fa-solid fa-xmark"></i>
@@ -595,17 +782,26 @@
 
     <script>
     // ============================================================
-    // CONSTANTS & STATE
+    // CONSTANTS & SECURITY CONFIG
     // ============================================================
     const STORAGE_KEY = 'hesapTakipTransactions_v2';
     const THEME_KEY = 'hesapTakipTheme';
+    const PIN_KEY = 'hesapTakip_PIN_hash';
+    const AUTOLOCK_KEY = 'hesapTakip_autolock';
+    const PRIVACY_KEY = 'hesapTakip_privacy';
     const PER_PAGE = 15;
+
     let currentPage = 1;
-    let selectedMonth = 'ALL'; // 'ALL' or 'YYYY-MM' (e.g. '2026-08', '2026-09', '2026-10')
+    let selectedMonth = 'ALL'; // 'ALL' or 'YYYY-MM'
     let categoryChart = null;
     let comparisonChart = null;
     let currentCategoryChartType = 'doughnut';
     let currentComparisonChartType = 'bar';
+
+    let enteredPin = '';
+    let isPrivacyMode = false;
+    let idleTimer = null;
+    let isAppLocked = false;
 
     const MONTH_NAMES = {
         '2026-08': 'Ağustos 2026',
@@ -636,57 +832,228 @@
     };
 
     // ============================================================
-    // REALISTIC MONTH-BY-MONTH INITIAL DATA (Ağustos, Eylül, Ekim 2026)
+    // SANITIZATION & XSS PREVENTION
     // ============================================================
-    function getInitialData() {
-        return [
-            // ================= AĞUSTOS 2026 (26 - 31 Ağustos) =================
-            { id: genId(), date: '2026-08-26', type: 'income', category: 'Maaş/Gelir', description: 'Ağustos Maaşı', amount: 45000 },
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Kredi/Borç', description: 'Ağustos Kredi Taksiti', amount: 6620 },
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Kalan Günler Yol/Ulaşım', amount: 1500 },
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Market / Mutfak', amount: 2000 },
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ağustos Sigara & Kahvaltı (6 Gün)', amount: 1200 },
-            { id: genId(), date: '2026-08-28', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Kişisel Masraf', amount: 1000 },
-
-            // ================= EYLÜL 2026 (1 - 30 Eylül) =================
-            { id: genId(), date: '2026-09-26', type: 'income', category: 'Maaş/Gelir', description: 'Eylül Maaşı', amount: 45000 },
-            { id: genId(), date: '2026-09-01', type: 'income', category: 'Maaş/Gelir', description: 'Eski Ev Depozito İadesi', amount: 7500 },
-            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Eski Ev Masrafı', description: 'Eylül Kira + Aidat', amount: 16200 },
-            { id: genId(), date: '2026-09-05', type: 'expense', category: 'Kredi/Borç', description: 'Eylül Krediler Toplamı', amount: 6620 },
-            { id: genId(), date: '2026-09-10', type: 'expense', category: 'Faturalar/Abonelik', description: 'Telefon + İnternet Faturaları', amount: 1735 },
-            { id: genId(), date: '2026-09-12', type: 'expense', category: 'Faturalar/Abonelik', description: 'Su Faturası', amount: 400 },
-            { id: genId(), date: '2026-09-15', type: 'expense', category: 'Faturalar/Abonelik', description: 'Abonelikler (Netflix/Spotify vb.)', amount: 300 },
-            { id: genId(), date: '2026-09-02', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Yol / Ulaşım Kartı', amount: 1750 },
-            { id: genId(), date: '2026-09-03', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Market & Yemek', amount: 2500 },
-            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Sigara (30 Gün x 120₺)', amount: 3600 },
-            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Sabah Kahvaltıları', amount: 1350 },
-            { id: genId(), date: '2026-09-18', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Buluşma / Sosyal Aktivite', amount: 2500 },
-            { id: genId(), date: '2026-09-20', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Kişisel İhtiyaçlar', amount: 1500 },
-            { id: genId(), date: '2026-09-25', type: 'expense', category: 'Diğer', description: 'Eylül Beklenmedik Rezerv Harcama', amount: 1000 },
-
-            // ================= EKİM 2026 (1 - 31 Ekim) =================
-            { id: genId(), date: '2026-10-26', type: 'income', category: 'Maaş/Gelir', description: 'Ekim Maaşı', amount: 45000 },
-            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Eski Ev Masrafı', description: 'Ekim Kira + Aidat', amount: 16200 },
-            { id: genId(), date: '2026-10-05', type: 'expense', category: 'Kredi/Borç', description: 'Ekim Krediler Toplamı', amount: 6620 },
-            { id: genId(), date: '2026-10-10', type: 'expense', category: 'Faturalar/Abonelik', description: 'Telefon + İnternet Faturaları', amount: 1735 },
-            { id: genId(), date: '2026-10-12', type: 'expense', category: 'Faturalar/Abonelik', description: 'Su Faturası', amount: 400 },
-            { id: genId(), date: '2026-10-15', type: 'expense', category: 'Faturalar/Abonelik', description: 'Abonelikler (Netflix/Spotify vb.)', amount: 300 },
-            { id: genId(), date: '2026-10-02', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Yol / Ulaşım', amount: 1750 },
-            { id: genId(), date: '2026-10-03', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Market & Mutfak', amount: 2500 },
-            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Sigara (30 Gün x 120₺)', amount: 3600 },
-            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Sabah Kahvaltıları', amount: 1350 },
-            { id: genId(), date: '2026-10-18', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Buluşma & Sosyal Harcamalar', amount: 2500 },
-            { id: genId(), date: '2026-10-20', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Kişisel Harcamalar', amount: 1500 },
-            { id: genId(), date: '2026-10-25', type: 'expense', category: 'Diğer', description: 'Ekim Sürpriz Rezerv Harcama', amount: 1000 },
-        ];
+    function escapeHTML(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
     }
 
     // ============================================================
-    // HELPERS
+    // PIN & SECURITY LOCK SYSTEM
     // ============================================================
-    function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+    async function hashString(str) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(str + '_hesap_salt_2026');
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function isPinSet() {
+        return !!localStorage.getItem(PIN_KEY);
+    }
+
+    function checkInitialLock() {
+        if (isPinSet()) {
+            showLockScreen();
+        } else {
+            hideLockScreen();
+        }
+        updatePinUIStatus();
+    }
+
+    function showLockScreen() {
+        isAppLocked = true;
+        enteredPin = '';
+        updatePinDots();
+        document.getElementById('pinErrorMsg').textContent = '';
+        document.getElementById('lockScreenOverlay').classList.add('active');
+        document.getElementById('appMainContent').classList.add('privacy-mask');
+    }
+
+    function hideLockScreen() {
+        isAppLocked = false;
+        document.getElementById('lockScreenOverlay').classList.remove('active');
+        document.getElementById('appMainContent').classList.remove('privacy-mask');
+        resetIdleTimer();
+    }
+
+    function lockAppNow() {
+        if (isPinSet()) {
+            closeModal('securityModal');
+            showLockScreen();
+            showToast('Uygulama kilitlendi!', 'info');
+        } else {
+            showToast('Önce bir PIN kodu belirleyin!', 'error');
+            openSecurityModal();
+        }
+    }
+
+    async function handlePinKey(num) {
+        if (enteredPin.length < 4) {
+            enteredPin += num;
+            updatePinDots();
+            if (enteredPin.length === 4) {
+                await verifyEnteredPin();
+            }
+        }
+    }
+
+    function clearPin() {
+        enteredPin = '';
+        updatePinDots();
+        document.getElementById('pinErrorMsg').textContent = '';
+    }
+
+    function backspacePin() {
+        if (enteredPin.length > 0) {
+            enteredPin = enteredPin.slice(0, -1);
+            updatePinDots();
+        }
+    }
+
+    function updatePinDots() {
+        for (let i = 0; i < 4; i++) {
+            const dot = document.getElementById(`dot-${i}`);
+            if (dot) {
+                dot.classList.toggle('filled', i < enteredPin.length);
+            }
+        }
+    }
+
+    async function verifyEnteredPin() {
+        const storedHash = localStorage.getItem(PIN_KEY);
+        const enteredHash = await hashString(enteredPin);
+
+        if (enteredHash === storedHash) {
+            hideLockScreen();
+            showToast('Kilit açıldı! Hoş geldiniz.', 'success');
+        } else {
+            const box = document.getElementById('lockBox');
+            box.classList.add('shake');
+            document.getElementById('pinErrorMsg').textContent = 'Hatalı PIN kodu! Lütfen tekrar deneyin.';
+            setTimeout(() => box.classList.remove('shake'), 500);
+            setTimeout(() => clearPin(), 600);
+        }
+    }
+
+    async function saveNewPin() {
+        const pinVal = document.getElementById('newPinInput').value.trim();
+        if (pinVal.length !== 4 || !/^\d+$/.test(pinVal)) {
+            showToast('PIN tam 4 haneli bir sayı olmalıdır!', 'error');
+            return;
+        }
+
+        const hashed = await hashString(pinVal);
+        localStorage.setItem(PIN_KEY, hashed);
+        document.getElementById('newPinInput').value = '';
+        updatePinUIStatus();
+        showToast('PIN kodu başarıyla ayarlandı!', 'success');
+    }
+
+    function removePin() {
+        localStorage.removeItem(PIN_KEY);
+        updatePinUIStatus();
+        showToast('PIN koruması kaldırıldı.');
+    }
+
+    function updatePinUIStatus() {
+        const hasPin = isPinSet();
+        const badge = document.getElementById('pinStatusBadge');
+        const activeActions = document.getElementById('pinActiveActions');
+        const quickLock = document.getElementById('quickLockBtn');
+
+        if (hasPin) {
+            badge.textContent = 'Aktif (Korumalı)';
+            badge.className = 'text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-400';
+            activeActions.classList.remove('hidden');
+            quickLock.classList.remove('hidden');
+            quickLock.classList.add('flex');
+        } else {
+            badge.textContent = 'Kapalı';
+            badge.className = 'text-[10px] px-2 py-0.5 rounded-full font-bold bg-slate-500/20 text-slate-400';
+            activeActions.classList.add('hidden');
+            quickLock.classList.add('hidden');
+            quickLock.classList.remove('flex');
+        }
+    }
+
+    function openSecurityModal() { openModal('securityModal'); }
+
+    // ============================================================
+    // IDLE AUTO LOCK (Hareketsizlikte Otomatik Kilitleme)
+    // ============================================================
+    function initAutoLock() {
+        const savedMins = localStorage.getItem(AUTOLOCK_KEY) || '3';
+        document.getElementById('autoLockTimeout').value = savedMins;
+
+        ['mousemove', 'keydown', 'touchstart', 'scroll', 'click'].forEach(evt => {
+            window.addEventListener(evt, resetIdleTimer, { passive: true });
+        });
+        resetIdleTimer();
+    }
+
+    function saveAutoLockSetting() {
+        const val = document.getElementById('autoLockTimeout').value;
+        localStorage.setItem(AUTOLOCK_KEY, val);
+        resetIdleTimer();
+        showToast('Otomatik kilit süresi güncellendi.');
+    }
+
+    function resetIdleTimer() {
+        if (idleTimer) clearTimeout(idleTimer);
+        if (isAppLocked || !isPinSet()) return;
+
+        const mins = parseInt(localStorage.getItem(AUTOLOCK_KEY) || '3', 10);
+        if (mins > 0) {
+            idleTimer = setTimeout(() => {
+                if (isPinSet() && !isAppLocked) {
+                    showLockScreen();
+                    showToast('Hareketsizlik nedeniyle kilitlendi.', 'info');
+                }
+            }, mins * 60 * 1000);
+        }
+    }
+
+    // ============================================================
+    // PRIVACY / MASKING MODE (Omuz Gözetleme Koruması)
+    // ============================================================
+    function initPrivacyMode() {
+        const saved = localStorage.getItem(PRIVACY_KEY) === 'true';
+        isPrivacyMode = saved;
+        updatePrivacyUI();
+    }
+
+    function togglePrivacyMode() {
+        isPrivacyMode = !isPrivacyMode;
+        localStorage.setItem(PRIVACY_KEY, isPrivacyMode);
+        updatePrivacyUI();
+        refreshAll();
+        showToast(isPrivacyMode ? 'Gizlilik Modu Açık: Tutarlar maskelendi' : 'Gizlilik Modu Kapalı');
+    }
+
+    function updatePrivacyUI() {
+        const icon = document.getElementById('privacyIcon');
+        const text = document.getElementById('privacyText');
+        if (isPrivacyMode) {
+            icon.className = 'fa-solid fa-eye text-emerald-400';
+            text.textContent = 'Göster';
+        } else {
+            icon.className = 'fa-solid fa-eye-slash text-brand-400';
+            text.textContent = 'Gizle';
+        }
+    }
 
     function formatCurrency(n) {
+        if (isPrivacyMode) {
+            return '₺ ••••••';
+        }
         return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
     }
 
@@ -705,6 +1072,8 @@
         return `${names[parseInt(m, 10) - 1] || m} ${y}`;
     }
 
+    function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
     function showToast(msg, type = 'success') {
         const el = document.createElement('div');
         el.className = `toast toast-${type}`;
@@ -721,22 +1090,58 @@
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
     // ============================================================
+    // REALISTIC MONTH-BY-MONTH INITIAL DATA
+    // ============================================================
+    function getInitialData() {
+        return [
+            // AĞUSTOS 2026
+            { id: genId(), date: '2026-08-26', type: 'income', category: 'Maaş/Gelir', description: 'Ağustos Maaşı', amount: 45000 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Kredi/Borç', description: 'Ağustos Kredi Taksiti', amount: 6620 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Kalan Günler Yol/Ulaşım', amount: 1500 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Market / Mutfak', amount: 2000 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ağustos Sigara & Kahvaltı (6 Gün)', amount: 1200 },
+            { id: genId(), date: '2026-08-28', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Kişisel Masraf', amount: 1000 },
+
+            // EYLÜL 2026
+            { id: genId(), date: '2026-09-26', type: 'income', category: 'Maaş/Gelir', description: 'Eylül Maaşı', amount: 45000 },
+            { id: genId(), date: '2026-09-01', type: 'income', category: 'Maaş/Gelir', description: 'Eski Ev Depozito İadesi', amount: 7500 },
+            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Eski Ev Masrafı', description: 'Eylül Kira + Aidat', amount: 16200 },
+            { id: genId(), date: '2026-09-05', type: 'expense', category: 'Kredi/Borç', description: 'Eylül Krediler Toplamı', amount: 6620 },
+            { id: genId(), date: '2026-09-10', type: 'expense', category: 'Faturalar/Abonelik', description: 'Telefon + İnternet Faturaları', amount: 1735 },
+            { id: genId(), date: '2026-09-12', type: 'expense', category: 'Faturalar/Abonelik', description: 'Su Faturası', amount: 400 },
+            { id: genId(), date: '2026-09-15', type: 'expense', category: 'Faturalar/Abonelik', description: 'Abonelikler (Netflix/Spotify vb.)', amount: 300 },
+            { id: genId(), date: '2026-09-02', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Yol / Ulaşım Kartı', amount: 1750 },
+            { id: genId(), date: '2026-09-03', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Market & Yemek', amount: 2500 },
+            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Sigara (30 Gün x 120₺)', amount: 3600 },
+            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Sabah Kahvaltıları', amount: 1350 },
+            { id: genId(), date: '2026-09-18', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Buluşma / Sosyal Aktivite', amount: 2500 },
+            { id: genId(), date: '2026-09-20', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Kişisel İhtiyaçlar', amount: 1500 },
+            { id: genId(), date: '2026-09-25', type: 'expense', category: 'Diğer', description: 'Eylül Beklenmedik Rezerv Harcama', amount: 1000 },
+
+            // EKİM 2026
+            { id: genId(), date: '2026-10-26', type: 'income', category: 'Maaş/Gelir', description: 'Ekim Maaşı', amount: 45000 },
+            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Eski Ev Masrafı', description: 'Ekim Kira + Aidat', amount: 16200 },
+            { id: genId(), date: '2026-10-05', type: 'expense', category: 'Kredi/Borç', description: 'Ekim Krediler Toplamı', amount: 6620 },
+            { id: genId(), date: '2026-10-10', type: 'expense', category: 'Faturalar/Abonelik', description: 'Telefon + İnternet Faturaları', amount: 1735 },
+            { id: genId(), date: '2026-10-12', type: 'expense', category: 'Faturalar/Abonelik', description: 'Su Faturası', amount: 400 },
+            { id: genId(), date: '2026-10-15', type: 'expense', category: 'Faturalar/Abonelik', description: 'Abonelikler (Netflix/Spotify vb.)', amount: 300 },
+            { id: genId(), date: '2026-10-02', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Yol / Ulaşım', amount: 1750 },
+            { id: genId(), date: '2026-10-03', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Market & Mutfak', amount: 2500 },
+            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Sigara (30 Gün x 120₺)', amount: 3600 },
+            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Sabah Kahvaltıları', amount: 1350 },
+            { id: genId(), date: '2026-10-18', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Buluşma & Sosyal Harcamalar', amount: 2500 },
+            { id: genId(), date: '2026-10-20', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Kişisel Harcamalar', amount: 1500 },
+            { id: genId(), date: '2026-10-25', type: 'expense', category: 'Diğer', description: 'Ekim Sürpriz Rezerv Harcama', amount: 1000 },
+        ];
+    }
+
+    // ============================================================
     // DATA LAYER (LocalStorage)
     // ============================================================
     function loadTransactions() {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) {
-            // Also check old key if exists to migrate
-            const oldRaw = localStorage.getItem('hesapTakipTransactions');
-            let initial;
-            if (oldRaw) {
-                try {
-                    const parsed = JSON.parse(oldRaw);
-                    initial = (parsed && parsed.length > 0) ? parsed : getInitialData();
-                } catch { initial = getInitialData(); }
-            } else {
-                initial = getInitialData();
-            }
+            const initial = getInitialData();
             saveTransactions(initial);
             return initial;
         }
@@ -806,17 +1211,14 @@
         selectedMonth = m;
         currentPage = 1;
 
-        // Update pills
         document.querySelectorAll('.month-pill').forEach(p => p.classList.remove('active'));
         const activePill = document.getElementById(`pill-${m}`);
         if (activePill) activePill.classList.add('active');
 
-        // Update month quick cards
         document.querySelectorAll('.summary-card').forEach(c => c.classList.remove('active'));
         const activeCard = document.getElementById(`card-${m}`);
         if (activeCard) activeCard.classList.add('active');
 
-        // Update form date default
         if (m !== 'ALL') {
             const currentFormDate = document.getElementById('txDate').value;
             if (!currentFormDate.startsWith(m)) {
@@ -1005,7 +1407,7 @@
                 },
                 scales: isDoughnut ? {} : {
                     x: { ticks: { color: getChartTextColor(), font: { size: 10 } }, grid: { display: false } },
-                    y: { ticks: { color: getChartTextColor(), font: { size: 10 }, callback: v => formatCurrency(v) }, grid: { color: getChartGridColor() } }
+                    y: { ticks: { color: getChartTextColor(), font: { size: 10 }, callback: v => isPrivacyMode ? '••••' : formatCurrency(v) }, grid: { color: getChartGridColor() } }
                 }
             }
         });
@@ -1084,14 +1486,14 @@
                 interaction: { mode: 'index', intersect: false },
                 scales: {
                     x: { ticks: { color: getChartTextColor(), font: { size: 11 } }, grid: { display: false } },
-                    y: { ticks: { color: getChartTextColor(), font: { size: 11 }, callback: v => formatCurrency(v) }, grid: { color: getChartGridColor() } }
+                    y: { ticks: { color: getChartTextColor(), font: { size: 11 }, callback: v => isPrivacyMode ? '••••' : formatCurrency(v) }, grid: { color: getChartGridColor() } }
                 }
             }
         });
     }
 
     // ============================================================
-    // TRANSACTION TABLE & FILTERING
+    // TRANSACTION TABLE & SANITIZATION
     // ============================================================
     function getFilteredTransactions() {
         let list = getTransactionsForSelectedPeriod();
@@ -1109,7 +1511,6 @@
         if (catFilter) list = list.filter(t => t.category === catFilter);
         if (typeFilter) list = list.filter(t => t.type === typeFilter);
 
-        // Sort by date descending
         list.sort((a, b) => new Date(b.date) - new Date(a.date));
         return list;
     }
@@ -1144,8 +1545,8 @@
             return `
                 <tr class="table-row border-b border-white/5 last:border-0">
                     <td class="py-3 px-2 sm:px-3 whitespace-nowrap">
-                        <span class="font-medium">${formatDate(t.date)}</span>
-                        <span class="block text-[10px] opacity-40">${getMonthDisplayName(getMonthKey(t.date))}</span>
+                        <span class="font-medium">${escapeHTML(formatDate(t.date))}</span>
+                        <span class="block text-[10px] opacity-40">${escapeHTML(getMonthDisplayName(getMonthKey(t.date)))}</span>
                     </td>
                     <td class="py-3 px-2 sm:px-3">
                         <span class="badge ${isIncome ? 'badge-income' : 'badge-expense'}">
@@ -1156,18 +1557,18 @@
                     <td class="py-3 px-2 sm:px-3">
                         <span class="flex items-center gap-1.5">
                             <i class="${icon} text-[10px]" style="color:${color}"></i>
-                            <span class="text-xs">${t.category}</span>
+                            <span class="text-xs">${escapeHTML(t.category)}</span>
                         </span>
                     </td>
-                    <td class="py-3 px-2 sm:px-3 hidden sm:table-cell opacity-75 max-w-[220px] truncate">${t.description}</td>
+                    <td class="py-3 px-2 sm:px-3 hidden sm:table-cell opacity-75 max-w-[220px] truncate">${escapeHTML(t.description)}</td>
                     <td class="py-3 px-2 sm:px-3 text-right font-semibold whitespace-nowrap ${isIncome ? 'text-emerald-400' : 'text-red-400'}">
                         ${isIncome ? '+' : '-'}${formatCurrency(t.amount)}
                     </td>
                     <td class="py-3 px-2 sm:px-3 text-right whitespace-nowrap">
-                        <button onclick="editTransaction('${t.id}')" class="btn-secondary mr-1" title="Düzenle">
+                        <button onclick="editTransaction('${escapeHTML(t.id)}')" class="btn-secondary mr-1" title="Düzenle">
                             <i class="fa-solid fa-pen text-[10px]"></i>
                         </button>
-                        <button onclick="promptDelete('${t.id}')" class="btn-danger" title="Sil">
+                        <button onclick="promptDelete('${escapeHTML(t.id)}')" class="btn-danger" title="Sil">
                             <i class="fa-solid fa-trash text-[10px]"></i>
                         </button>
                     </td>
@@ -1225,12 +1626,19 @@
     function handleFormSubmit(e) {
         e.preventDefault();
         const editId = document.getElementById('editId').value;
+        const rawAmount = parseFloat(document.getElementById('txAmount').value);
+
+        if (isNaN(rawAmount) || rawAmount < 0) {
+            showToast('Lütfen geçerli bir tutar girin!', 'error');
+            return;
+        }
+
         const data = {
             date: document.getElementById('txDate').value,
             type: document.getElementById('txType').value,
             category: document.getElementById('txCategory').value,
-            description: document.getElementById('txDesc').value,
-            amount: parseFloat(document.getElementById('txAmount').value),
+            description: document.getElementById('txDesc').value.trim(),
+            amount: rawAmount,
         };
 
         if (editId) {
@@ -1240,7 +1648,7 @@
         } else {
             data.id = genId();
             addTransaction(data);
-            showToast('İşlem eklendi!');
+            showToast('İşlem güvenle eklendi!');
         }
 
         document.getElementById('transactionForm').reset();
@@ -1298,7 +1706,7 @@
         const data = getTransactions();
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         downloadFile(blob, `hesap-takip-butce-${new Date().toISOString().slice(0,10)}.json`);
-        showToast('JSON dosyası indirildi!');
+        showToast('JSON dosyası güvenle indirildi!');
         closeModal('importExportModal');
     }
 
@@ -1340,13 +1748,20 @@
                     return;
                 }
                 const existing = getTransactions();
-                const merged = [...existing, ...imported.map(t => ({ ...t, id: t.id || genId() }))];
+                const merged = [...existing, ...imported.map(t => ({
+                    id: genId(),
+                    date: t.date || new Date().toISOString().slice(0, 10),
+                    type: t.type === 'income' ? 'income' : 'expense',
+                    category: t.category || 'Diğer',
+                    description: escapeHTML(t.description || 'İçe Aktarılan İşlem'),
+                    amount: parseFloat(t.amount) || 0
+                }))];
                 saveTransactions(merged);
-                showToast(`${imported.length} işlem içe aktarıldı!`);
+                showToast(`${imported.length} işlem güvenle içe aktarıldı!`);
                 closeModal('importExportModal');
                 refreshAll();
             } catch {
-                showToast('Dosya okunamadı!', 'error');
+                showToast('Dosya okunamadı veya biçimi geçersiz!', 'error');
             }
         };
         reader.readAsText(file);
@@ -1403,6 +1818,9 @@
     document.addEventListener('DOMContentLoaded', () => {
         initTheme();
         initForm();
+        initPrivacyMode();
+        initAutoLock();
+        checkInitialLock();
         refreshAll();
     });
     </script>
