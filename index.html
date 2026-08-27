@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hesap Takip — Kişisel Finans & Güvenli Bütçe Yönetimi</title>
-    <meta name="description" content="Uçtan uca şifreli, PIN korumalı ve gizlilik moduna sahip kişisel bütçe takip sistemi.">
+    <title>Hesap Takip — Kişisel Finans & Bütçe Yönetimi</title>
+    <meta name="description" content="Uçtan uca şifreli, PIN korumalı, akıllı analizlere ve bütçe planlamasına sahip modern kişisel finans yönetimi.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: ['selector', '[data-theme="dark"]'],
@@ -39,14 +39,14 @@
         /* Light theme */
         [data-theme="light"] body { background: #f8fafc; color: #1e293b; }
         [data-theme="light"] .glass-card {
-            background: rgba(255,255,255,0.85);
-            border: 1px solid rgba(226,232,240,0.9);
+            background: rgba(255,255,255,0.88);
+            border: 1px solid rgba(226,232,240,0.95);
             box-shadow: 0 4px 25px rgba(0,0,0,0.04);
             backdrop-filter: blur(12px);
         }
         [data-theme="light"] .nav-glass {
-            background: rgba(255,255,255,0.9);
-            border-bottom: 1px solid rgba(226,232,240,0.8);
+            background: rgba(255,255,255,0.92);
+            border-bottom: 1px solid rgba(226,232,240,0.85);
             backdrop-filter: blur(16px);
         }
         [data-theme="light"] .input-field {
@@ -67,16 +67,22 @@
             background: linear-gradient(135deg, #6366f1, #4f46e5); color: #fff; border-color: #6366f1;
             box-shadow: 0 4px 12px rgba(99,102,241,0.25);
         }
+        [data-theme="light"] .quick-chip {
+            background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569;
+        }
+        [data-theme="light"] .quick-chip:hover {
+            background: #e2e8f0; color: #1e293b; border-color: #94a3b8;
+        }
 
         /* Dark theme */
         [data-theme="dark"] body {
             background: #020617;
-            background-image: radial-gradient(ellipse at top, rgba(99,102,241,0.12) 0%, transparent 65%);
+            background-image: radial-gradient(ellipse at top, rgba(99,102,241,0.14) 0%, transparent 65%);
             color: #e2e8f0;
         }
         [data-theme="dark"] .glass-card {
-            background: rgba(30,41,59,0.6);
-            border: 1px solid rgba(99,102,241,0.15);
+            background: rgba(30,41,59,0.65);
+            border: 1px solid rgba(99,102,241,0.16);
             box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
             backdrop-filter: blur(12px);
         }
@@ -103,16 +109,22 @@
             background: linear-gradient(135deg, #6366f1, #4f46e5); color: #fff; border-color: #6366f1;
             box-shadow: 0 4px 15px rgba(99,102,241,0.35);
         }
+        [data-theme="dark"] .quick-chip {
+            background: rgba(30,41,59,0.6); border: 1px solid rgba(99,102,241,0.18); color: #94a3b8;
+        }
+        [data-theme="dark"] .quick-chip:hover {
+            background: rgba(99,102,241,0.18); color: #c7d2fe; border-color: #6366f1;
+        }
 
         /* Shared */
         .glass-card { border-radius: 16px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .input-field {
-            border-radius: 10px; padding: 10px 14px; font-size: 14px;
+            border-radius: 10px; padding: 9px 12px; font-size: 13px;
             transition: all 0.2s ease; outline: none; width: 100%;
         }
         .btn-primary {
             background: linear-gradient(135deg, #6366f1, #4f46e5);
-            color: #fff; border: none; border-radius: 10px; padding: 10px 20px;
+            color: #fff; border: none; border-radius: 10px; padding: 10px 18px;
             font-weight: 600; cursor: pointer; transition: all 0.2s ease;
             box-shadow: 0 4px 15px rgba(99,102,241,0.3);
         }
@@ -120,8 +132,8 @@
         .btn-primary:active { transform: translateY(0); }
         .btn-danger {
             background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: #fff; border: none; border-radius: 8px; padding: 6px 12px;
-            font-size: 12px; cursor: pointer; transition: all 0.2s ease;
+            color: #fff; border: none; border-radius: 8px; padding: 5px 10px;
+            font-size: 11px; cursor: pointer; transition: all 0.2s ease;
         }
         .btn-danger:hover { box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
         .btn-secondary {
@@ -132,7 +144,7 @@
         .btn-secondary:hover { background: rgba(99,102,241,0.22); color: #a5b4fc; }
 
         .progress-bar-bg {
-            background: rgba(99,102,241,0.15); border-radius: 999px; overflow: hidden; height: 10px;
+            background: rgba(99,102,241,0.15); border-radius: 999px; overflow: hidden; height: 8px;
         }
         .progress-bar-fill {
             background: linear-gradient(90deg, #6366f1, #a78bfa);
@@ -147,7 +159,7 @@
 
         .badge {
             display: inline-flex; align-items: center; gap: 4px;
-            padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600;
+            padding: 3px 8px; border-radius: 999px; font-size: 10px; font-weight: 600;
             letter-spacing: 0.3px;
         }
         .badge-income { background: rgba(16,185,129,0.15); color: #10b981; }
@@ -170,9 +182,9 @@
         }
 
         .kpi-icon-wrap {
-            width: 44px; height: 44px; border-radius: 12px;
+            width: 42px; height: 42px; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 18px;
+            font-size: 17px;
         }
 
         .fade-in { animation: fadeIn 0.4s ease; }
@@ -185,7 +197,7 @@
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.35); border-radius: 999px; }
 
@@ -209,13 +221,13 @@
         @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
         @keyframes toastOut { to { opacity: 0; transform: translateX(-50%) translateY(20px); } }
 
-        select.input-field { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236366f1' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+        select.input-field { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236366f1' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 30px; }
 
         .month-pill {
             cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-size: 13px;
+            padding: 7px 14px;
+            border-radius: 11px;
+            font-size: 12px;
             font-weight: 600;
             white-space: nowrap;
             transition: all 0.2s ease;
@@ -225,31 +237,33 @@
         }
         .month-pill:hover:not(.active) { transform: translateY(-1px); }
 
-        .summary-card {
-            border-radius: 14px;
-            padding: 12px 14px;
+        .quick-chip {
             cursor: pointer;
-            transition: all 0.2s ease;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            user-select: none;
         }
-        .summary-card:hover { transform: translateY(-2px); }
-        .summary-card.active {
-            border-color: #6366f1 !important;
-            box-shadow: 0 0 0 2px rgba(99,102,241,0.4);
-        }
+        .quick-chip:active { transform: scale(0.96); }
 
         /* Lock Screen Overlay */
         #lockScreenOverlay {
             position: fixed; inset: 0; z-index: 999;
             display: none; align-items: center; justify-content: center;
-            background: rgba(2,6,23,0.92);
+            background: rgba(2,6,23,0.93);
             backdrop-filter: blur(25px);
         }
         #lockScreenOverlay.active { display: flex; }
 
         .pin-key {
-            width: 60px; height: 60px; border-radius: 18px;
+            width: 58px; height: 58px; border-radius: 16px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px; font-weight: 600; cursor: pointer;
+            font-size: 19px; font-weight: 600; cursor: pointer;
             transition: all 0.15s ease;
             background: rgba(30,41,59,0.7);
             border: 1px solid rgba(99,102,241,0.2);
@@ -275,11 +289,17 @@
             40%, 80% { transform: translateX(8px); }
         }
 
-        /* Blurred content when privacy mode or locked */
         .privacy-mask {
             filter: blur(7px);
             user-select: none;
             transition: filter 0.2s ease;
+        }
+
+        /* Print styles */
+        @media print {
+            nav, .mobile-nav, #formCard, #monthSelectorContainer, .btn-secondary, button { display: none !important; }
+            body { background: #fff !important; color: #000 !important; }
+            .glass-card { border: 1px solid #ddd !important; box-shadow: none !important; }
         }
     </style>
 </head>
@@ -292,7 +312,7 @@
                 <i class="fa-solid fa-shield-halved text-white text-2xl"></i>
             </div>
             <h2 class="text-lg font-bold text-white mb-1">Korumalı Hesap Takip</h2>
-            <p class="text-xs text-slate-400 mb-6">Finansal verilerinizi görüntülemek için PIN kodunuzu girin</p>
+            <p class="text-xs text-slate-400 mb-6">Finansal verilerinize erişmek için PIN kodunu girin</p>
 
             <!-- PIN Dots -->
             <div class="flex justify-center gap-3 mb-6" id="pinDots">
@@ -330,11 +350,11 @@
                     <i class="fa-solid fa-wallet text-white text-sm"></i>
                 </div>
                 <div>
-                    <h1 class="text-base font-bold bg-gradient-to-r from-brand-400 to-purple-400 bg-clip-text text-transparent">Hesap Takip</h1>
-                    <div class="flex items-center gap-1.5 text-[10px] opacity-60">
-                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
-                        <span>Uçtan Uca İstemci Güvenliği (SSL/TLS)</span>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-base font-bold bg-gradient-to-r from-brand-400 to-purple-400 bg-clip-text text-transparent">Hesap Takip Pro</h1>
+                        <span class="text-[9px] px-1.5 py-0.2 rounded font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Aktif</span>
                     </div>
+                    <p class="text-[10px] opacity-50">Kişisel Finans & Bütçe Yönetimi</p>
                 </div>
             </div>
 
@@ -351,9 +371,15 @@
                     <span class="hidden sm:inline">Güvenlik</span>
                 </button>
 
-                <!-- Lock Now Button (if PIN active) -->
+                <!-- Quick Lock Button -->
                 <button onclick="lockAppNow()" id="quickLockBtn" class="btn-secondary text-xs hidden items-center gap-1.5 text-amber-400" title="Uygulamayı Hemen Kilitle">
                     <i class="fa-solid fa-lock"></i>
+                </button>
+
+                <!-- Print / Report Button -->
+                <button onclick="window.print()" class="btn-secondary text-xs hidden md:flex items-center gap-1.5" title="Finansal Rapor Yazdır">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Rapor</span>
                 </button>
 
                 <!-- Data Import/Export Button -->
@@ -371,38 +397,73 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-5 space-y-6" id="appMainContent">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-5 space-y-5" id="appMainContent">
 
-        <!-- PERIOD / MONTH SELECTOR BAR -->
+        <!-- PERIOD / MONTH SELECTOR & SMART HEALTH ROW -->
         <section class="glass-card p-3 sm:p-4 fade-in">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-calendar-day text-brand-400"></i>
-                    <span class="text-xs font-semibold uppercase tracking-wider opacity-70">Dönem & Ay Seçimi:</span>
+                    <span class="text-xs font-semibold uppercase tracking-wider opacity-70">Dönem & Ay:</span>
+                    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="monthPillsContainer">
+                        <button onclick="selectMonth('ALL')" class="month-pill active" id="pill-ALL">
+                            <i class="fa-solid fa-infinity text-xs"></i>
+                            <span>Tüm Dönem</span>
+                        </button>
+                        <!-- Dynamic Month Pills Injected Here -->
+                    </div>
                 </div>
-                <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="monthSelectorContainer">
-                    <button onclick="selectMonth('ALL')" class="month-pill active" id="pill-ALL">
-                        <i class="fa-solid fa-infinity text-xs"></i>
-                        <span>Tüm Dönem (Genel)</span>
-                    </button>
-                    <button onclick="selectMonth('2026-08')" class="month-pill" id="pill-2026-08">
-                        <i class="fa-regular fa-calendar text-xs"></i>
-                        <span>Ağustos 2026</span>
-                    </button>
-                    <button onclick="selectMonth('2026-09')" class="month-pill" id="pill-2026-09">
-                        <i class="fa-regular fa-calendar text-xs"></i>
-                        <span>Eylül 2026</span>
-                    </button>
-                    <button onclick="selectMonth('2026-10')" class="month-pill" id="pill-2026-10">
-                        <i class="fa-regular fa-calendar text-xs"></i>
-                        <span>Ekim 2026</span>
+
+                <div class="flex items-center gap-2 text-xs">
+                    <!-- Quick Month Add / Jump -->
+                    <button onclick="setBudgetLimitPrompt()" class="btn-secondary text-[11px] py-1.5 flex items-center gap-1" title="Aylık Harcama Limiti Belirle">
+                        <i class="fa-solid fa-bullseye text-amber-400"></i>
+                        <span id="budgetLimitBtnLabel">Bütçe Limiti Belirle</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Month Quick Overview Cards (Comparison) -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4 pt-3 border-t border-white/5" id="monthlyComparisonGrid">
-                <!-- Will be dynamically populated -->
+            <!-- SMART INSIGHTS STRIP -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-3 pt-3 border-t border-white/5 text-xs" id="smartInsightsBar">
+                <div class="p-2 rounded-xl bg-brand-500/5 border border-brand-500/10 flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center text-brand-400 text-sm">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] opacity-50">Günlük Ort. Masraf</p>
+                        <p class="font-bold text-slate-200 financial-value" id="insightDailyAvg">₺0</p>
+                    </div>
+                </div>
+
+                <div class="p-2 rounded-xl bg-purple-500/5 border border-purple-500/10 flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 text-sm">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] opacity-50">En Yüksek Harcama</p>
+                        <p class="font-bold text-slate-200 truncate max-w-[110px]" id="insightTopCat">—</p>
+                    </div>
+                </div>
+
+                <div class="p-2 rounded-xl bg-emerald-500/5 border border-emerald-500/10 flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-sm">
+                        <i class="fa-solid fa-piggy-bank"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] opacity-50">Tasarruf Oranı</p>
+                        <p class="font-bold text-emerald-400" id="insightSavingsRate">%0</p>
+                    </div>
+                </div>
+
+                <div class="p-2 rounded-xl bg-amber-500/5 border border-amber-500/10 flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400 text-sm">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] opacity-50">Finansal Durum</p>
+                        <p class="font-bold text-slate-200" id="insightHealthStatus">Mükemmel</p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -410,7 +471,7 @@
         <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 fade-in" id="kpiSection">
             <!-- Toplam Gelir -->
             <div class="glass-card p-4 sm:p-5">
-                <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center justify-between mb-2.5">
                     <div class="kpi-icon-wrap bg-emerald-500/10">
                         <i class="fa-solid fa-arrow-trend-up text-emerald-400"></i>
                     </div>
@@ -421,7 +482,7 @@
             </div>
             <!-- Toplam Gider -->
             <div class="glass-card p-4 sm:p-5">
-                <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center justify-between mb-2.5">
                     <div class="kpi-icon-wrap bg-red-500/10">
                         <i class="fa-solid fa-arrow-trend-down text-red-400"></i>
                     </div>
@@ -432,7 +493,7 @@
             </div>
             <!-- Net Bakiye -->
             <div class="glass-card p-4 sm:p-5">
-                <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center justify-between mb-2.5">
                     <div class="kpi-icon-wrap bg-brand-500/10">
                         <i class="fa-solid fa-sack-dollar text-brand-400"></i>
                     </div>
@@ -443,13 +504,13 @@
             </div>
             <!-- Bütçe Kullanım -->
             <div class="glass-card p-4 sm:p-5">
-                <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center justify-between mb-2.5">
                     <div class="kpi-icon-wrap bg-amber-500/10">
                         <i class="fa-solid fa-gauge-high text-amber-400"></i>
                     </div>
                     <span class="text-xs font-bold" id="kpiBudgetPct">0%</span>
                 </div>
-                <p class="text-xs opacity-50 mb-1">Bütçe Kullanımı</p>
+                <p class="text-xs opacity-50 mb-1">Bütçe Harcama Oranı</p>
                 <div class="progress-bar-bg mt-2">
                     <div class="progress-bar-fill" id="kpiBudgetBar" style="width:0%"></div>
                 </div>
@@ -458,12 +519,12 @@
         </section>
 
         <!-- Charts + Form Row -->
-        <section class="grid lg:grid-cols-3 gap-4 sm:gap-6">
+        <section class="grid lg:grid-cols-3 gap-4 sm:gap-5">
             <!-- Charts (2 Columns on large screens) -->
-            <div class="lg:col-span-2 space-y-4 sm:space-y-6">
+            <div class="lg:col-span-2 space-y-4 sm:space-y-5">
                 <!-- Doughnut/Bar Chart: Category Breakdown for Selected Period -->
-                <div class="glass-card p-4 sm:p-6 fade-in">
-                    <div class="flex items-center justify-between mb-4">
+                <div class="glass-card p-4 sm:p-5 fade-in">
+                    <div class="flex items-center justify-between mb-3">
                         <div>
                             <h2 class="text-sm font-semibold flex items-center gap-2">
                                 <i class="fa-solid fa-chart-pie text-brand-400"></i>
@@ -476,107 +537,130 @@
                             <button onclick="setCategoryChartType('bar')" class="btn-secondary text-xs px-2.5 py-1 opacity-60" id="tabBar">Sütun</button>
                         </div>
                     </div>
-                    <div class="relative" style="min-height:260px; max-height:300px">
+                    <div class="relative" style="min-height:240px; max-height:270px">
                         <canvas id="categoryChart"></canvas>
                     </div>
                 </div>
 
                 <!-- Monthly Comparison Bar & Line Chart -->
-                <div class="glass-card p-4 sm:p-6 fade-in">
-                    <div class="flex items-center justify-between mb-4">
+                <div class="glass-card p-4 sm:p-5 fade-in">
+                    <div class="flex items-center justify-between mb-3">
                         <div>
                             <h2 class="text-sm font-semibold flex items-center gap-2">
                                 <i class="fa-solid fa-chart-column text-brand-400"></i>
-                                Aylık Karşılaştırma & Bütçe Seyri
+                                Gelir & Gider Karşılaştırması
                             </h2>
-                            <p class="text-[11px] opacity-50">Ağustos, Eylül ve Ekim aylarındaki gelir-gider farkı</p>
+                            <p class="text-[11px] opacity-50">Aylık finansal hareketlerin seyri</p>
                         </div>
                         <div class="flex gap-1">
-                            <button onclick="setComparisonChartType('bar')" class="btn-secondary text-xs px-2.5 py-1" id="tabCompBar">Karşılaştırma</button>
-                            <button onclick="setComparisonChartType('line')" class="btn-secondary text-xs px-2.5 py-1 opacity-60" id="tabCompLine">Trend</button>
+                            <button onclick="setComparisonChartType('bar')" class="btn-secondary text-xs px-2.5 py-1" id="tabCompBar">Sütun</button>
+                            <button onclick="setComparisonChartType('line')" class="btn-secondary text-xs px-2.5 py-1 opacity-60" id="tabCompLine">Çizgi</button>
                         </div>
                     </div>
-                    <div class="relative" style="min-height:260px; max-height:300px">
+                    <div class="relative" style="min-height:240px; max-height:270px">
                         <canvas id="comparisonChart"></canvas>
                     </div>
                 </div>
             </div>
 
             <!-- Add / Edit Transaction Form -->
-            <div class="glass-card p-4 sm:p-6 fade-in self-start sticky top-20" id="formCard">
-                <div class="flex items-center justify-between mb-4">
+            <div class="glass-card p-4 sm:p-5 fade-in self-start sticky top-20" id="formCard">
+                <div class="flex items-center justify-between mb-3">
                     <h2 class="text-sm font-semibold flex items-center gap-2">
                         <i class="fa-solid fa-plus-circle text-brand-400"></i>
-                        <span id="formTitle">Yeni İşlem Ekle</span>
+                        <span id="formTitle">İşlem Ekle</span>
                     </h2>
-                    <span class="text-[10px] px-2 py-0.5 rounded-md bg-brand-500/10 text-brand-400" id="formTargetMonthLabel">Hedef Ay: Otomatik</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded-md bg-brand-500/10 text-brand-400" id="formTargetMonthLabel">Hedef: Otomatik</span>
                 </div>
 
-                <form id="transactionForm" class="space-y-3" onsubmit="return handleFormSubmit(event)">
+                <!-- Quick Preset Chips for Ultra-Fast Entry -->
+                <div class="mb-3">
+                    <p class="text-[10px] opacity-50 mb-1.5 font-medium">Hızlı Şablonlar:</p>
+                    <div class="flex flex-wrap gap-1.5">
+                        <span class="quick-chip" onclick="applyQuickPreset('income', 'Maaş/Gelir', 'Aylık Maaş', 'Banka Kartı')"><i class="fa-solid fa-briefcase text-emerald-400 text-[10px]"></i> Maaş</span>
+                        <span class="quick-chip" onclick="applyQuickPreset('expense', 'Temel Yaşam', 'Market Alışverişi', 'Kredi Kartı')"><i class="fa-solid fa-basket-shopping text-blue-400 text-[10px]"></i> Market</span>
+                        <span class="quick-chip" onclick="applyQuickPreset('expense', 'Eski Ev Masrafı', 'Kira + Aidat Ödemesi', 'Havale/EFT')"><i class="fa-solid fa-house text-amber-400 text-[10px]"></i> Kira</span>
+                        <span class="quick-chip" onclick="applyQuickPreset('expense', 'Faturalar/Abonelik', 'Fatura Ödemesi', 'Kredi Kartı')"><i class="fa-solid fa-bolt text-pink-400 text-[10px]"></i> Fatura</span>
+                        <span class="quick-chip" onclick="applyQuickPreset('expense', 'Sosyal/Sigara/Kahvaltı', 'Sosyal Harcama / Yemek', 'Nakit')"><i class="fa-solid fa-mug-hot text-purple-400 text-[10px]"></i> Sosyal</span>
+                    </div>
+                </div>
+
+                <form id="transactionForm" class="space-y-2.5" onsubmit="return handleFormSubmit(event)">
                     <input type="hidden" id="editId" value="">
                     <div>
-                        <label class="text-xs opacity-60 mb-1 flex items-center justify-between">
+                        <label class="text-[11px] opacity-60 mb-1 flex items-center justify-between">
                             <span>İşlem Tarihi</span>
                             <span class="text-[10px] text-brand-400 cursor-pointer" onclick="setFormDateToday()">Bugün</span>
                         </label>
                         <input type="date" id="txDate" class="input-field" required onchange="updateFormTargetMonth()">
                     </div>
-                    <div>
-                        <label class="text-xs opacity-60 mb-1 block">İşlem Tipi</label>
-                        <select id="txType" class="input-field" required onchange="handleTypeChange()">
-                            <option value="expense">🔴 Gider (Masraf)</option>
-                            <option value="income">🟢 Gelir (Maaş / Kazanç)</option>
-                        </select>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[11px] opacity-60 mb-1 block">İşlem Tipi</label>
+                            <select id="txType" class="input-field" required onchange="handleTypeChange()">
+                                <option value="expense">🔴 Gider (Masraf)</option>
+                                <option value="income">🟢 Gelir (Maaş)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[11px] opacity-60 mb-1 block">Ödeme Yöntemi</label>
+                            <select id="txPaymentMethod" class="input-field">
+                                <option value="Kredi Kartı">💳 Kredi Kartı</option>
+                                <option value="Banka Kartı">🏦 Banka Kartı</option>
+                                <option value="Nakit">💵 Nakit</option>
+                                <option value="Havale/EFT">📱 Havale/EFT</option>
+                            </select>
+                        </div>
                     </div>
                     <div>
-                        <label class="text-xs opacity-60 mb-1 block">Kategori</label>
+                        <label class="text-[11px] opacity-60 mb-1 block">Kategori</label>
                         <select id="txCategory" class="input-field" required>
                             <option value="Maaş/Gelir">Maaş / Gelir</option>
                             <option value="Kredi/Borç">Kredi / Borç</option>
-                            <option value="Eski Ev Masrafı">Eski Ev Masrafı (Kira / Aidat)</option>
-                            <option value="Temel Yaşam">Temel Yaşam (Yol / Market / Kişisel)</option>
+                            <option value="Eski Ev Masrafı">Eski Ev Masrafı (Kira/Aidat)</option>
+                            <option value="Temel Yaşam">Temel Yaşam (Yol/Market/Yemek)</option>
                             <option value="Sosyal/Sigara/Kahvaltı">Sosyal / Sigara / Kahvaltı</option>
-                            <option value="Faturalar/Abonelik">Faturalar / Abonelik (Tel/Su/Netflix)</option>
+                            <option value="Faturalar/Abonelik">Faturalar / Abonelik (Tel/Su/Net)</option>
                             <option value="Diğer">Diğer / Sürpriz Masraf</option>
                         </select>
                     </div>
                     <div>
-                        <label class="text-xs opacity-60 mb-1 block">Açıklama</label>
-                        <input type="text" id="txDesc" class="input-field" placeholder="Örn: Eylül Kirası, Market alışverişi..." required maxlength="100">
+                        <label class="text-[11px] opacity-60 mb-1 block">Açıklama</label>
+                        <input type="text" id="txDesc" class="input-field" placeholder="Örn: Market harcaması..." required maxlength="100">
                     </div>
                     <div>
-                        <label class="text-xs opacity-60 mb-1 block">Tutar (₺)</label>
-                        <input type="number" id="txAmount" class="input-field font-semibold" placeholder="0.00" step="0.01" min="0" max="99999999" required>
+                        <label class="text-[11px] opacity-60 mb-1 block">Tutar (₺)</label>
+                        <input type="number" id="txAmount" class="input-field font-semibold text-sm" placeholder="0.00" step="0.01" min="0.01" max="99999999" required>
                     </div>
 
-                    <button type="submit" class="btn-primary w-full flex items-center justify-center gap-2 mt-3">
+                    <button type="submit" class="btn-primary w-full flex items-center justify-center gap-2 mt-2">
                         <i class="fa-solid fa-check"></i>
                         <span id="formSubmitText">Kaydet</span>
                     </button>
-                    <button type="button" id="cancelEdit" class="w-full text-center text-xs opacity-50 hover:opacity-100 cursor-pointer py-2 hidden" onclick="cancelEditMode()">
+                    <button type="button" id="cancelEdit" class="w-full text-center text-xs opacity-50 hover:opacity-100 cursor-pointer py-1.5 hidden" onclick="cancelEditMode()">
                         <i class="fa-solid fa-xmark"></i> Düzenlemeyi İptal Et
                     </button>
                 </form>
             </div>
         </section>
 
-        <!-- Transaction History -->
-        <section class="glass-card p-4 sm:p-6 fade-in" id="historySection">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+        <!-- Transaction History Table & Filtering -->
+        <section class="glass-card p-4 sm:p-5 fade-in" id="historySection">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                 <div>
                     <h2 class="text-sm font-semibold flex items-center gap-2">
                         <i class="fa-solid fa-clock-rotate-left text-brand-400"></i>
                         <span>İşlem Geçmişi</span>
                         <span class="badge badge-income text-[10px]" id="txCount">0</span>
                     </h2>
-                    <p class="text-[11px] opacity-50" id="historyPeriodNotice">Seçili döneme ait kayıtlar listeleniyor</p>
+                    <p class="text-[11px] opacity-50" id="historyPeriodNotice">İşlemler listeleniyor</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <div class="relative flex-1 min-w-[140px]">
+                    <div class="relative flex-1 min-w-[130px]">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-xs opacity-40"></i>
-                        <input type="text" id="searchInput" class="input-field pl-8 text-xs" placeholder="Açıklama veya tutar ara..." oninput="renderTransactions()" maxlength="50">
+                        <input type="text" id="searchInput" class="input-field pl-8 text-xs py-1.5" placeholder="Ara..." oninput="renderTransactions()" maxlength="50">
                     </div>
-                    <select id="filterCategory" class="input-field text-xs w-auto" onchange="renderTransactions()">
+                    <select id="filterCategory" class="input-field text-xs w-auto py-1.5" onchange="renderTransactions()">
                         <option value="">Tüm Kategoriler</option>
                         <option value="Maaş/Gelir">Maaş / Gelir</option>
                         <option value="Kredi/Borç">Kredi / Borç</option>
@@ -586,10 +670,16 @@
                         <option value="Faturalar/Abonelik">Faturalar / Abonelik</option>
                         <option value="Diğer">Diğer</option>
                     </select>
-                    <select id="filterType" class="input-field text-xs w-auto" onchange="renderTransactions()">
+                    <select id="filterType" class="input-field text-xs w-auto py-1.5" onchange="renderTransactions()">
                         <option value="">Tüm Tipler</option>
                         <option value="income">Gelir (+)</option>
                         <option value="expense">Gider (-)</option>
+                    </select>
+                    <select id="sortBy" class="input-field text-xs w-auto py-1.5" onchange="renderTransactions()">
+                        <option value="date-desc">En Yeni Tarih</option>
+                        <option value="date-asc">En Eski Tarih</option>
+                        <option value="amount-desc">En Yüksek Tutar</option>
+                        <option value="amount-asc">En Düşük Tutar</option>
                     </select>
                 </div>
             </div>
@@ -598,26 +688,37 @@
                 <table class="w-full text-xs sm:text-sm">
                     <thead>
                         <tr class="text-left opacity-50 text-[11px] uppercase tracking-wider border-b border-white/5">
-                            <th class="pb-3 px-2 sm:px-3">Tarih / Ay</th>
-                            <th class="pb-3 px-2 sm:px-3">Tip</th>
-                            <th class="pb-3 px-2 sm:px-3">Kategori</th>
-                            <th class="pb-3 px-2 sm:px-3 hidden sm:table-cell">Açıklama</th>
-                            <th class="pb-3 px-2 sm:px-3 text-right">Tutar</th>
-                            <th class="pb-3 px-2 sm:px-3 text-right">İşlemler</th>
+                            <th class="pb-2.5 px-2 sm:px-3">Tarih</th>
+                            <th class="pb-2.5 px-2 sm:px-3">Tip</th>
+                            <th class="pb-2.5 px-2 sm:px-3">Kategori</th>
+                            <th class="pb-2.5 px-2 sm:px-3 hidden sm:table-cell">Açıklama</th>
+                            <th class="pb-2.5 px-2 sm:px-3 hidden md:table-cell">Ödeme</th>
+                            <th class="pb-2.5 px-2 sm:px-3 text-right">Tutar</th>
+                            <th class="pb-2.5 px-2 sm:px-3 text-right">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody id="txTableBody"></tbody>
                 </table>
             </div>
 
-            <div id="emptyState" class="hidden text-center py-12 opacity-40">
-                <i class="fa-solid fa-inbox text-4xl mb-3 block"></i>
-                <p class="text-sm">Bu dönemde henüz işlem kaydı bulunmuyor</p>
-                <button onclick="scrollToSection('formCard')" class="btn-secondary text-xs mt-3">Yeni İşlem Ekle</button>
+            <div id="emptyState" class="hidden text-center py-10 opacity-50">
+                <div class="w-14 h-14 rounded-2xl bg-brand-500/10 flex items-center justify-center mx-auto mb-3 text-brand-400 text-2xl">
+                    <i class="fa-solid fa-inbox"></i>
+                </div>
+                <p class="text-sm font-semibold text-slate-300">Henüz Kaydedilmiş İşlem Yok</p>
+                <p class="text-xs opacity-60 mt-1 max-w-sm mx-auto">Gelir ve giderlerinizi sağ üstteki formdan ekleyebilir veya örnek bütçe şablonunu yükleyebilirsiniz.</p>
+                <div class="flex justify-center gap-2 mt-4">
+                    <button onclick="scrollToSection('formCard')" class="btn-primary text-xs py-2 px-4">
+                        <i class="fa-solid fa-plus mr-1"></i> İlk İşlemini Ekle
+                    </button>
+                    <button onclick="loadSampleBudgetTemplate()" class="btn-secondary text-xs py-2 px-3">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Örnek Şablonu Yükle
+                    </button>
+                </div>
             </div>
 
             <!-- Pagination -->
-            <div class="flex items-center justify-between mt-4 pt-4 border-t border-white/5" id="paginationArea">
+            <div class="flex items-center justify-between mt-4 pt-3 border-t border-white/5" id="paginationArea">
                 <p class="text-[11px] opacity-40" id="paginationInfo"></p>
                 <div class="flex gap-1" id="paginationBtns"></div>
             </div>
@@ -662,15 +763,15 @@
                 </button>
             </div>
 
-            <div class="space-y-4 text-xs">
-                <!-- Status badges -->
-                <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 space-y-1.5">
+            <div class="space-y-3.5 text-xs">
+                <!-- Status badge -->
+                <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 space-y-1">
                     <div class="flex items-center gap-2 font-bold">
                         <i class="fa-solid fa-lock text-sm"></i>
-                        <span>Zero-Knowledge Yerel Mimari Aktif</span>
+                        <span>Zero-Knowledge İstemci Güvenliği</span>
                     </div>
                     <p class="text-[11px] opacity-80">
-                        Verileriniz hiçbir üçüncü şahıs sunucusuna gönderilmez. Sadece bu cihazın tarayıcısında depolanır.
+                        Verileriniz hiçbir sunucuya aktarılmaz. Yalnızca bu tarayıcıda yerel olarak saklanır.
                     </p>
                 </div>
 
@@ -678,15 +779,15 @@
                 <div class="p-3.5 rounded-xl border border-white/10 space-y-3">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="font-semibold text-white">PIN Kodu ile Uygulama Kilidi</p>
-                            <p class="text-[11px] opacity-50">Yetkisiz girişleri engellemek için 4 haneli PIN belirleyin</p>
+                            <p class="font-semibold text-white">PIN Kodu ile Ekran Kilidi</p>
+                            <p class="text-[11px] opacity-50">Uygulamanızı yetkisiz gözlerden korumak için 4 haneli PIN belirleyin</p>
                         </div>
                         <span id="pinStatusBadge" class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-slate-500/20 text-slate-400">Kapalı</span>
                     </div>
 
                     <div id="pinSetupFields" class="space-y-2 pt-2 border-t border-white/5">
                         <input type="password" id="newPinInput" class="input-field text-center tracking-widest text-base" placeholder="4 Haneli Yeni PIN (örn: 1234)" maxlength="4" inputmode="numeric">
-                        <button onclick="saveNewPin()" class="btn-primary w-full text-xs py-2">PIN Kodunu Kaydet / Güncelle</button>
+                        <button onclick="saveNewPin()" class="btn-primary w-full text-xs py-2">PIN Kodunu Kaydet / Değiştir</button>
                     </div>
 
                     <div id="pinActiveActions" class="hidden flex gap-2 pt-2 border-t border-white/5">
@@ -713,30 +814,14 @@
                     </div>
                     <p class="text-[11px] opacity-50">Ekran başında olmadığınızda verilerinizi otomatik olarak kilitler.</p>
                 </div>
-
-                <!-- Cyber Security Specs List -->
-                <div class="p-3 rounded-xl bg-slate-800/40 border border-white/5 space-y-1 text-[11px] opacity-70">
-                    <div class="flex items-center gap-1.5 text-emerald-400">
-                        <i class="fa-solid fa-check text-[10px]"></i>
-                        <span>Content Security Policy (CSP) & HSTS Koruması</span>
-                    </div>
-                    <div class="flex items-center gap-1.5 text-emerald-400">
-                        <i class="fa-solid fa-check text-[10px]"></i>
-                        <span>Anti-Clickjacking (X-Frame-Options: DENY)</span>
-                    </div>
-                    <div class="flex items-center gap-1.5 text-emerald-400">
-                        <i class="fa-solid fa-check text-[10px]"></i>
-                        <span>XSS & HTML Injection Sanitizasyonu</span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- Import/Export Modal -->
+    <!-- Import/Export & Template Modal -->
     <div class="modal-overlay" id="importExportModal">
         <div class="modal-content">
-            <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center justify-between mb-4">
                 <h3 class="text-sm font-semibold flex items-center gap-2">
                     <i class="fa-solid fa-arrow-right-arrow-left text-brand-400"></i>
                     Veri Yönetimi & Yedekleme
@@ -745,46 +830,50 @@
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            <div class="space-y-3">
-                <button onclick="exportJSON()" class="w-full btn-primary flex items-center justify-center gap-2 text-sm">
-                    <i class="fa-solid fa-download"></i> JSON Olarak Dışa Aktar
+            <div class="space-y-2.5">
+                <button onclick="exportJSON()" class="w-full btn-primary flex items-center justify-center gap-2 text-xs py-2.5">
+                    <i class="fa-solid fa-download"></i> JSON Olarak Yedekle (Dışa Aktar)
                 </button>
-                <button onclick="exportCSV()" class="w-full btn-primary flex items-center justify-center gap-2 text-sm" style="background: linear-gradient(135deg, #10b981, #059669);">
-                    <i class="fa-solid fa-file-csv"></i> CSV Olarak Dışa Aktar
+                <button onclick="exportCSV()" class="w-full btn-primary flex items-center justify-center gap-2 text-xs py-2.5" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <i class="fa-solid fa-file-csv"></i> Excel / CSV Olarak İndir
                 </button>
                 <div class="relative">
                     <input type="file" id="importFile" accept=".json,.csv" class="hidden" onchange="importData(event)">
-                    <button onclick="document.getElementById('importFile').click()" class="w-full text-sm py-3 rounded-xl border-2 border-dashed border-brand-500/30 text-brand-400 hover:bg-brand-500/5 transition-all flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-upload"></i> JSON / CSV İçe Aktar
+                    <button onclick="document.getElementById('importFile').click()" class="w-full text-xs py-2.5 rounded-xl border-2 border-dashed border-brand-500/30 text-brand-400 hover:bg-brand-500/5 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-upload"></i> Yedekten Geri Yükle (JSON / CSV)
                     </button>
                 </div>
-                <div class="pt-3 border-t border-white/5">
-                    <button onclick="confirmResetData()" class="w-full text-xs py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 transition-all flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-trash-can"></i> Başlangıç Verilerine Sıfırla
+                <div class="pt-3 border-t border-white/5 space-y-2">
+                    <button onclick="loadSampleBudgetTemplate()" class="w-full text-xs py-2 rounded-xl text-brand-400 hover:bg-brand-500/10 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> 26 Ağu - 30 Eki Örnek Bütçe Planını Yükle
+                    </button>
+                    <button onclick="confirmClearAllData()" class="w-full text-xs py-2 rounded-xl text-red-400 hover:bg-red-500/10 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-trash-can"></i> Tüm İşlemleri Temizle (Sıfırla)
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Confirm Delete Modal -->
+    <!-- Confirm Dialog Modal -->
     <div class="modal-overlay" id="confirmModal">
         <div class="modal-content text-center">
             <i class="fa-solid fa-triangle-exclamation text-3xl text-amber-400 mb-3"></i>
-            <h3 class="text-sm font-semibold mb-2" id="confirmTitle">Emin misiniz?</h3>
-            <p class="text-xs opacity-50 mb-5" id="confirmMessage">Bu işlem geri alınamaz.</p>
+            <h3 class="text-sm font-semibold mb-1.5" id="confirmTitle">Emin misiniz?</h3>
+            <p class="text-xs opacity-50 mb-4" id="confirmMessage">Bu işlem geri alınamaz.</p>
             <div class="flex gap-2">
-                <button onclick="closeModal('confirmModal')" class="flex-1 btn-secondary py-2.5">İptal</button>
-                <button id="confirmAction" class="flex-1 btn-danger py-2.5">Sil</button>
+                <button onclick="closeModal('confirmModal')" class="flex-1 btn-secondary py-2">İptal</button>
+                <button id="confirmAction" class="flex-1 btn-danger py-2">Onayla</button>
             </div>
         </div>
     </div>
 
     <script>
     // ============================================================
-    // CONSTANTS & SECURITY CONFIG
+    // CONSTANTS & STATE (Clean & Empty by default)
     // ============================================================
-    const STORAGE_KEY = 'hesapTakipTransactions_v2';
+    const STORAGE_KEY = 'hesapTakipTransactions_clean_v1';
+    const BUDGET_LIMIT_KEY = 'hesapTakip_budget_limit';
     const THEME_KEY = 'hesapTakipTheme';
     const PIN_KEY = 'hesapTakip_PIN_hash';
     const AUTOLOCK_KEY = 'hesapTakip_autolock';
@@ -792,7 +881,7 @@
     const PER_PAGE = 15;
 
     let currentPage = 1;
-    let selectedMonth = 'ALL'; // 'ALL' or 'YYYY-MM'
+    let selectedMonth = 'ALL';
     let categoryChart = null;
     let comparisonChart = null;
     let currentCategoryChartType = 'doughnut';
@@ -802,14 +891,6 @@
     let isPrivacyMode = false;
     let idleTimer = null;
     let isAppLocked = false;
-
-    const MONTH_NAMES = {
-        '2026-08': 'Ağustos 2026',
-        '2026-09': 'Eylül 2026',
-        '2026-10': 'Ekim 2026',
-        '2026-11': 'Kasım 2026',
-        '2026-12': 'Aralık 2026'
-    };
 
     const CATEGORY_COLORS = {
         'Maaş/Gelir':              { bg: '#10b981', light: 'rgba(16,185,129,0.15)' },
@@ -831,8 +912,15 @@
         'Diğer':                  'fa-solid fa-ellipsis'
     };
 
+    const PAYMENT_ICONS = {
+        'Kredi Kartı': 'fa-regular fa-credit-card text-amber-400',
+        'Banka Kartı': 'fa-solid fa-credit-card text-blue-400',
+        'Nakit': 'fa-solid fa-money-bill-wave text-emerald-400',
+        'Havale/EFT': 'fa-solid fa-mobile-screen-button text-purple-400'
+    };
+
     // ============================================================
-    // SANITIZATION & XSS PREVENTION
+    // SANITIZATION
     // ============================================================
     function escapeHTML(str) {
         if (!str) return '';
@@ -845,7 +933,7 @@
     }
 
     // ============================================================
-    // PIN & SECURITY LOCK SYSTEM
+    // PIN & SECURITY
     // ============================================================
     async function hashString(str) {
         const encoder = new TextEncoder();
@@ -855,16 +943,11 @@
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    function isPinSet() {
-        return !!localStorage.getItem(PIN_KEY);
-    }
+    function isPinSet() { return !!localStorage.getItem(PIN_KEY); }
 
     function checkInitialLock() {
-        if (isPinSet()) {
-            showLockScreen();
-        } else {
-            hideLockScreen();
-        }
+        if (isPinSet()) showLockScreen();
+        else hideLockScreen();
         updatePinUIStatus();
     }
 
@@ -899,9 +982,7 @@
         if (enteredPin.length < 4) {
             enteredPin += num;
             updatePinDots();
-            if (enteredPin.length === 4) {
-                await verifyEnteredPin();
-            }
+            if (enteredPin.length === 4) await verifyEnteredPin();
         }
     }
 
@@ -921,23 +1002,20 @@
     function updatePinDots() {
         for (let i = 0; i < 4; i++) {
             const dot = document.getElementById(`dot-${i}`);
-            if (dot) {
-                dot.classList.toggle('filled', i < enteredPin.length);
-            }
+            if (dot) dot.classList.toggle('filled', i < enteredPin.length);
         }
     }
 
     async function verifyEnteredPin() {
         const storedHash = localStorage.getItem(PIN_KEY);
         const enteredHash = await hashString(enteredPin);
-
         if (enteredHash === storedHash) {
             hideLockScreen();
-            showToast('Kilit açıldı! Hoş geldiniz.', 'success');
+            showToast('Kilit açıldı!', 'success');
         } else {
             const box = document.getElementById('lockBox');
             box.classList.add('shake');
-            document.getElementById('pinErrorMsg').textContent = 'Hatalı PIN kodu! Lütfen tekrar deneyin.';
+            document.getElementById('pinErrorMsg').textContent = 'Hatalı PIN kodu!';
             setTimeout(() => box.classList.remove('shake'), 500);
             setTimeout(() => clearPin(), 600);
         }
@@ -949,7 +1027,6 @@
             showToast('PIN tam 4 haneli bir sayı olmalıdır!', 'error');
             return;
         }
-
         const hashed = await hashString(pinVal);
         localStorage.setItem(PIN_KEY, hashed);
         document.getElementById('newPinInput').value = '';
@@ -987,12 +1064,11 @@
     function openSecurityModal() { openModal('securityModal'); }
 
     // ============================================================
-    // IDLE AUTO LOCK (Hareketsizlikte Otomatik Kilitleme)
+    // IDLE TIMEOUT
     // ============================================================
     function initAutoLock() {
         const savedMins = localStorage.getItem(AUTOLOCK_KEY) || '3';
         document.getElementById('autoLockTimeout').value = savedMins;
-
         ['mousemove', 'keydown', 'touchstart', 'scroll', 'click'].forEach(evt => {
             window.addEventListener(evt, resetIdleTimer, { passive: true });
         });
@@ -1009,7 +1085,6 @@
     function resetIdleTimer() {
         if (idleTimer) clearTimeout(idleTimer);
         if (isAppLocked || !isPinSet()) return;
-
         const mins = parseInt(localStorage.getItem(AUTOLOCK_KEY) || '3', 10);
         if (mins > 0) {
             idleTimer = setTimeout(() => {
@@ -1022,7 +1097,7 @@
     }
 
     // ============================================================
-    // PRIVACY / MASKING MODE (Omuz Gözetleme Koruması)
+    // PRIVACY / MASKING MODE
     // ============================================================
     function initPrivacyMode() {
         const saved = localStorage.getItem(PRIVACY_KEY) === 'true';
@@ -1035,7 +1110,7 @@
         localStorage.setItem(PRIVACY_KEY, isPrivacyMode);
         updatePrivacyUI();
         refreshAll();
-        showToast(isPrivacyMode ? 'Gizlilik Modu Açık: Tutarlar maskelendi' : 'Gizlilik Modu Kapalı');
+        showToast(isPrivacyMode ? 'Gizlilik Modu: Tutarlar maskelendi' : 'Gizlilik Modu Kapalı');
     }
 
     function updatePrivacyUI() {
@@ -1051,9 +1126,7 @@
     }
 
     function formatCurrency(n) {
-        if (isPrivacyMode) {
-            return '₺ ••••••';
-        }
+        if (isPrivacyMode) return '₺ ••••••';
         return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
     }
 
@@ -1061,12 +1134,10 @@
         return new Date(d).toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', year: 'numeric' });
     }
 
-    function getMonthKey(dateStr) {
-        return dateStr.slice(0, 7); // 'YYYY-MM'
-    }
+    function getMonthKey(dateStr) { return dateStr ? dateStr.slice(0, 7) : ''; }
 
     function getMonthDisplayName(key) {
-        if (MONTH_NAMES[key]) return MONTH_NAMES[key];
+        if (!key || key === 'ALL') return 'Tüm Dönem';
         const [y, m] = key.split('-');
         const names = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
         return `${names[parseInt(m, 10) - 1] || m} ${y}`;
@@ -1090,61 +1161,11 @@
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
     // ============================================================
-    // REALISTIC MONTH-BY-MONTH INITIAL DATA
-    // ============================================================
-    function getInitialData() {
-        return [
-            // AĞUSTOS 2026
-            { id: genId(), date: '2026-08-26', type: 'income', category: 'Maaş/Gelir', description: 'Ağustos Maaşı', amount: 45000 },
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Kredi/Borç', description: 'Ağustos Kredi Taksiti', amount: 6620 },
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Kalan Günler Yol/Ulaşım', amount: 1500 },
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Market / Mutfak', amount: 2000 },
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ağustos Sigara & Kahvaltı (6 Gün)', amount: 1200 },
-            { id: genId(), date: '2026-08-28', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Kişisel Masraf', amount: 1000 },
-
-            // EYLÜL 2026
-            { id: genId(), date: '2026-09-26', type: 'income', category: 'Maaş/Gelir', description: 'Eylül Maaşı', amount: 45000 },
-            { id: genId(), date: '2026-09-01', type: 'income', category: 'Maaş/Gelir', description: 'Eski Ev Depozito İadesi', amount: 7500 },
-            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Eski Ev Masrafı', description: 'Eylül Kira + Aidat', amount: 16200 },
-            { id: genId(), date: '2026-09-05', type: 'expense', category: 'Kredi/Borç', description: 'Eylül Krediler Toplamı', amount: 6620 },
-            { id: genId(), date: '2026-09-10', type: 'expense', category: 'Faturalar/Abonelik', description: 'Telefon + İnternet Faturaları', amount: 1735 },
-            { id: genId(), date: '2026-09-12', type: 'expense', category: 'Faturalar/Abonelik', description: 'Su Faturası', amount: 400 },
-            { id: genId(), date: '2026-09-15', type: 'expense', category: 'Faturalar/Abonelik', description: 'Abonelikler (Netflix/Spotify vb.)', amount: 300 },
-            { id: genId(), date: '2026-09-02', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Yol / Ulaşım Kartı', amount: 1750 },
-            { id: genId(), date: '2026-09-03', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Market & Yemek', amount: 2500 },
-            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Sigara (30 Gün x 120₺)', amount: 3600 },
-            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Sabah Kahvaltıları', amount: 1350 },
-            { id: genId(), date: '2026-09-18', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Buluşma / Sosyal Aktivite', amount: 2500 },
-            { id: genId(), date: '2026-09-20', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Kişisel İhtiyaçlar', amount: 1500 },
-            { id: genId(), date: '2026-09-25', type: 'expense', category: 'Diğer', description: 'Eylül Beklenmedik Rezerv Harcama', amount: 1000 },
-
-            // EKİM 2026
-            { id: genId(), date: '2026-10-26', type: 'income', category: 'Maaş/Gelir', description: 'Ekim Maaşı', amount: 45000 },
-            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Eski Ev Masrafı', description: 'Ekim Kira + Aidat', amount: 16200 },
-            { id: genId(), date: '2026-10-05', type: 'expense', category: 'Kredi/Borç', description: 'Ekim Krediler Toplamı', amount: 6620 },
-            { id: genId(), date: '2026-10-10', type: 'expense', category: 'Faturalar/Abonelik', description: 'Telefon + İnternet Faturaları', amount: 1735 },
-            { id: genId(), date: '2026-10-12', type: 'expense', category: 'Faturalar/Abonelik', description: 'Su Faturası', amount: 400 },
-            { id: genId(), date: '2026-10-15', type: 'expense', category: 'Faturalar/Abonelik', description: 'Abonelikler (Netflix/Spotify vb.)', amount: 300 },
-            { id: genId(), date: '2026-10-02', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Yol / Ulaşım', amount: 1750 },
-            { id: genId(), date: '2026-10-03', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Market & Mutfak', amount: 2500 },
-            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Sigara (30 Gün x 120₺)', amount: 3600 },
-            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Sabah Kahvaltıları', amount: 1350 },
-            { id: genId(), date: '2026-10-18', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Buluşma & Sosyal Harcamalar', amount: 2500 },
-            { id: genId(), date: '2026-10-20', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Kişisel Harcamalar', amount: 1500 },
-            { id: genId(), date: '2026-10-25', type: 'expense', category: 'Diğer', description: 'Ekim Sürpriz Rezerv Harcama', amount: 1000 },
-        ];
-    }
-
-    // ============================================================
-    // DATA LAYER (LocalStorage)
+    // DATA LAYER (Starts Clean / Empty)
     // ============================================================
     function loadTransactions() {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) {
-            const initial = getInitialData();
-            saveTransactions(initial);
-            return initial;
-        }
+        if (!raw) return [];
         try { return JSON.parse(raw); }
         catch { return []; }
     }
@@ -1171,6 +1192,76 @@
         let all = getTransactions();
         all = all.filter(t => t.id !== id);
         saveTransactions(all);
+    }
+
+    // ============================================================
+    // SAMPLE BUDGET TEMPLATE (On-Demand Loadable)
+    // ============================================================
+    function getSampleTemplateData() {
+        return [
+            // AĞUSTOS 2026
+            { id: genId(), date: '2026-08-26', type: 'income', category: 'Maaş/Gelir', description: 'Ağustos Maaşı', paymentMethod: 'Banka Kartı', amount: 45000 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Kredi/Borç', description: 'Ağustos Kredi Taksiti', paymentMethod: 'Havale/EFT', amount: 6620 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Kalan Günler Yol', paymentMethod: 'Kredi Kartı', amount: 1500 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Market / Mutfak', paymentMethod: 'Kredi Kartı', amount: 2000 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ağustos Sigara & Kahvaltı', paymentMethod: 'Nakit', amount: 1200 },
+            { id: genId(), date: '2026-08-28', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Kişisel Masraf', paymentMethod: 'Nakit', amount: 1000 },
+
+            // EYLÜL 2026
+            { id: genId(), date: '2026-09-26', type: 'income', category: 'Maaş/Gelir', description: 'Eylül Maaşı', paymentMethod: 'Banka Kartı', amount: 45000 },
+            { id: genId(), date: '2026-09-01', type: 'income', category: 'Maaş/Gelir', description: 'Eski Ev Depozito İadesi', paymentMethod: 'Havale/EFT', amount: 7500 },
+            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Eski Ev Masrafı', description: 'Eylül Kira + Aidat', paymentMethod: 'Havale/EFT', amount: 16200 },
+            { id: genId(), date: '2026-09-05', type: 'expense', category: 'Kredi/Borç', description: 'Eylül Krediler Toplamı', paymentMethod: 'Havale/EFT', amount: 6620 },
+            { id: genId(), date: '2026-09-10', type: 'expense', category: 'Faturalar/Abonelik', description: 'Telefon + İnternet Faturaları', paymentMethod: 'Kredi Kartı', amount: 1735 },
+            { id: genId(), date: '2026-09-12', type: 'expense', category: 'Faturalar/Abonelik', description: 'Su Faturası', paymentMethod: 'Kredi Kartı', amount: 400 },
+            { id: genId(), date: '2026-09-15', type: 'expense', category: 'Faturalar/Abonelik', description: 'Abonelikler (Netflix/Spotify)', paymentMethod: 'Kredi Kartı', amount: 300 },
+            { id: genId(), date: '2026-09-02', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Yol / Ulaşım Kartı', paymentMethod: 'Kredi Kartı', amount: 1750 },
+            { id: genId(), date: '2026-09-03', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Market & Yemek', paymentMethod: 'Kredi Kartı', amount: 2500 },
+            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Sigara (30 Gün x 120₺)', paymentMethod: 'Nakit', amount: 3600 },
+            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Sabah Kahvaltıları', paymentMethod: 'Nakit', amount: 1350 },
+            { id: genId(), date: '2026-09-18', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Buluşma / Sosyal Aktivite', paymentMethod: 'Kredi Kartı', amount: 2500 },
+            { id: genId(), date: '2026-09-20', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Kişisel İhtiyaçlar', paymentMethod: 'Nakit', amount: 1500 },
+            { id: genId(), date: '2026-09-25', type: 'expense', category: 'Diğer', description: 'Eylül Sürpriz Rezerv Harcama', paymentMethod: 'Nakit', amount: 1000 },
+
+            // EKİM 2026
+            { id: genId(), date: '2026-10-26', type: 'income', category: 'Maaş/Gelir', description: 'Ekim Maaşı', paymentMethod: 'Banka Kartı', amount: 45000 },
+            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Eski Ev Masrafı', description: 'Ekim Kira + Aidat', paymentMethod: 'Havale/EFT', amount: 16200 },
+            { id: genId(), date: '2026-10-05', type: 'expense', category: 'Kredi/Borç', description: 'Ekim Krediler Toplamı', paymentMethod: 'Havale/EFT', amount: 6620 },
+            { id: genId(), date: '2026-10-10', type: 'expense', category: 'Faturalar/Abonelik', description: 'Telefon + İnternet Faturaları', paymentMethod: 'Kredi Kartı', amount: 1735 },
+            { id: genId(), date: '2026-10-12', type: 'expense', category: 'Faturalar/Abonelik', description: 'Su Faturası', paymentMethod: 'Kredi Kartı', amount: 400 },
+            { id: genId(), date: '2026-10-15', type: 'expense', category: 'Faturalar/Abonelik', description: 'Abonelikler (Netflix/Spotify)', paymentMethod: 'Kredi Kartı', amount: 300 },
+            { id: genId(), date: '2026-10-02', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Yol / Ulaşım', paymentMethod: 'Kredi Kartı', amount: 1750 },
+            { id: genId(), date: '2026-10-03', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Market & Mutfak', paymentMethod: 'Kredi Kartı', amount: 2500 },
+            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Sigara (30 Gün x 120₺)', paymentMethod: 'Nakit', amount: 3600 },
+            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Sabah Kahvaltıları', paymentMethod: 'Nakit', amount: 1350 },
+            { id: genId(), date: '2026-10-18', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Buluşma & Sosyal', paymentMethod: 'Kredi Kartı', amount: 2500 },
+            { id: genId(), date: '2026-10-20', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Kişisel Harcamalar', paymentMethod: 'Nakit', amount: 1500 },
+            { id: genId(), date: '2026-10-25', type: 'expense', category: 'Diğer', description: 'Ekim Sürpriz Rezerv Harcama', paymentMethod: 'Nakit', amount: 1000 },
+        ];
+    }
+
+    function loadSampleBudgetTemplate() {
+        saveTransactions(getSampleTemplateData());
+        closeModal('importExportModal');
+        showToast('26 Ağu - 30 Eki örnek bütçe planı yüklendi!');
+        refreshAll();
+    }
+
+    function confirmClearAllData() {
+        document.getElementById('confirmTitle').textContent = 'Tüm Verileri Temizle';
+        document.getElementById('confirmMessage').textContent = 'Kayıtlı tüm işlemler silinecek ve tertemiz bir başlangıç yapılacak. Emin misiniz?';
+        document.getElementById('confirmAction').textContent = 'Temizle';
+        document.getElementById('confirmAction').onclick = () => {
+            localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem('hesapTakipTransactions_v2');
+            localStorage.removeItem('hesapTakipTransactions');
+            closeModal('confirmModal');
+            closeModal('importExportModal');
+            showToast('Tüm işlemler temizlendi!');
+            refreshAll();
+        };
+        closeModal('importExportModal');
+        openModal('confirmModal');
     }
 
     // ============================================================
@@ -1207,17 +1298,41 @@
     // ============================================================
     // MONTH & PERIOD FILTERING
     // ============================================================
+    function getAvailableMonths() {
+        const all = getTransactions();
+        const set = new Set();
+        all.forEach(t => { if (t.date) set.add(t.date.slice(0, 7)); });
+        return Array.from(set).sort();
+    }
+
+    function renderMonthPills() {
+        const months = getAvailableMonths();
+        const container = document.getElementById('monthPillsContainer');
+
+        let html = `
+            <button onclick="selectMonth('ALL')" class="month-pill ${selectedMonth === 'ALL' ? 'active' : ''}" id="pill-ALL">
+                <i class="fa-solid fa-infinity text-xs"></i>
+                <span>Tüm Dönem</span>
+            </button>
+        `;
+
+        months.forEach(m => {
+            const isSel = selectedMonth === m;
+            html += `
+                <button onclick="selectMonth('${m}')" class="month-pill ${isSel ? 'active' : ''}" id="pill-${m}">
+                    <i class="fa-regular fa-calendar text-xs"></i>
+                    <span>${getMonthDisplayName(m)}</span>
+                </button>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
+
     function selectMonth(m) {
         selectedMonth = m;
         currentPage = 1;
-
-        document.querySelectorAll('.month-pill').forEach(p => p.classList.remove('active'));
-        const activePill = document.getElementById(`pill-${m}`);
-        if (activePill) activePill.classList.add('active');
-
-        document.querySelectorAll('.summary-card').forEach(c => c.classList.remove('active'));
-        const activeCard = document.getElementById(`card-${m}`);
-        if (activeCard) activeCard.classList.add('active');
+        renderMonthPills();
 
         if (m !== 'ALL') {
             const currentFormDate = document.getElementById('txDate').value;
@@ -1226,48 +1341,91 @@
                 updateFormTargetMonth();
             }
         }
-
         refreshAll();
     }
 
     function getTransactionsForSelectedPeriod() {
         const all = getTransactions();
         if (selectedMonth === 'ALL') return all;
-        return all.filter(t => t.date.startsWith(selectedMonth));
+        return all.filter(t => t.date && t.date.startsWith(selectedMonth));
     }
 
-    function renderMonthlyComparisonGrid() {
-        const all = getTransactions();
-        const months = ['2026-08', '2026-09', '2026-10'];
-        const grid = document.getElementById('monthlyComparisonGrid');
+    // ============================================================
+    // SMART INSIGHTS & BUDGET LIMIT
+    // ============================================================
+    function setBudgetLimitPrompt() {
+        const currentLimit = localStorage.getItem(BUDGET_LIMIT_KEY) || '';
+        const input = prompt('Aylık Harcama Limiti Belirleyin (₺):', currentLimit);
+        if (input !== null) {
+            const num = parseFloat(input);
+            if (!isNaN(num) && num > 0) {
+                localStorage.setItem(BUDGET_LIMIT_KEY, num.toString());
+                showToast(`Aylık bütçe limiti ₺${num.toLocaleString('tr-TR')} olarak ayarlandı.`);
+            } else if (input.trim() === '') {
+                localStorage.removeItem(BUDGET_LIMIT_KEY);
+                showToast('Bütçe limiti kaldırıldı.');
+            }
+            refreshAll();
+        }
+    }
 
-        let html = '';
-        months.forEach(m => {
-            const mTx = all.filter(t => t.date.startsWith(m));
-            const inc = mTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-            const exp = mTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-            const net = inc - exp;
-            const isSelected = selectedMonth === m;
+    function renderSmartInsights() {
+        const periodTx = getTransactionsForSelectedPeriod();
+        const expenses = periodTx.filter(t => t.type === 'expense');
+        const incomes = periodTx.filter(t => t.type === 'income');
 
-            html += `
-                <div onclick="selectMonth('${m}')" id="card-${m}" class="summary-card glass-card ${isSelected ? 'active' : ''}">
-                    <div class="flex items-center justify-between mb-1.5">
-                        <span class="text-xs font-bold text-brand-400 flex items-center gap-1.5">
-                            <i class="fa-solid fa-calendar-check text-[11px]"></i>
-                            ${getMonthDisplayName(m)}
-                        </span>
-                        <span class="text-[10px] px-1.5 py-0.5 rounded ${net >= 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'} font-semibold">
-                            ${net >= 0 ? '+' : ''}${formatCurrency(net)}
-                        </span>
-                    </div>
-                    <div class="flex justify-between text-[11px] opacity-70">
-                        <span>Gelir: <strong class="text-emerald-400 font-medium">${formatCurrency(inc)}</strong></span>
-                        <span>Masraf: <strong class="text-red-400 font-medium">${formatCurrency(exp)}</strong></span>
-                    </div>
-                </div>
-            `;
-        });
-        grid.innerHTML = html;
+        const totalExpense = expenses.reduce((s, t) => s + t.amount, 0);
+        const totalIncome = incomes.reduce((s, t) => s + t.amount, 0);
+
+        // Daily Avg
+        const daysInPeriod = selectedMonth === 'ALL' ? 66 : 30;
+        const dailyAvg = totalExpense > 0 ? totalExpense / daysInPeriod : 0;
+        document.getElementById('insightDailyAvg').textContent = formatCurrency(dailyAvg);
+
+        // Top Category
+        const catMap = {};
+        expenses.forEach(t => { catMap[t.category] = (catMap[t.category] || 0) + t.amount; });
+        let topCat = '—';
+        let topAmt = 0;
+        for (const [k, v] of Object.entries(catMap)) {
+            if (v > topAmt) { topAmt = v; topCat = k; }
+        }
+        document.getElementById('insightTopCat').textContent = topCat;
+
+        // Savings Rate
+        const savings = totalIncome - totalExpense;
+        const savingsRate = totalIncome > 0 ? Math.round((savings / totalIncome) * 100) : 0;
+        const sRateEl = document.getElementById('insightSavingsRate');
+        sRateEl.textContent = `${savingsRate >= 0 ? '+' : ''}${savingsRate}%`;
+        sRateEl.className = `font-bold ${savingsRate >= 0 ? 'text-emerald-400' : 'text-red-400'}`;
+
+        // Health Status
+        const healthEl = document.getElementById('insightHealthStatus');
+        if (totalIncome === 0 && totalExpense === 0) {
+            healthEl.textContent = 'Veri Bekleniyor';
+            healthEl.className = 'font-bold text-slate-400';
+        } else if (savingsRate >= 30) {
+            healthEl.textContent = '🌟 Harika';
+            healthEl.className = 'font-bold text-emerald-400';
+        } else if (savingsRate >= 10) {
+            healthEl.textContent = '👍 Dengeli';
+            healthEl.className = 'font-bold text-blue-400';
+        } else if (savingsRate >= 0) {
+            healthEl.textContent = '⚠️ Sınırda';
+            healthEl.className = 'font-bold text-amber-400';
+        } else {
+            healthEl.textContent = '🚨 Açık Var';
+            healthEl.className = 'font-bold text-red-400';
+        }
+
+        // Budget Limit Label
+        const budgetLimit = localStorage.getItem(BUDGET_LIMIT_KEY);
+        const limitBtn = document.getElementById('budgetLimitBtnLabel');
+        if (budgetLimit) {
+            limitBtn.textContent = `Limit: ₺${parseFloat(budgetLimit).toLocaleString('tr-TR')}`;
+        } else {
+            limitBtn.textContent = 'Bütçe Limiti Belirle';
+        }
     }
 
     // ============================================================
@@ -1278,7 +1436,10 @@
         const totalIncome = periodTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
         const totalExpense = periodTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
         const balance = totalIncome - totalExpense;
-        const budgetPct = totalIncome > 0 ? Math.round((totalExpense / totalIncome) * 100) : 0;
+
+        const budgetLimit = parseFloat(localStorage.getItem(BUDGET_LIMIT_KEY) || '0');
+        const denominator = budgetLimit > 0 ? budgetLimit : (totalIncome > 0 ? totalIncome : 0);
+        const budgetPct = denominator > 0 ? Math.round((totalExpense / denominator) * 100) : 0;
 
         const periodTitle = selectedMonth === 'ALL' ? 'Tüm Dönem' : getMonthDisplayName(selectedMonth);
 
@@ -1299,22 +1460,17 @@
         bar.className = `progress-bar-fill ${budgetPct > 100 ? 'over-budget' : ''}`;
 
         const lbl = document.getElementById('kpiBudgetLabel');
-        if (budgetPct > 100) {
-            lbl.textContent = '⚠️ Bu dönem bütçe aşıldı!';
-            document.getElementById('kpiBudgetPct').classList.add('text-red-400');
-        } else if (budgetPct > 80) {
-            lbl.textContent = '⚡ Bütçe sınırına yakın';
-            document.getElementById('kpiBudgetPct').classList.remove('text-red-400');
+        if (budgetLimit > 0) {
+            lbl.textContent = `Aylık ₺${budgetLimit.toLocaleString('tr-TR')} limitine göre`;
         } else {
-            lbl.textContent = `${periodTitle} harcama oranı`;
-            document.getElementById('kpiBudgetPct').classList.remove('text-red-400');
+            lbl.textContent = 'Gelire göre harcama oranı';
         }
 
         document.getElementById('categoryChartTitle').textContent = `Kategori Dağılımı (${periodTitle})`;
-        document.getElementById('categoryChartSub').textContent = `${periodTitle} dönemindeki harcama dağılımı`;
+        document.getElementById('categoryChartSub').textContent = `${periodTitle} dönemindeki harcamalar`;
         document.getElementById('historyPeriodNotice').textContent = selectedMonth === 'ALL'
-            ? 'Tüm dönemdeki (Ağustos - Ekim) tüm kayıtlar listeleniyor'
-            : `${getMonthDisplayName(selectedMonth)} ayına ait işlemler listeleniyor`;
+            ? 'Tüm kayıtlar listeleniyor'
+            : `${getMonthDisplayName(selectedMonth)} ayına ait işlemler`;
     }
 
     // ============================================================
@@ -1361,7 +1517,7 @@
                 type: 'doughnut',
                 data: {
                     labels: ['Harcama Yok'],
-                    datasets: [{ data: [1], backgroundColor: ['rgba(148,163,184,0.2)'], borderWidth: 0 }]
+                    datasets: [{ data: [1], backgroundColor: ['rgba(148,163,184,0.15)'], borderWidth: 0 }]
                 },
                 options: {
                     responsive: true,
@@ -1382,7 +1538,7 @@
                     borderColor: colors,
                     borderWidth: isDoughnut ? 0 : 2,
                     borderRadius: isDoughnut ? 0 : 8,
-                    hoverOffset: isDoughnut ? 12 : 0,
+                    hoverOffset: isDoughnut ? 10 : 0,
                 }]
             },
             options: {
@@ -1392,13 +1548,13 @@
                 plugins: {
                     legend: {
                         position: isDoughnut ? 'bottom' : 'top',
-                        labels: { color: getChartTextColor(), padding: 10, font: { size: 11, family: 'Inter' }, usePointStyle: true, pointStyle: 'circle' }
+                        labels: { color: getChartTextColor(), padding: 8, font: { size: 10, family: 'Inter' }, usePointStyle: true, pointStyle: 'circle' }
                     },
                     tooltip: {
                         backgroundColor: 'rgba(15,23,42,0.95)',
                         titleFont: { family: 'Inter', weight: '600' },
                         bodyFont: { family: 'Inter' },
-                        padding: 12,
+                        padding: 10,
                         cornerRadius: 10,
                         callbacks: {
                             label: ctx => ` ${ctx.label}: ${formatCurrency(ctx.raw)}`
@@ -1415,15 +1571,17 @@
 
     function renderComparisonChart() {
         const all = getTransactions();
-        const months = ['2026-08', '2026-09', '2026-10'];
+        let months = getAvailableMonths();
+        if (months.length === 0) months = ['2026-08', '2026-09', '2026-10'];
+
         const monthLabels = months.map(m => getMonthDisplayName(m));
 
         const incomeData = months.map(m => {
-            return all.filter(t => t.date.startsWith(m) && t.type === 'income').reduce((s, t) => s + t.amount, 0);
+            return all.filter(t => t.date && t.date.startsWith(m) && t.type === 'income').reduce((s, t) => s + t.amount, 0);
         });
 
         const expenseData = months.map(m => {
-            return all.filter(t => t.date.startsWith(m) && t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+            return all.filter(t => t.date && t.date.startsWith(m) && t.type === 'expense').reduce((s, t) => s + t.amount, 0);
         });
 
         if (comparisonChart) comparisonChart.destroy();
@@ -1439,26 +1597,26 @@
                     {
                         label: 'Gelir (₺)',
                         data: incomeData,
-                        backgroundColor: isBar ? 'rgba(16,185,129,0.7)' : 'rgba(16,185,129,0.1)',
+                        backgroundColor: isBar ? 'rgba(16,185,129,0.75)' : 'rgba(16,185,129,0.1)',
                         borderColor: '#10b981',
                         borderWidth: 2,
-                        borderRadius: isBar ? 8 : 0,
+                        borderRadius: isBar ? 6 : 0,
                         fill: !isBar,
                         tension: 0.35,
-                        pointRadius: 5,
-                        pointHoverRadius: 8
+                        pointRadius: 4,
+                        pointHoverRadius: 7
                     },
                     {
                         label: 'Masraf (₺)',
                         data: expenseData,
-                        backgroundColor: isBar ? 'rgba(239,68,68,0.7)' : 'rgba(239,68,68,0.1)',
+                        backgroundColor: isBar ? 'rgba(239,68,68,0.75)' : 'rgba(239,68,68,0.1)',
                         borderColor: '#ef4444',
                         borderWidth: 2,
-                        borderRadius: isBar ? 8 : 0,
+                        borderRadius: isBar ? 6 : 0,
                         fill: !isBar,
                         tension: 0.35,
-                        pointRadius: 5,
-                        pointHoverRadius: 8
+                        pointRadius: 4,
+                        pointHoverRadius: 7
                     }
                 ]
             },
@@ -1468,13 +1626,13 @@
                 plugins: {
                     legend: {
                         position: 'top',
-                        labels: { color: getChartTextColor(), padding: 12, font: { size: 11, family: 'Inter' }, usePointStyle: true, pointStyle: 'circle' }
+                        labels: { color: getChartTextColor(), padding: 10, font: { size: 11, family: 'Inter' }, usePointStyle: true, pointStyle: 'circle' }
                     },
                     tooltip: {
                         backgroundColor: 'rgba(15,23,42,0.95)',
                         titleFont: { family: 'Inter', weight: '600' },
                         bodyFont: { family: 'Inter' },
-                        padding: 12,
+                        padding: 10,
                         cornerRadius: 10,
                         mode: 'index',
                         intersect: false,
@@ -1485,33 +1643,42 @@
                 },
                 interaction: { mode: 'index', intersect: false },
                 scales: {
-                    x: { ticks: { color: getChartTextColor(), font: { size: 11 } }, grid: { display: false } },
-                    y: { ticks: { color: getChartTextColor(), font: { size: 11 }, callback: v => isPrivacyMode ? '••••' : formatCurrency(v) }, grid: { color: getChartGridColor() } }
+                    x: { ticks: { color: getChartTextColor(), font: { size: 10 } }, grid: { display: false } },
+                    y: { ticks: { color: getChartTextColor(), font: { size: 10 }, callback: v => isPrivacyMode ? '••••' : formatCurrency(v) }, grid: { color: getChartGridColor() } }
                 }
             }
         });
     }
 
     // ============================================================
-    // TRANSACTION TABLE & SANITIZATION
+    // TRANSACTION TABLE
     // ============================================================
     function getFilteredTransactions() {
         let list = getTransactionsForSelectedPeriod();
         const search = document.getElementById('searchInput').value.toLowerCase().trim();
         const catFilter = document.getElementById('filterCategory').value;
         const typeFilter = document.getElementById('filterType').value;
+        const sortOpt = document.getElementById('sortBy').value;
 
         if (search) {
             list = list.filter(t =>
-                t.description.toLowerCase().includes(search) ||
-                t.category.toLowerCase().includes(search) ||
-                t.amount.toString().includes(search)
+                (t.description && t.description.toLowerCase().includes(search)) ||
+                (t.category && t.category.toLowerCase().includes(search)) ||
+                (t.amount && t.amount.toString().includes(search))
             );
         }
         if (catFilter) list = list.filter(t => t.category === catFilter);
         if (typeFilter) list = list.filter(t => t.type === typeFilter);
 
-        list.sort((a, b) => new Date(b.date) - new Date(a.date));
+        // Sorting
+        list.sort((a, b) => {
+            if (sortOpt === 'date-desc') return new Date(b.date) - new Date(a.date);
+            if (sortOpt === 'date-asc') return new Date(a.date) - new Date(b.date);
+            if (sortOpt === 'amount-desc') return b.amount - a.amount;
+            if (sortOpt === 'amount-asc') return a.amount - b.amount;
+            return 0;
+        });
+
         return list;
     }
 
@@ -1542,29 +1709,37 @@
             const icon = CATEGORY_ICONS[t.category] || 'fa-solid fa-ellipsis';
             const color = CATEGORY_COLORS[t.category]?.bg || '#6b7280';
             const isIncome = t.type === 'income';
+            const payIcon = PAYMENT_ICONS[t.paymentMethod] || 'fa-solid fa-money-bill text-slate-400';
+
             return `
                 <tr class="table-row border-b border-white/5 last:border-0">
-                    <td class="py-3 px-2 sm:px-3 whitespace-nowrap">
+                    <td class="py-2.5 px-2 sm:px-3 whitespace-nowrap">
                         <span class="font-medium">${escapeHTML(formatDate(t.date))}</span>
                         <span class="block text-[10px] opacity-40">${escapeHTML(getMonthDisplayName(getMonthKey(t.date)))}</span>
                     </td>
-                    <td class="py-3 px-2 sm:px-3">
+                    <td class="py-2.5 px-2 sm:px-3">
                         <span class="badge ${isIncome ? 'badge-income' : 'badge-expense'}">
-                            <i class="fa-solid ${isIncome ? 'fa-arrow-up' : 'fa-arrow-down'} text-[9px]"></i>
+                            <i class="fa-solid ${isIncome ? 'fa-arrow-up' : 'fa-arrow-down'} text-[8px]"></i>
                             ${isIncome ? 'Gelir' : 'Gider'}
                         </span>
                     </td>
-                    <td class="py-3 px-2 sm:px-3">
+                    <td class="py-2.5 px-2 sm:px-3">
                         <span class="flex items-center gap-1.5">
                             <i class="${icon} text-[10px]" style="color:${color}"></i>
                             <span class="text-xs">${escapeHTML(t.category)}</span>
                         </span>
                     </td>
-                    <td class="py-3 px-2 sm:px-3 hidden sm:table-cell opacity-75 max-w-[220px] truncate">${escapeHTML(t.description)}</td>
-                    <td class="py-3 px-2 sm:px-3 text-right font-semibold whitespace-nowrap ${isIncome ? 'text-emerald-400' : 'text-red-400'}">
+                    <td class="py-2.5 px-2 sm:px-3 hidden sm:table-cell opacity-75 max-w-[200px] truncate">${escapeHTML(t.description)}</td>
+                    <td class="py-2.5 px-2 sm:px-3 hidden md:table-cell whitespace-nowrap opacity-70">
+                        <span class="inline-flex items-center gap-1 text-[11px]">
+                            <i class="${payIcon}"></i>
+                            <span>${escapeHTML(t.paymentMethod || 'Diğer')}</span>
+                        </span>
+                    </td>
+                    <td class="py-2.5 px-2 sm:px-3 text-right font-semibold whitespace-nowrap ${isIncome ? 'text-emerald-400' : 'text-red-400'}">
                         ${isIncome ? '+' : '-'}${formatCurrency(t.amount)}
                     </td>
-                    <td class="py-3 px-2 sm:px-3 text-right whitespace-nowrap">
+                    <td class="py-2.5 px-2 sm:px-3 text-right whitespace-nowrap">
                         <button onclick="editTransaction('${escapeHTML(t.id)}')" class="btn-secondary mr-1" title="Düzenle">
                             <i class="fa-solid fa-pen text-[10px]"></i>
                         </button>
@@ -1581,7 +1756,7 @@
         const btnsEl = document.getElementById('paginationBtns');
         let btnsHtml = '';
         for (let i = 1; i <= totalPages; i++) {
-            btnsHtml += `<button onclick="goToPage(${i})" class="w-7 h-7 rounded-lg text-[11px] font-semibold transition-all ${i === currentPage ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30' : 'hover:bg-brand-500/10'}">${i}</button>`;
+            btnsHtml += `<button onclick="goToPage(${i})" class="w-6 h-6 rounded-lg text-[10px] font-semibold transition-all ${i === currentPage ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30' : 'hover:bg-brand-500/10'}">${i}</button>`;
         }
         btnsEl.innerHTML = btnsHtml;
     }
@@ -1593,7 +1768,7 @@
     }
 
     // ============================================================
-    // FORM HANDLING
+    // FORM & QUICK PRESETS
     // ============================================================
     function initForm() {
         setFormDateToday();
@@ -1613,14 +1788,19 @@
         }
     }
 
+    function applyQuickPreset(type, category, desc, payment) {
+        document.getElementById('txType').value = type;
+        document.getElementById('txCategory').value = category;
+        document.getElementById('txDesc').value = desc;
+        if (payment) document.getElementById('txPaymentMethod').value = payment;
+        document.getElementById('txAmount').focus();
+    }
+
     function handleTypeChange() {
         const type = document.getElementById('txType').value;
         const catSelect = document.getElementById('txCategory');
-        if (type === 'income') {
-            catSelect.value = 'Maaş/Gelir';
-        } else if (catSelect.value === 'Maaş/Gelir') {
-            catSelect.value = 'Temel Yaşam';
-        }
+        if (type === 'income') catSelect.value = 'Maaş/Gelir';
+        else if (catSelect.value === 'Maaş/Gelir') catSelect.value = 'Temel Yaşam';
     }
 
     function handleFormSubmit(e) {
@@ -1628,7 +1808,7 @@
         const editId = document.getElementById('editId').value;
         const rawAmount = parseFloat(document.getElementById('txAmount').value);
 
-        if (isNaN(rawAmount) || rawAmount < 0) {
+        if (isNaN(rawAmount) || rawAmount <= 0) {
             showToast('Lütfen geçerli bir tutar girin!', 'error');
             return;
         }
@@ -1637,6 +1817,7 @@
             date: document.getElementById('txDate').value,
             type: document.getElementById('txType').value,
             category: document.getElementById('txCategory').value,
+            paymentMethod: document.getElementById('txPaymentMethod').value,
             description: document.getElementById('txDesc').value.trim(),
             amount: rawAmount,
         };
@@ -1648,7 +1829,7 @@
         } else {
             data.id = genId();
             addTransaction(data);
-            showToast('İşlem güvenle eklendi!');
+            showToast('İşlem eklendi!');
         }
 
         document.getElementById('transactionForm').reset();
@@ -1665,6 +1846,7 @@
         document.getElementById('txDate').value = tx.date;
         document.getElementById('txType').value = tx.type;
         document.getElementById('txCategory').value = tx.category;
+        document.getElementById('txPaymentMethod').value = tx.paymentMethod || 'Kredi Kartı';
         document.getElementById('txDesc').value = tx.description;
         document.getElementById('txAmount').value = tx.amount;
 
@@ -1678,7 +1860,7 @@
 
     function cancelEditMode() {
         document.getElementById('editId').value = '';
-        document.getElementById('formTitle').textContent = 'Yeni İşlem Ekle';
+        document.getElementById('formTitle').textContent = 'İşlem Ekle';
         document.getElementById('formSubmitText').textContent = 'Kaydet';
         document.getElementById('cancelEdit').classList.add('hidden');
         document.getElementById('transactionForm').reset();
@@ -1705,18 +1887,18 @@
     function exportJSON() {
         const data = getTransactions();
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        downloadFile(blob, `hesap-takip-butce-${new Date().toISOString().slice(0,10)}.json`);
-        showToast('JSON dosyası güvenle indirildi!');
+        downloadFile(blob, `hesap-takip-${new Date().toISOString().slice(0,10)}.json`);
+        showToast('JSON yedeği indirildi!');
         closeModal('importExportModal');
     }
 
     function exportCSV() {
         const data = getTransactions();
-        const headers = ['Tarih', 'Tip', 'Kategori', 'Açıklama', 'Tutar'];
-        const rows = data.map(t => [t.date, t.type === 'income' ? 'Gelir' : 'Gider', t.category, `"${t.description}"`, t.amount]);
+        const headers = ['Tarih', 'Tip', 'Kategori', 'Ödeme_Yöntemi', 'Açıklama', 'Tutar'];
+        const rows = data.map(t => [t.date, t.type === 'income' ? 'Gelir' : 'Gider', t.category, t.paymentMethod || 'Banka Kartı', `"${t.description}"`, t.amount]);
         const csv = '\uFEFF' + [headers.join(';'), ...rows.map(r => r.join(';'))].join('\n');
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        downloadFile(blob, `hesap-takip-butce-${new Date().toISOString().slice(0,10)}.csv`);
+        downloadFile(blob, `hesap-takip-${new Date().toISOString().slice(0,10)}.csv`);
         showToast('CSV dosyası indirildi!');
         closeModal('importExportModal');
     }
@@ -1753,15 +1935,16 @@
                     date: t.date || new Date().toISOString().slice(0, 10),
                     type: t.type === 'income' ? 'income' : 'expense',
                     category: t.category || 'Diğer',
-                    description: escapeHTML(t.description || 'İçe Aktarılan İşlem'),
+                    paymentMethod: t.paymentMethod || 'Banka Kartı',
+                    description: escapeHTML(t.description || 'İşlem'),
                     amount: parseFloat(t.amount) || 0
                 }))];
                 saveTransactions(merged);
-                showToast(`${imported.length} işlem güvenle içe aktarıldı!`);
+                showToast(`${imported.length} işlem başarıyla yüklendi!`);
                 closeModal('importExportModal');
                 refreshAll();
             } catch {
-                showToast('Dosya okunamadı veya biçimi geçersiz!', 'error');
+                showToast('Dosya okunamadı!', 'error');
             }
         };
         reader.readAsText(file);
@@ -1779,34 +1962,19 @@
                 date: parts[0].trim(),
                 type: parts[1].trim().toLowerCase() === 'gelir' ? 'income' : 'expense',
                 category: parts[2].trim(),
-                description: parts[3].trim().replace(/"/g, ''),
-                amount: parseFloat(parts[4].trim()) || 0
+                paymentMethod: parts.length > 5 ? parts[3].trim() : 'Banka Kartı',
+                description: parts[parts.length > 5 ? 4 : 3].trim().replace(/"/g, ''),
+                amount: parseFloat(parts[parts.length > 5 ? 5 : 4].trim()) || 0
             };
         }).filter(Boolean);
-    }
-
-    function confirmResetData() {
-        document.getElementById('confirmTitle').textContent = 'Verileri Sıfırla';
-        document.getElementById('confirmMessage').textContent = 'Mevcut tüm işlemler silinerek Ağustos, Eylül ve Ekim hazır bütçe planı yüklenecek. Emin misiniz?';
-        document.getElementById('confirmAction').textContent = 'Sıfırla ve Yükle';
-        document.getElementById('confirmAction').onclick = () => {
-            localStorage.removeItem(STORAGE_KEY);
-            localStorage.removeItem('hesapTakipTransactions');
-            saveTransactions(getInitialData());
-            closeModal('confirmModal');
-            closeModal('importExportModal');
-            showToast('Aylık başlangıç verileri başarıyla yüklendi!');
-            refreshAll();
-        };
-        closeModal('importExportModal');
-        openModal('confirmModal');
     }
 
     // ============================================================
     // REFRESH ALL
     // ============================================================
     function refreshAll() {
-        renderMonthlyComparisonGrid();
+        renderMonthPills();
+        renderSmartInsights();
         renderKPIs();
         renderCharts();
         renderTransactions();
