@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hesap Takip — Kişisel Finans Yönetimi</title>
-    <meta name="description" content="26 Ağustos - 30 Ekim 2026 dönemi kişisel bütçe takip ve finans yönetim uygulaması.">
+    <title>Hesap Takip — Kişisel Finans & Aylık Bütçe Yönetimi</title>
+    <meta name="description" content="Aylık ve dönemsel bazlı kişisel bütçe takip ve finans yönetim uygulaması.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -37,62 +37,75 @@
         body { font-family: 'Inter', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
 
         /* Light theme */
-        [data-theme="light"] body { background: #f1f5f9; color: #1e293b; }
+        [data-theme="light"] body { background: #f8fafc; color: #1e293b; }
         [data-theme="light"] .glass-card {
-            background: rgba(255,255,255,0.75);
-            border: 1px solid rgba(255,255,255,0.9);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+            background: rgba(255,255,255,0.85);
+            border: 1px solid rgba(226,232,240,0.9);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.04);
             backdrop-filter: blur(12px);
         }
         [data-theme="light"] .nav-glass {
-            background: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.9);
             border-bottom: 1px solid rgba(226,232,240,0.8);
             backdrop-filter: blur(16px);
         }
         [data-theme="light"] .input-field {
-            background: #fff; border: 1px solid #e2e8f0; color: #1e293b;
+            background: #fff; border: 1px solid #cbd5e1; color: #1e293b;
         }
         [data-theme="light"] .input-field:focus {
             border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
         }
-        [data-theme="light"] .table-row:hover { background: rgba(99,102,241,0.04); }
-        [data-theme="light"] .modal-overlay { background: rgba(0,0,0,0.3); }
+        [data-theme="light"] .table-row:hover { background: rgba(99,102,241,0.05); }
+        [data-theme="light"] .modal-overlay { background: rgba(15,23,42,0.4); }
         [data-theme="light"] .modal-content {
-            background: #fff; border: 1px solid #e2e8f0;
+            background: #fff; border: 1px solid #e2e8f0; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        [data-theme="light"] .month-pill {
+            background: #e2e8f0; color: #475569; border: 1px solid #cbd5e1;
+        }
+        [data-theme="light"] .month-pill.active {
+            background: linear-gradient(135deg, #6366f1, #4f46e5); color: #fff; border-color: #6366f1;
+            box-shadow: 0 4px 12px rgba(99,102,241,0.25);
         }
 
         /* Dark theme */
         [data-theme="dark"] body {
             background: #020617;
-            background-image: radial-gradient(ellipse at top, rgba(99,102,241,0.08) 0%, transparent 60%);
+            background-image: radial-gradient(ellipse at top, rgba(99,102,241,0.12) 0%, transparent 65%);
             color: #e2e8f0;
         }
         [data-theme="dark"] .glass-card {
-            background: rgba(30,41,59,0.55);
-            border: 1px solid rgba(99,102,241,0.12);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04);
+            background: rgba(30,41,59,0.6);
+            border: 1px solid rgba(99,102,241,0.15);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
             backdrop-filter: blur(12px);
         }
         [data-theme="dark"] .nav-glass {
-            background: rgba(2,6,23,0.8);
-            border-bottom: 1px solid rgba(99,102,241,0.15);
+            background: rgba(2,6,23,0.85);
+            border-bottom: 1px solid rgba(99,102,241,0.18);
             backdrop-filter: blur(16px);
         }
         [data-theme="dark"] .input-field {
-            background: rgba(15,23,42,0.8); border: 1px solid rgba(99,102,241,0.2); color: #e2e8f0;
+            background: rgba(15,23,42,0.85); border: 1px solid rgba(99,102,241,0.25); color: #e2e8f0;
         }
         [data-theme="dark"] .input-field:focus {
-            border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+            border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25);
         }
         [data-theme="dark"] .table-row:hover { background: rgba(99,102,241,0.08); }
-        [data-theme="dark"] .modal-overlay { background: rgba(0,0,0,0.6); }
+        [data-theme="dark"] .modal-overlay { background: rgba(0,0,0,0.7); }
         [data-theme="dark"] .modal-content {
-            background: #1e293b; border: 1px solid rgba(99,102,241,0.2);
+            background: #1e293b; border: 1px solid rgba(99,102,241,0.25); box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        [data-theme="dark"] .month-pill {
+            background: rgba(30,41,59,0.7); color: #94a3b8; border: 1px solid rgba(99,102,241,0.2);
+        }
+        [data-theme="dark"] .month-pill.active {
+            background: linear-gradient(135deg, #6366f1, #4f46e5); color: #fff; border-color: #6366f1;
+            box-shadow: 0 4px 15px rgba(99,102,241,0.35);
         }
 
         /* Shared */
-        .glass-card { border-radius: 16px; transition: all 0.3s ease; }
-        .glass-card:hover { transform: translateY(-2px); }
+        .glass-card { border-radius: 16px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .input-field {
             border-radius: 10px; padding: 10px 14px; font-size: 14px;
             transition: all 0.2s ease; outline: none; width: 100%;
@@ -103,7 +116,7 @@
             font-weight: 600; cursor: pointer; transition: all 0.2s ease;
             box-shadow: 0 4px 15px rgba(99,102,241,0.3);
         }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,0.4); }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,0.45); }
         .btn-primary:active { transform: translateY(0); }
         .btn-danger {
             background: linear-gradient(135deg, #ef4444, #dc2626);
@@ -112,11 +125,11 @@
         }
         .btn-danger:hover { box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
         .btn-secondary {
-            background: rgba(99,102,241,0.1); color: #818cf8;
-            border: 1px solid rgba(99,102,241,0.2); border-radius: 8px;
+            background: rgba(99,102,241,0.12); color: #818cf8;
+            border: 1px solid rgba(99,102,241,0.25); border-radius: 8px;
             padding: 6px 12px; font-size: 12px; cursor: pointer; transition: all 0.2s ease;
         }
-        .btn-secondary:hover { background: rgba(99,102,241,0.2); }
+        .btn-secondary:hover { background: rgba(99,102,241,0.22); color: #a5b4fc; }
 
         .progress-bar-bg {
             background: rgba(99,102,241,0.15); border-radius: 999px; overflow: hidden; height: 10px;
@@ -130,7 +143,7 @@
             background: linear-gradient(90deg, #ef4444, #f87171);
         }
 
-        .table-row { transition: background 0.15s ease; border-radius: 8px; }
+        .table-row { transition: background 0.15s ease; }
 
         .badge {
             display: inline-flex; align-items: center; gap: 4px;
@@ -157,13 +170,13 @@
         }
 
         .kpi-icon-wrap {
-            width: 48px; height: 48px; border-radius: 14px;
+            width: 44px; height: 44px; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
         }
 
-        .fade-in { animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         .pulse-dot {
             width: 8px; height: 8px; border-radius: 50%; background: #10b981;
@@ -172,17 +185,9 @@
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 999px; }
-
-        /* Tab Active */
-        .tab-btn { position: relative; padding-bottom: 8px; }
-        .tab-btn.active::after {
-            content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-            height: 3px; background: linear-gradient(90deg, #6366f1, #a78bfa);
-            border-radius: 999px;
-        }
+        ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.35); border-radius: 999px; }
 
         /* Mobile nav */
         .mobile-nav {
@@ -196,14 +201,44 @@
             position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
             padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 500;
             z-index: 200; animation: toastIn 0.3s ease, toastOut 0.3s ease 2.5s forwards;
-            white-space: nowrap;
+            white-space: nowrap; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
-        .toast-success { background: rgba(16,185,129,0.9); color: #fff; }
-        .toast-error { background: rgba(239,68,68,0.9); color: #fff; }
+        .toast-success { background: rgba(16,185,129,0.95); color: #fff; }
+        .toast-error { background: rgba(239,68,68,0.95); color: #fff; }
         @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
         @keyframes toastOut { to { opacity: 0; transform: translateX(-50%) translateY(20px); } }
 
         select.input-field { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236366f1' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+
+        .month-pill {
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .month-pill:hover:not(.active) {
+            transform: translateY(-1px);
+        }
+
+        .summary-card {
+            border-radius: 14px;
+            padding: 12px 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .summary-card:hover {
+            transform: translateY(-2px);
+        }
+        .summary-card.active {
+            border-color: #6366f1 !important;
+            box-shadow: 0 0 0 2px rgba(99,102,241,0.4);
+        }
     </style>
 </head>
 <body class="min-h-screen pb-24 md:pb-8">
@@ -217,7 +252,7 @@
                 </div>
                 <div>
                     <h1 class="text-base font-bold bg-gradient-to-r from-brand-400 to-purple-400 bg-clip-text text-transparent">Hesap Takip</h1>
-                    <p class="text-[10px] opacity-50">26 Ağu — 30 Eki 2026</p>
+                    <p class="text-[10px] opacity-50">Zamana & Aylara Göre Bütçe Planı</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
@@ -226,16 +261,49 @@
                     <span>Veri</span>
                 </button>
                 <button onclick="toggleTheme()" id="themeToggle" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:bg-brand-500/10" title="Tema Değiştir">
-                    <i class="fa-solid fa-moon text-brand-400"></i>
+                    <i class="fa-solid fa-sun text-amber-400"></i>
                 </button>
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-5 space-y-6">
 
-        <!-- KPI Cards -->
+        <!-- PERIOD / MONTH SELECTOR BAR -->
+        <section class="glass-card p-3 sm:p-4 fade-in">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-calendar-day text-brand-400"></i>
+                    <span class="text-xs font-semibold uppercase tracking-wider opacity-70">Dönem & Ay Seçimi:</span>
+                </div>
+                <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="monthSelectorContainer">
+                    <button onclick="selectMonth('ALL')" class="month-pill active" id="pill-ALL">
+                        <i class="fa-solid fa-infinity text-xs"></i>
+                        <span>Tüm Dönem (Genel)</span>
+                    </button>
+                    <button onclick="selectMonth('2026-08')" class="month-pill" id="pill-2026-08">
+                        <i class="fa-regular fa-calendar text-xs"></i>
+                        <span>Ağustos 2026</span>
+                    </button>
+                    <button onclick="selectMonth('2026-09')" class="month-pill" id="pill-2026-09">
+                        <i class="fa-regular fa-calendar text-xs"></i>
+                        <span>Eylül 2026</span>
+                    </button>
+                    <button onclick="selectMonth('2026-10')" class="month-pill" id="pill-2026-10">
+                        <i class="fa-regular fa-calendar text-xs"></i>
+                        <span>Ekim 2026</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Month Quick Overview Cards (Comparison) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4 pt-3 border-t border-white/5" id="monthlyComparisonGrid">
+                <!-- Will be dynamically populated -->
+            </div>
+        </section>
+
+        <!-- KPI Cards (Reflects selected month / period) -->
         <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 fade-in" id="kpiSection">
             <!-- Toplam Gelir -->
             <div class="glass-card p-4 sm:p-5">
@@ -245,7 +313,7 @@
                     </div>
                     <div class="pulse-dot"></div>
                 </div>
-                <p class="text-xs opacity-50 mb-1">Toplam Gelir</p>
+                <p class="text-xs opacity-50 mb-1" id="kpiIncomeLabel">Toplam Gelir</p>
                 <p class="text-lg sm:text-2xl font-bold text-emerald-400" id="kpiIncome">₺0</p>
             </div>
             <!-- Toplam Gider -->
@@ -256,7 +324,7 @@
                     </div>
                     <span class="text-[10px] opacity-40"><i class="fa-solid fa-chart-pie"></i></span>
                 </div>
-                <p class="text-xs opacity-50 mb-1">Toplam Gider</p>
+                <p class="text-xs opacity-50 mb-1" id="kpiExpenseLabel">Toplam Gider</p>
                 <p class="text-lg sm:text-2xl font-bold text-red-400" id="kpiExpense">₺0</p>
             </div>
             <!-- Net Bakiye -->
@@ -267,7 +335,7 @@
                     </div>
                     <span class="text-[10px] opacity-40"><i class="fa-solid fa-scale-balanced"></i></span>
                 </div>
-                <p class="text-xs opacity-50 mb-1">Net Bakiye</p>
+                <p class="text-xs opacity-50 mb-1" id="kpiBalanceLabel">Net Kalan Bakiye</p>
                 <p class="text-lg sm:text-2xl font-bold" id="kpiBalance">₺0</p>
             </div>
             <!-- Bütçe Kullanım -->
@@ -282,59 +350,79 @@
                 <div class="progress-bar-bg mt-2">
                     <div class="progress-bar-fill" id="kpiBudgetBar" style="width:0%"></div>
                 </div>
-                <p class="text-[10px] opacity-40 mt-1.5" id="kpiBudgetLabel">Gelire göre harcama oranı</p>
+                <p class="text-[10px] opacity-40 mt-1.5 truncate" id="kpiBudgetLabel">Harcama oranı</p>
             </div>
         </section>
 
         <!-- Charts + Form Row -->
         <section class="grid lg:grid-cols-3 gap-4 sm:gap-6">
-            <!-- Charts -->
+            <!-- Charts (2 Columns on large screens) -->
             <div class="lg:col-span-2 space-y-4 sm:space-y-6">
-                <!-- Doughnut Chart -->
+                <!-- Doughnut/Bar Chart: Category Breakdown for Selected Period -->
                 <div class="glass-card p-4 sm:p-6 fade-in">
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-sm font-semibold flex items-center gap-2">
-                            <i class="fa-solid fa-chart-pie text-brand-400"></i>
-                            Kategori Dağılımı
-                        </h2>
+                        <div>
+                            <h2 class="text-sm font-semibold flex items-center gap-2">
+                                <i class="fa-solid fa-chart-pie text-brand-400"></i>
+                                <span id="categoryChartTitle">Kategori Dağılımı</span>
+                            </h2>
+                            <p class="text-[11px] opacity-50" id="categoryChartSub">Seçili döneme ait harcamalar</p>
+                        </div>
                         <div class="flex gap-1">
-                            <button onclick="setChartType('doughnut')" class="tab-btn active text-xs px-2 py-1 rounded-lg transition-all" id="tabDoughnut">Pasta</button>
-                            <button onclick="setChartType('bar')" class="tab-btn text-xs px-2 py-1 rounded-lg transition-all" id="tabBar">Sütun</button>
+                            <button onclick="setCategoryChartType('doughnut')" class="btn-secondary text-xs px-2.5 py-1" id="tabDoughnut">Pasta</button>
+                            <button onclick="setCategoryChartType('bar')" class="btn-secondary text-xs px-2.5 py-1 opacity-60" id="tabBar">Sütun</button>
                         </div>
                     </div>
-                    <div class="relative" style="max-height:320px">
+                    <div class="relative" style="min-height:260px; max-height:300px">
                         <canvas id="categoryChart"></canvas>
                     </div>
                 </div>
-                <!-- Trend Chart -->
+
+                <!-- Monthly Comparison Bar & Line Chart -->
                 <div class="glass-card p-4 sm:p-6 fade-in">
-                    <h2 class="text-sm font-semibold flex items-center gap-2 mb-4">
-                        <i class="fa-solid fa-chart-line text-brand-400"></i>
-                        Gelir/Gider Trendi
-                    </h2>
-                    <div class="relative" style="max-height:300px">
-                        <canvas id="trendChart"></canvas>
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h2 class="text-sm font-semibold flex items-center gap-2">
+                                <i class="fa-solid fa-chart-column text-brand-400"></i>
+                                Aylık Karşılaştırma & Bütçe Seyri
+                            </h2>
+                            <p class="text-[11px] opacity-50">Ağustos, Eylül ve Ekim aylarındaki gelir-gider farkı</p>
+                        </div>
+                        <div class="flex gap-1">
+                            <button onclick="setComparisonChartType('bar')" class="btn-secondary text-xs px-2.5 py-1" id="tabCompBar">Karşılaştırma</button>
+                            <button onclick="setComparisonChartType('line')" class="btn-secondary text-xs px-2.5 py-1 opacity-60" id="tabCompLine">Trend</button>
+                        </div>
+                    </div>
+                    <div class="relative" style="min-height:260px; max-height:300px">
+                        <canvas id="comparisonChart"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- Add Transaction Form -->
+            <!-- Add / Edit Transaction Form -->
             <div class="glass-card p-4 sm:p-6 fade-in self-start sticky top-20" id="formCard">
-                <h2 class="text-sm font-semibold flex items-center gap-2 mb-5">
-                    <i class="fa-solid fa-plus-circle text-brand-400"></i>
-                    <span id="formTitle">Yeni İşlem Ekle</span>
-                </h2>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-sm font-semibold flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle text-brand-400"></i>
+                        <span id="formTitle">Yeni İşlem Ekle</span>
+                    </h2>
+                    <span class="text-[10px] px-2 py-0.5 rounded-md bg-brand-500/10 text-brand-400" id="formTargetMonthLabel">Hedef Ay: Otomatik</span>
+                </div>
+
                 <form id="transactionForm" class="space-y-3" onsubmit="return handleFormSubmit(event)">
                     <input type="hidden" id="editId" value="">
                     <div>
-                        <label class="text-xs opacity-60 mb-1 block">Tarih</label>
-                        <input type="date" id="txDate" class="input-field" required>
+                        <label class="text-xs opacity-60 mb-1 flex items-center justify-between">
+                            <span>İşlem Tarihi</span>
+                            <span class="text-[10px] text-brand-400 cursor-pointer" onclick="setFormDateToday()">Bugün</span>
+                        </label>
+                        <input type="date" id="txDate" class="input-field" required onchange="updateFormTargetMonth()">
                     </div>
                     <div>
                         <label class="text-xs opacity-60 mb-1 block">İşlem Tipi</label>
-                        <select id="txType" class="input-field" required>
-                            <option value="expense">Gider</option>
-                            <option value="income">Gelir</option>
+                        <select id="txType" class="input-field" required onchange="handleTypeChange()">
+                            <option value="expense">🔴 Gider (Masraf)</option>
+                            <option value="income">🟢 Gelir (Maaş / Kazanç)</option>
                         </select>
                     </div>
                     <div>
@@ -342,22 +430,23 @@
                         <select id="txCategory" class="input-field" required>
                             <option value="Maaş/Gelir">Maaş / Gelir</option>
                             <option value="Kredi/Borç">Kredi / Borç</option>
-                            <option value="Eski Ev Masrafı">Eski Ev Masrafı</option>
-                            <option value="Temel Yaşam">Temel Yaşam</option>
+                            <option value="Eski Ev Masrafı">Eski Ev Masrafı (Kira / Aidat)</option>
+                            <option value="Temel Yaşam">Temel Yaşam (Yol / Market / Kişisel)</option>
                             <option value="Sosyal/Sigara/Kahvaltı">Sosyal / Sigara / Kahvaltı</option>
-                            <option value="Faturalar/Abonelik">Faturalar / Abonelik</option>
-                            <option value="Diğer">Diğer</option>
+                            <option value="Faturalar/Abonelik">Faturalar / Abonelik (Tel/Su/Netflix)</option>
+                            <option value="Diğer">Diğer / Sürpriz Masraf</option>
                         </select>
                     </div>
                     <div>
                         <label class="text-xs opacity-60 mb-1 block">Açıklama</label>
-                        <input type="text" id="txDesc" class="input-field" placeholder="Açıklama girin..." required>
+                        <input type="text" id="txDesc" class="input-field" placeholder="Örn: Eylül Kirası, Market alışverişi..." required>
                     </div>
                     <div>
                         <label class="text-xs opacity-60 mb-1 block">Tutar (₺)</label>
-                        <input type="number" id="txAmount" class="input-field" placeholder="0.00" step="0.01" min="0" required>
+                        <input type="number" id="txAmount" class="input-field font-semibold" placeholder="0.00" step="0.01" min="0" required>
                     </div>
-                    <button type="submit" class="btn-primary w-full flex items-center justify-center gap-2 mt-2">
+
+                    <button type="submit" class="btn-primary w-full flex items-center justify-center gap-2 mt-3">
                         <i class="fa-solid fa-check"></i>
                         <span id="formSubmitText">Kaydet</span>
                     </button>
@@ -371,15 +460,18 @@
         <!-- Transaction History -->
         <section class="glass-card p-4 sm:p-6 fade-in" id="historySection">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-                <h2 class="text-sm font-semibold flex items-center gap-2">
-                    <i class="fa-solid fa-clock-rotate-left text-brand-400"></i>
-                    İşlem Geçmişi
-                    <span class="badge badge-income text-[10px]" id="txCount">0</span>
-                </h2>
+                <div>
+                    <h2 class="text-sm font-semibold flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-brand-400"></i>
+                        <span>İşlem Geçmişi</span>
+                        <span class="badge badge-income text-[10px]" id="txCount">0</span>
+                    </h2>
+                    <p class="text-[11px] opacity-50" id="historyPeriodNotice">Seçili döneme ait kayıtlar listeleniyor</p>
+                </div>
                 <div class="flex flex-wrap gap-2">
                     <div class="relative flex-1 min-w-[140px]">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-xs opacity-40"></i>
-                        <input type="text" id="searchInput" class="input-field pl-8 text-xs" placeholder="Ara..." oninput="renderTransactions()">
+                        <input type="text" id="searchInput" class="input-field pl-8 text-xs" placeholder="Açıklama veya tutar ara..." oninput="renderTransactions()">
                     </div>
                     <select id="filterCategory" class="input-field text-xs w-auto" onchange="renderTransactions()">
                         <option value="">Tüm Kategoriler</option>
@@ -392,31 +484,35 @@
                         <option value="Diğer">Diğer</option>
                     </select>
                     <select id="filterType" class="input-field text-xs w-auto" onchange="renderTransactions()">
-                        <option value="">Tümü</option>
-                        <option value="income">Gelir</option>
-                        <option value="expense">Gider</option>
+                        <option value="">Tüm Tipler</option>
+                        <option value="income">Gelir (+)</option>
+                        <option value="expense">Gider (-)</option>
                     </select>
                 </div>
             </div>
+
             <div class="overflow-x-auto">
                 <table class="w-full text-xs sm:text-sm">
                     <thead>
-                        <tr class="text-left opacity-50 text-[11px] uppercase tracking-wider">
-                            <th class="pb-3 px-2 sm:px-3">Tarih</th>
+                        <tr class="text-left opacity-50 text-[11px] uppercase tracking-wider border-b border-white/5">
+                            <th class="pb-3 px-2 sm:px-3">Tarih / Ay</th>
                             <th class="pb-3 px-2 sm:px-3">Tip</th>
                             <th class="pb-3 px-2 sm:px-3">Kategori</th>
                             <th class="pb-3 px-2 sm:px-3 hidden sm:table-cell">Açıklama</th>
                             <th class="pb-3 px-2 sm:px-3 text-right">Tutar</th>
-                            <th class="pb-3 px-2 sm:px-3 text-right">İşlem</th>
+                            <th class="pb-3 px-2 sm:px-3 text-right">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody id="txTableBody"></tbody>
                 </table>
             </div>
+
             <div id="emptyState" class="hidden text-center py-12 opacity-40">
                 <i class="fa-solid fa-inbox text-4xl mb-3 block"></i>
-                <p class="text-sm">Henüz işlem yok</p>
+                <p class="text-sm">Bu dönemde henüz işlem kaydı bulunmuyor</p>
+                <button onclick="scrollToSection('formCard')" class="btn-secondary text-xs mt-3">Yeni İşlem Ekle</button>
             </div>
+
             <!-- Pagination -->
             <div class="flex items-center justify-between mt-4 pt-4 border-t border-white/5" id="paginationArea">
                 <p class="text-[11px] opacity-40" id="paginationInfo"></p>
@@ -477,7 +573,7 @@
                 </div>
                 <div class="pt-3 border-t border-white/5">
                     <button onclick="confirmResetData()" class="w-full text-xs py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 transition-all flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-trash-can"></i> Tüm Verileri Sıfırla
+                        <i class="fa-solid fa-trash-can"></i> Başlangıç Verilerine Sıfırla
                     </button>
                 </div>
             </div>
@@ -501,13 +597,23 @@
     // ============================================================
     // CONSTANTS & STATE
     // ============================================================
-    const STORAGE_KEY = 'hesapTakipTransactions';
+    const STORAGE_KEY = 'hesapTakipTransactions_v2';
     const THEME_KEY = 'hesapTakipTheme';
     const PER_PAGE = 15;
     let currentPage = 1;
+    let selectedMonth = 'ALL'; // 'ALL' or 'YYYY-MM' (e.g. '2026-08', '2026-09', '2026-10')
     let categoryChart = null;
-    let trendChart = null;
+    let comparisonChart = null;
     let currentCategoryChartType = 'doughnut';
+    let currentComparisonChartType = 'bar';
+
+    const MONTH_NAMES = {
+        '2026-08': 'Ağustos 2026',
+        '2026-09': 'Eylül 2026',
+        '2026-10': 'Ekim 2026',
+        '2026-11': 'Kasım 2026',
+        '2026-12': 'Aralık 2026'
+    };
 
     const CATEGORY_COLORS = {
         'Maaş/Gelir':              { bg: '#10b981', light: 'rgba(16,185,129,0.15)' },
@@ -530,35 +636,48 @@
     };
 
     // ============================================================
-    // INITIAL DATA
+    // REALISTIC MONTH-BY-MONTH INITIAL DATA (Ağustos, Eylül, Ekim 2026)
     // ============================================================
     function getInitialData() {
         return [
-            // Gelirler - 3x Maaş
+            // ================= AĞUSTOS 2026 (26 - 31 Ağustos) =================
             { id: genId(), date: '2026-08-26', type: 'income', category: 'Maaş/Gelir', description: 'Ağustos Maaşı', amount: 45000 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Kredi/Borç', description: 'Ağustos Kredi Taksiti', amount: 6620 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Kalan Günler Yol/Ulaşım', amount: 1500 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Market / Mutfak', amount: 2000 },
+            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ağustos Sigara & Kahvaltı (6 Gün)', amount: 1200 },
+            { id: genId(), date: '2026-08-28', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Kişisel Masraf', amount: 1000 },
+
+            // ================= EYLÜL 2026 (1 - 30 Eylül) =================
             { id: genId(), date: '2026-09-26', type: 'income', category: 'Maaş/Gelir', description: 'Eylül Maaşı', amount: 45000 },
-            { id: genId(), date: '2026-10-26', type: 'income', category: 'Maaş/Gelir', description: 'Ekim Maaşı', amount: 45000 },
-            // Depozito İadesi
-            { id: genId(), date: '2026-09-01', type: 'income', category: 'Maaş/Gelir', description: 'Depozito İadesi', amount: 7500 },
-            // Krediler
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Kredi/Borç', description: 'Krediler Toplamı (Ağu-Eki)', amount: 19860 },
-            // Eski Ev Masrafı
+            { id: genId(), date: '2026-09-01', type: 'income', category: 'Maaş/Gelir', description: 'Eski Ev Depozito İadesi', amount: 7500 },
             { id: genId(), date: '2026-09-01', type: 'expense', category: 'Eski Ev Masrafı', description: 'Eylül Kira + Aidat', amount: 16200 },
+            { id: genId(), date: '2026-09-05', type: 'expense', category: 'Kredi/Borç', description: 'Eylül Krediler Toplamı', amount: 6620 },
+            { id: genId(), date: '2026-09-10', type: 'expense', category: 'Faturalar/Abonelik', description: 'Telefon + İnternet Faturaları', amount: 1735 },
+            { id: genId(), date: '2026-09-12', type: 'expense', category: 'Faturalar/Abonelik', description: 'Su Faturası', amount: 400 },
+            { id: genId(), date: '2026-09-15', type: 'expense', category: 'Faturalar/Abonelik', description: 'Abonelikler (Netflix/Spotify vb.)', amount: 300 },
+            { id: genId(), date: '2026-09-02', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Yol / Ulaşım Kartı', amount: 1750 },
+            { id: genId(), date: '2026-09-03', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Market & Yemek', amount: 2500 },
+            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Sigara (30 Gün x 120₺)', amount: 3600 },
+            { id: genId(), date: '2026-09-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Sabah Kahvaltıları', amount: 1350 },
+            { id: genId(), date: '2026-09-18', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Eylül Buluşma / Sosyal Aktivite', amount: 2500 },
+            { id: genId(), date: '2026-09-20', type: 'expense', category: 'Temel Yaşam', description: 'Eylül Kişisel İhtiyaçlar', amount: 1500 },
+            { id: genId(), date: '2026-09-25', type: 'expense', category: 'Diğer', description: 'Eylül Beklenmedik Rezerv Harcama', amount: 1000 },
+
+            // ================= EKİM 2026 (1 - 31 Ekim) =================
+            { id: genId(), date: '2026-10-26', type: 'income', category: 'Maaş/Gelir', description: 'Ekim Maaşı', amount: 45000 },
             { id: genId(), date: '2026-10-01', type: 'expense', category: 'Eski Ev Masrafı', description: 'Ekim Kira + Aidat', amount: 16200 },
-            // Temel Yaşam
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Yol / Ulaşım', amount: 5000 },
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Market / Yemek', amount: 7000 },
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Kişisel Harcama', amount: 4000 },
-            // Faturalar / Abonelik
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Faturalar/Abonelik', description: 'Telefon + İnternet', amount: 3470 },
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Faturalar/Abonelik', description: 'Abonelikler (Netflix vb.)', amount: 600 },
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Faturalar/Abonelik', description: 'Su Faturası', amount: 800 },
-            // Sosyal / Sigara / Kahvaltı
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Sigara (60 gün x 120₺)', amount: 7200 },
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Sabah Kahvaltısı', amount: 2700 },
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Buluşma / Sosyal Aktivite', amount: 5000 },
-            // Diğer
-            { id: genId(), date: '2026-08-27', type: 'expense', category: 'Diğer', description: 'Sürpriz Harcama Rezervi', amount: 2000 },
+            { id: genId(), date: '2026-10-05', type: 'expense', category: 'Kredi/Borç', description: 'Ekim Krediler Toplamı', amount: 6620 },
+            { id: genId(), date: '2026-10-10', type: 'expense', category: 'Faturalar/Abonelik', description: 'Telefon + İnternet Faturaları', amount: 1735 },
+            { id: genId(), date: '2026-10-12', type: 'expense', category: 'Faturalar/Abonelik', description: 'Su Faturası', amount: 400 },
+            { id: genId(), date: '2026-10-15', type: 'expense', category: 'Faturalar/Abonelik', description: 'Abonelikler (Netflix/Spotify vb.)', amount: 300 },
+            { id: genId(), date: '2026-10-02', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Yol / Ulaşım', amount: 1750 },
+            { id: genId(), date: '2026-10-03', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Market & Mutfak', amount: 2500 },
+            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Sigara (30 Gün x 120₺)', amount: 3600 },
+            { id: genId(), date: '2026-10-01', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Sabah Kahvaltıları', amount: 1350 },
+            { id: genId(), date: '2026-10-18', type: 'expense', category: 'Sosyal/Sigara/Kahvaltı', description: 'Ekim Buluşma & Sosyal Harcamalar', amount: 2500 },
+            { id: genId(), date: '2026-10-20', type: 'expense', category: 'Temel Yaşam', description: 'Ekim Kişisel Harcamalar', amount: 1500 },
+            { id: genId(), date: '2026-10-25', type: 'expense', category: 'Diğer', description: 'Ekim Sürpriz Rezerv Harcama', amount: 1000 },
         ];
     }
 
@@ -573,6 +692,17 @@
 
     function formatDate(d) {
         return new Date(d).toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function getMonthKey(dateStr) {
+        return dateStr.slice(0, 7); // 'YYYY-MM'
+    }
+
+    function getMonthDisplayName(key) {
+        if (MONTH_NAMES[key]) return MONTH_NAMES[key];
+        const [y, m] = key.split('-');
+        const names = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+        return `${names[parseInt(m, 10) - 1] || m} ${y}`;
     }
 
     function showToast(msg, type = 'success') {
@@ -596,7 +726,17 @@
     function loadTransactions() {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) {
-            const initial = getInitialData();
+            // Also check old key if exists to migrate
+            const oldRaw = localStorage.getItem('hesapTakipTransactions');
+            let initial;
+            if (oldRaw) {
+                try {
+                    const parsed = JSON.parse(oldRaw);
+                    initial = (parsed && parsed.length > 0) ? parsed : getInitialData();
+                } catch { initial = getInitialData(); }
+            } else {
+                initial = getInitialData();
+            }
             saveTransactions(initial);
             return initial;
         }
@@ -643,7 +783,6 @@
         document.documentElement.setAttribute('data-theme', next);
         localStorage.setItem(THEME_KEY, next);
         updateThemeIcon(next);
-        // Re-render charts for theme colors
         renderCharts();
     }
 
@@ -661,20 +800,95 @@
     }
 
     // ============================================================
+    // MONTH & PERIOD FILTERING
+    // ============================================================
+    function selectMonth(m) {
+        selectedMonth = m;
+        currentPage = 1;
+
+        // Update pills
+        document.querySelectorAll('.month-pill').forEach(p => p.classList.remove('active'));
+        const activePill = document.getElementById(`pill-${m}`);
+        if (activePill) activePill.classList.add('active');
+
+        // Update month quick cards
+        document.querySelectorAll('.summary-card').forEach(c => c.classList.remove('active'));
+        const activeCard = document.getElementById(`card-${m}`);
+        if (activeCard) activeCard.classList.add('active');
+
+        // Update form date default
+        if (m !== 'ALL') {
+            const currentFormDate = document.getElementById('txDate').value;
+            if (!currentFormDate.startsWith(m)) {
+                document.getElementById('txDate').value = `${m}-01`;
+                updateFormTargetMonth();
+            }
+        }
+
+        refreshAll();
+    }
+
+    function getTransactionsForSelectedPeriod() {
+        const all = getTransactions();
+        if (selectedMonth === 'ALL') return all;
+        return all.filter(t => t.date.startsWith(selectedMonth));
+    }
+
+    function renderMonthlyComparisonGrid() {
+        const all = getTransactions();
+        const months = ['2026-08', '2026-09', '2026-10'];
+        const grid = document.getElementById('monthlyComparisonGrid');
+
+        let html = '';
+        months.forEach(m => {
+            const mTx = all.filter(t => t.date.startsWith(m));
+            const inc = mTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+            const exp = mTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+            const net = inc - exp;
+            const isSelected = selectedMonth === m;
+
+            html += `
+                <div onclick="selectMonth('${m}')" id="card-${m}" class="summary-card glass-card ${isSelected ? 'active' : ''}">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="text-xs font-bold text-brand-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-calendar-check text-[11px]"></i>
+                            ${getMonthDisplayName(m)}
+                        </span>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded ${net >= 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'} font-semibold">
+                            ${net >= 0 ? '+' : ''}${formatCurrency(net)}
+                        </span>
+                    </div>
+                    <div class="flex justify-between text-[11px] opacity-70">
+                        <span>Gelir: <strong class="text-emerald-400 font-medium">${formatCurrency(inc)}</strong></span>
+                        <span>Masraf: <strong class="text-red-400 font-medium">${formatCurrency(exp)}</strong></span>
+                    </div>
+                </div>
+            `;
+        });
+        grid.innerHTML = html;
+    }
+
+    // ============================================================
     // KPI RENDERING
     // ============================================================
     function renderKPIs() {
-        const all = getTransactions();
-        const totalIncome = all.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-        const totalExpense = all.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+        const periodTx = getTransactionsForSelectedPeriod();
+        const totalIncome = periodTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+        const totalExpense = periodTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
         const balance = totalIncome - totalExpense;
         const budgetPct = totalIncome > 0 ? Math.round((totalExpense / totalIncome) * 100) : 0;
+
+        const periodTitle = selectedMonth === 'ALL' ? 'Tüm Dönem' : getMonthDisplayName(selectedMonth);
+
+        document.getElementById('kpiIncomeLabel').textContent = `${periodTitle} Gelir`;
+        document.getElementById('kpiExpenseLabel').textContent = `${periodTitle} Gider`;
+        document.getElementById('kpiBalanceLabel').textContent = `${periodTitle} Net Bakiye`;
 
         document.getElementById('kpiIncome').textContent = formatCurrency(totalIncome);
         document.getElementById('kpiExpense').textContent = formatCurrency(totalExpense);
 
         const balEl = document.getElementById('kpiBalance');
-        balEl.textContent = formatCurrency(balance);
+        balEl.textContent = `${balance >= 0 ? '+' : ''}${formatCurrency(balance)}`;
         balEl.className = `text-lg sm:text-2xl font-bold ${balance >= 0 ? 'text-emerald-400' : 'text-red-400'}`;
 
         document.getElementById('kpiBudgetPct').textContent = budgetPct + '%';
@@ -682,16 +896,23 @@
         bar.style.width = Math.min(budgetPct, 100) + '%';
         bar.className = `progress-bar-fill ${budgetPct > 100 ? 'over-budget' : ''}`;
 
+        const lbl = document.getElementById('kpiBudgetLabel');
         if (budgetPct > 100) {
-            document.getElementById('kpiBudgetLabel').textContent = '⚠️ Bütçe aşıldı!';
+            lbl.textContent = '⚠️ Bu dönem bütçe aşıldı!';
             document.getElementById('kpiBudgetPct').classList.add('text-red-400');
         } else if (budgetPct > 80) {
-            document.getElementById('kpiBudgetLabel').textContent = '⚡ Bütçe sınırına yaklaşılıyor';
+            lbl.textContent = '⚡ Bütçe sınırına yakın';
             document.getElementById('kpiBudgetPct').classList.remove('text-red-400');
         } else {
-            document.getElementById('kpiBudgetLabel').textContent = 'Gelire göre harcama oranı';
+            lbl.textContent = `${periodTitle} harcama oranı`;
             document.getElementById('kpiBudgetPct').classList.remove('text-red-400');
         }
+
+        document.getElementById('categoryChartTitle').textContent = `Kategori Dağılımı (${periodTitle})`;
+        document.getElementById('categoryChartSub').textContent = `${periodTitle} dönemindeki harcama dağılımı`;
+        document.getElementById('historyPeriodNotice').textContent = selectedMonth === 'ALL'
+            ? 'Tüm dönemdeki (Ağustos - Ekim) tüm kayıtlar listeleniyor'
+            : `${getMonthDisplayName(selectedMonth)} ayına ait işlemler listeleniyor`;
     }
 
     // ============================================================
@@ -699,19 +920,26 @@
     // ============================================================
     function renderCharts() {
         renderCategoryChart();
-        renderTrendChart();
+        renderComparisonChart();
     }
 
-    function setChartType(type) {
+    function setCategoryChartType(type) {
         currentCategoryChartType = type;
-        document.getElementById('tabDoughnut').classList.toggle('active', type === 'doughnut');
-        document.getElementById('tabBar').classList.toggle('active', type === 'bar');
+        document.getElementById('tabDoughnut').classList.toggle('opacity-60', type !== 'doughnut');
+        document.getElementById('tabBar').classList.toggle('opacity-60', type !== 'bar');
         renderCategoryChart();
     }
 
+    function setComparisonChartType(type) {
+        currentComparisonChartType = type;
+        document.getElementById('tabCompBar').classList.toggle('opacity-60', type !== 'bar');
+        document.getElementById('tabCompLine').classList.toggle('opacity-60', type !== 'line');
+        renderComparisonChart();
+    }
+
     function renderCategoryChart() {
-        const all = getTransactions();
-        const expenses = all.filter(t => t.type === 'expense');
+        const periodTx = getTransactionsForSelectedPeriod();
+        const expenses = periodTx.filter(t => t.type === 'expense');
         const grouped = {};
         expenses.forEach(t => {
             grouped[t.category] = (grouped[t.category] || 0) + t.amount;
@@ -726,13 +954,29 @@
         const ctx = document.getElementById('categoryChart').getContext('2d');
         const isDoughnut = currentCategoryChartType === 'doughnut';
 
+        if (labels.length === 0) {
+            categoryChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Harcama Yok'],
+                    datasets: [{ data: [1], backgroundColor: ['rgba(148,163,184,0.2)'], borderWidth: 0 }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } }
+                }
+            });
+            return;
+        }
+
         categoryChart = new Chart(ctx, {
             type: isDoughnut ? 'doughnut' : 'bar',
             data: {
                 labels,
                 datasets: [{
                     data,
-                    backgroundColor: isDoughnut ? colors : colors.map(c => c + '33'),
+                    backgroundColor: isDoughnut ? colors : colors.map(c => c + '40'),
                     borderColor: colors,
                     borderWidth: isDoughnut ? 0 : 2,
                     borderRadius: isDoughnut ? 0 : 8,
@@ -741,15 +985,15 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 cutout: isDoughnut ? '65%' : undefined,
                 plugins: {
                     legend: {
                         position: isDoughnut ? 'bottom' : 'top',
-                        labels: { color: getChartTextColor(), padding: 12, font: { size: 11, family: 'Inter' }, usePointStyle: true, pointStyle: 'circle' }
+                        labels: { color: getChartTextColor(), padding: 10, font: { size: 11, family: 'Inter' }, usePointStyle: true, pointStyle: 'circle' }
                     },
                     tooltip: {
-                        backgroundColor: 'rgba(15,23,42,0.9)',
+                        backgroundColor: 'rgba(15,23,42,0.95)',
                         titleFont: { family: 'Inter', weight: '600' },
                         bodyFont: { family: 'Inter' },
                         padding: 12,
@@ -767,70 +1011,65 @@
         });
     }
 
-    function renderTrendChart() {
+    function renderComparisonChart() {
         const all = getTransactions();
-        // Group by month
-        const months = {};
-        all.forEach(t => {
-            const key = t.date.slice(0, 7); // YYYY-MM
-            if (!months[key]) months[key] = { income: 0, expense: 0 };
-            months[key][t.type] += t.amount;
+        const months = ['2026-08', '2026-09', '2026-10'];
+        const monthLabels = months.map(m => getMonthDisplayName(m));
+
+        const incomeData = months.map(m => {
+            return all.filter(t => t.date.startsWith(m) && t.type === 'income').reduce((s, t) => s + t.amount, 0);
         });
 
-        const sortedKeys = Object.keys(months).sort();
-        const monthLabels = sortedKeys.map(k => {
-            const [y, m] = k.split('-');
-            const names = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
-            return names[parseInt(m) - 1] + ' ' + y;
+        const expenseData = months.map(m => {
+            return all.filter(t => t.date.startsWith(m) && t.type === 'expense').reduce((s, t) => s + t.amount, 0);
         });
 
-        if (trendChart) trendChart.destroy();
+        if (comparisonChart) comparisonChart.destroy();
 
-        const ctx = document.getElementById('trendChart').getContext('2d');
-        trendChart = new Chart(ctx, {
-            type: 'line',
+        const ctx = document.getElementById('comparisonChart').getContext('2d');
+        const isBar = currentComparisonChartType === 'bar';
+
+        comparisonChart = new Chart(ctx, {
+            type: isBar ? 'bar' : 'line',
             data: {
                 labels: monthLabels,
                 datasets: [
                     {
-                        label: 'Gelir',
-                        data: sortedKeys.map(k => months[k].income),
+                        label: 'Gelir (₺)',
+                        data: incomeData,
+                        backgroundColor: isBar ? 'rgba(16,185,129,0.7)' : 'rgba(16,185,129,0.1)',
                         borderColor: '#10b981',
-                        backgroundColor: 'rgba(16,185,129,0.1)',
-                        fill: true,
-                        tension: 0.4,
+                        borderWidth: 2,
+                        borderRadius: isBar ? 8 : 0,
+                        fill: !isBar,
+                        tension: 0.35,
                         pointRadius: 5,
-                        pointHoverRadius: 8,
-                        pointBackgroundColor: '#10b981',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        borderWidth: 3,
+                        pointHoverRadius: 8
                     },
                     {
-                        label: 'Gider',
-                        data: sortedKeys.map(k => months[k].expense),
+                        label: 'Masraf (₺)',
+                        data: expenseData,
+                        backgroundColor: isBar ? 'rgba(239,68,68,0.7)' : 'rgba(239,68,68,0.1)',
                         borderColor: '#ef4444',
-                        backgroundColor: 'rgba(239,68,68,0.1)',
-                        fill: true,
-                        tension: 0.4,
+                        borderWidth: 2,
+                        borderRadius: isBar ? 8 : 0,
+                        fill: !isBar,
+                        tension: 0.35,
                         pointRadius: 5,
-                        pointHoverRadius: 8,
-                        pointBackgroundColor: '#ef4444',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        borderWidth: 3,
+                        pointHoverRadius: 8
                     }
                 ]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        labels: { color: getChartTextColor(), padding: 16, font: { size: 12, family: 'Inter' }, usePointStyle: true, pointStyle: 'circle' }
+                        position: 'top',
+                        labels: { color: getChartTextColor(), padding: 12, font: { size: 11, family: 'Inter' }, usePointStyle: true, pointStyle: 'circle' }
                     },
                     tooltip: {
-                        backgroundColor: 'rgba(15,23,42,0.9)',
+                        backgroundColor: 'rgba(15,23,42,0.95)',
                         titleFont: { family: 'Inter', weight: '600' },
                         bodyFont: { family: 'Inter' },
                         padding: 12,
@@ -852,27 +1091,27 @@
     }
 
     // ============================================================
-    // TRANSACTION TABLE
+    // TRANSACTION TABLE & FILTERING
     // ============================================================
     function getFilteredTransactions() {
-        let all = getTransactions();
+        let list = getTransactionsForSelectedPeriod();
         const search = document.getElementById('searchInput').value.toLowerCase().trim();
         const catFilter = document.getElementById('filterCategory').value;
         const typeFilter = document.getElementById('filterType').value;
 
         if (search) {
-            all = all.filter(t =>
+            list = list.filter(t =>
                 t.description.toLowerCase().includes(search) ||
                 t.category.toLowerCase().includes(search) ||
                 t.amount.toString().includes(search)
             );
         }
-        if (catFilter) all = all.filter(t => t.category === catFilter);
-        if (typeFilter) all = all.filter(t => t.type === typeFilter);
+        if (catFilter) list = list.filter(t => t.category === catFilter);
+        if (typeFilter) list = list.filter(t => t.type === typeFilter);
 
         // Sort by date descending
-        all.sort((a, b) => new Date(b.date) - new Date(a.date));
-        return all;
+        list.sort((a, b) => new Date(b.date) - new Date(a.date));
+        return list;
     }
 
     function renderTransactions() {
@@ -904,7 +1143,10 @@
             const isIncome = t.type === 'income';
             return `
                 <tr class="table-row border-b border-white/5 last:border-0">
-                    <td class="py-3 px-2 sm:px-3 whitespace-nowrap">${formatDate(t.date)}</td>
+                    <td class="py-3 px-2 sm:px-3 whitespace-nowrap">
+                        <span class="font-medium">${formatDate(t.date)}</span>
+                        <span class="block text-[10px] opacity-40">${getMonthDisplayName(getMonthKey(t.date))}</span>
+                    </td>
                     <td class="py-3 px-2 sm:px-3">
                         <span class="badge ${isIncome ? 'badge-income' : 'badge-expense'}">
                             <i class="fa-solid ${isIncome ? 'fa-arrow-up' : 'fa-arrow-down'} text-[9px]"></i>
@@ -917,7 +1159,7 @@
                             <span class="text-xs">${t.category}</span>
                         </span>
                     </td>
-                    <td class="py-3 px-2 sm:px-3 hidden sm:table-cell opacity-70 max-w-[200px] truncate">${t.description}</td>
+                    <td class="py-3 px-2 sm:px-3 hidden sm:table-cell opacity-75 max-w-[220px] truncate">${t.description}</td>
                     <td class="py-3 px-2 sm:px-3 text-right font-semibold whitespace-nowrap ${isIncome ? 'text-emerald-400' : 'text-red-400'}">
                         ${isIncome ? '+' : '-'}${formatCurrency(t.amount)}
                     </td>
@@ -953,8 +1195,31 @@
     // FORM HANDLING
     // ============================================================
     function initForm() {
+        setFormDateToday();
+    }
+
+    function setFormDateToday() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('txDate').value = today;
+        updateFormTargetMonth();
+    }
+
+    function updateFormTargetMonth() {
+        const dateVal = document.getElementById('txDate').value;
+        if (dateVal) {
+            const key = getMonthKey(dateVal);
+            document.getElementById('formTargetMonthLabel').textContent = `Hedef: ${getMonthDisplayName(key)}`;
+        }
+    }
+
+    function handleTypeChange() {
+        const type = document.getElementById('txType').value;
+        const catSelect = document.getElementById('txCategory');
+        if (type === 'income') {
+            catSelect.value = 'Maaş/Gelir';
+        } else if (catSelect.value === 'Maaş/Gelir') {
+            catSelect.value = 'Temel Yaşam';
+        }
     }
 
     function handleFormSubmit(e) {
@@ -998,6 +1263,7 @@
         document.getElementById('formTitle').textContent = 'İşlemi Düzenle';
         document.getElementById('formSubmitText').textContent = 'Güncelle';
         document.getElementById('cancelEdit').classList.remove('hidden');
+        updateFormTargetMonth();
 
         scrollToSection('formCard');
     }
@@ -1013,7 +1279,7 @@
 
     function promptDelete(id) {
         document.getElementById('confirmTitle').textContent = 'İşlemi Sil';
-        document.getElementById('confirmMessage').textContent = 'Bu işlem kalıcı olarak silinecek. Devam etmek istiyor musunuz?';
+        document.getElementById('confirmMessage').textContent = 'Bu işlem kaydı kalıcı olarak silinecek. Emin misiniz?';
         document.getElementById('confirmAction').onclick = () => {
             deleteTransaction(id);
             closeModal('confirmModal');
@@ -1031,7 +1297,7 @@
     function exportJSON() {
         const data = getTransactions();
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        downloadFile(blob, `hesap-takip-${new Date().toISOString().slice(0,10)}.json`);
+        downloadFile(blob, `hesap-takip-butce-${new Date().toISOString().slice(0,10)}.json`);
         showToast('JSON dosyası indirildi!');
         closeModal('importExportModal');
     }
@@ -1042,7 +1308,7 @@
         const rows = data.map(t => [t.date, t.type === 'income' ? 'Gelir' : 'Gider', t.category, `"${t.description}"`, t.amount]);
         const csv = '\uFEFF' + [headers.join(';'), ...rows.map(r => r.join(';'))].join('\n');
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        downloadFile(blob, `hesap-takip-${new Date().toISOString().slice(0,10)}.csv`);
+        downloadFile(blob, `hesap-takip-butce-${new Date().toISOString().slice(0,10)}.csv`);
         showToast('CSV dosyası indirildi!');
         closeModal('importExportModal');
     }
@@ -1073,7 +1339,6 @@
                     showToast('Geçerli veri bulunamadı!', 'error');
                     return;
                 }
-                // Merge with existing
                 const existing = getTransactions();
                 const merged = [...existing, ...imported.map(t => ({ ...t, id: t.id || genId() }))];
                 saveTransactions(merged);
@@ -1106,14 +1371,16 @@
     }
 
     function confirmResetData() {
-        document.getElementById('confirmTitle').textContent = 'Tüm Verileri Sıfırla';
-        document.getElementById('confirmMessage').textContent = 'Tüm işlemler silinecek ve varsayılan veriler yüklenecek. Emin misiniz?';
-        document.getElementById('confirmAction').textContent = 'Sıfırla';
+        document.getElementById('confirmTitle').textContent = 'Verileri Sıfırla';
+        document.getElementById('confirmMessage').textContent = 'Mevcut tüm işlemler silinerek Ağustos, Eylül ve Ekim hazır bütçe planı yüklenecek. Emin misiniz?';
+        document.getElementById('confirmAction').textContent = 'Sıfırla ve Yükle';
         document.getElementById('confirmAction').onclick = () => {
             localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem('hesapTakipTransactions');
+            saveTransactions(getInitialData());
             closeModal('confirmModal');
             closeModal('importExportModal');
-            showToast('Veriler sıfırlandı!');
+            showToast('Aylık başlangıç verileri başarıyla yüklendi!');
             refreshAll();
         };
         closeModal('importExportModal');
@@ -1124,6 +1391,7 @@
     // REFRESH ALL
     // ============================================================
     function refreshAll() {
+        renderMonthlyComparisonGrid();
         renderKPIs();
         renderCharts();
         renderTransactions();
