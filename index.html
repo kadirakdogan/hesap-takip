@@ -145,14 +145,25 @@
 
         .progress-bar-bg {
             background: rgba(99,102,241,0.15); border-radius: 999px; overflow: hidden; height: 8px;
+            position: relative;
         }
         .progress-bar-fill {
             background: linear-gradient(90deg, #6366f1, #a78bfa);
             height: 100%; border-radius: 999px;
+            position: absolute; left: 0; top: 0; z-index: 2;
             transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .progress-bar-fill.over-budget {
             background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+        .progress-bar-planned {
+            background: linear-gradient(90deg, rgba(245,158,11,0.5), rgba(234,179,8,0.65));
+            height: 100%; border-radius: 999px;
+            position: absolute; left: 0; top: 0; z-index: 1;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .progress-bar-planned.over-budget-planned {
+            background: repeating-linear-gradient(45deg, rgba(239,68,68,0.4), rgba(239,68,68,0.4) 6px, rgba(248,113,113,0.7) 6px, rgba(248,113,113,0.7) 12px);
         }
 
         .table-row { transition: background 0.15s ease; }
@@ -164,6 +175,26 @@
         }
         .badge-income { background: rgba(16,185,129,0.15); color: #10b981; }
         .badge-expense { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .badge-status-completed { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+        .badge-status-planned { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px dashed rgba(245,158,11,0.45); }
+
+        /* Bank & Commission Badges */
+        .badge-bank-enpara { background: rgba(139,92,246,0.18); color: #c084fc; border: 1px solid rgba(139,92,246,0.35); }
+        .badge-bank-hadi { background: rgba(234,179,8,0.18); color: #facc15; border: 1px solid rgba(234,179,8,0.35); }
+        .badge-bank-akbank { background: rgba(239,68,68,0.18); color: #f87171; border: 1px solid rgba(239,68,68,0.35); }
+        .badge-bank-ziraat { background: rgba(16,185,129,0.18); color: #34d399; border: 1px solid rgba(16,185,129,0.35); }
+        .badge-bank-yapikredi { background: rgba(59,130,246,0.18); color: #60a5fa; border: 1px solid rgba(59,130,246,0.35); }
+        .badge-bank-default { background: rgba(148,163,184,0.18); color: #cbd5e1; border: 1px solid rgba(148,163,184,0.35); }
+
+        .badge-prim-5 { background: linear-gradient(135deg, rgba(245,158,11,0.22), rgba(234,179,8,0.15)); color: #fbbf24; border: 1px solid rgba(245,158,11,0.45); }
+        .badge-prim-1 { background: linear-gradient(135deg, rgba(59,130,246,0.22), rgba(99,102,241,0.15)); color: #93c5fd; border: 1px solid rgba(59,130,246,0.45); }
+
+        .prim-calc-box {
+            background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(234,179,8,0.08));
+            border: 1px dashed rgba(234,179,8,0.4);
+            border-radius: 12px;
+            padding: 10px 12px;
+        }
 
         .modal-overlay {
             position: fixed; inset: 0; z-index: 100;
@@ -424,7 +455,7 @@
             </div>
 
             <!-- SMART INSIGHTS STRIP -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-3 pt-3 border-t border-white/5 text-xs" id="smartInsightsBar">
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 mt-3 pt-3 border-t border-white/5 text-xs" id="smartInsightsBar">
                 <div class="p-2 rounded-xl bg-brand-500/5 border border-brand-500/10 flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center text-brand-400 text-sm">
                         <i class="fa-solid fa-calculator"></i>
@@ -464,6 +495,17 @@
                         <p class="font-bold text-slate-200" id="insightHealthStatus">Mükemmel</p>
                     </div>
                 </div>
+
+                <div class="p-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-yellow-500/5 border border-amber-500/20 flex items-center gap-2.5 col-span-2 sm:col-span-1">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 text-sm">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="text-[10px] text-amber-400/80 font-medium">Toplam Prim Kazancı</p>
+                        <p class="font-bold text-amber-300 financial-value truncate" id="insightPrimEarned">₺0</p>
+                        <p class="text-[9px] opacity-50 truncate" id="insightPrimSales">Ciro: ₺0</p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -477,8 +519,9 @@
                     </div>
                     <div class="pulse-dot"></div>
                 </div>
-                <p class="text-xs opacity-50 mb-1" id="kpiIncomeLabel">Toplam Gelir</p>
+                <p class="text-xs opacity-50 mb-1" id="kpiIncomeLabel">Fiili Gelir</p>
                 <p class="text-lg sm:text-2xl font-bold text-emerald-400 financial-value" id="kpiIncome">₺0</p>
+                <p class="text-[10px] opacity-70 mt-1 truncate text-emerald-300/80" id="kpiIncomeSub">Tahsil Edilen Gelir</p>
             </div>
             <!-- Toplam Gider -->
             <div class="glass-card p-4 sm:p-5">
@@ -488,8 +531,9 @@
                     </div>
                     <span class="text-[10px] opacity-40"><i class="fa-solid fa-chart-pie"></i></span>
                 </div>
-                <p class="text-xs opacity-50 mb-1" id="kpiExpenseLabel">Toplam Gider</p>
+                <p class="text-xs opacity-50 mb-1" id="kpiExpenseLabel">Fiili Gider</p>
                 <p class="text-lg sm:text-2xl font-bold text-red-400 financial-value" id="kpiExpense">₺0</p>
+                <p class="text-[10px] opacity-50 mt-1 truncate" id="kpiExpenseSub">Gerçekleşen Harcamalar</p>
             </div>
             <!-- Net Bakiye -->
             <div class="glass-card p-4 sm:p-5">
@@ -501,6 +545,7 @@
                 </div>
                 <p class="text-xs opacity-50 mb-1" id="kpiBalanceLabel">Net Kalan Bakiye</p>
                 <p class="text-lg sm:text-2xl font-bold financial-value" id="kpiBalance">₺0</p>
+                <p class="text-[10px] opacity-50 mt-1 truncate" id="kpiBalanceSub">Fiili Kasa / Nakit</p>
             </div>
             <!-- Bütçe Kullanım -->
             <div class="glass-card p-4 sm:p-5">
@@ -508,13 +553,17 @@
                     <div class="kpi-icon-wrap bg-amber-500/10">
                         <i class="fa-solid fa-gauge-high text-amber-400"></i>
                     </div>
-                    <span class="text-xs font-bold" id="kpiBudgetPct">0%</span>
+                    <div class="text-right">
+                        <span class="text-xs font-bold block" id="kpiBudgetPct">0%</span>
+                        <span class="text-[9px] opacity-60 text-amber-300" id="kpiBudgetCommittedSub">+0% Planlanan</span>
+                    </div>
                 </div>
                 <p class="text-xs opacity-50 mb-1">Bütçe Harcama Oranı</p>
-                <div class="progress-bar-bg mt-2">
+                <div class="progress-bar-bg mt-2" title="Mor: Fiili Harcama | Sarı/Çizgili: Planlanan Taahhüt">
+                    <div class="progress-bar-planned" id="kpiBudgetPlannedBar" style="width:0%"></div>
                     <div class="progress-bar-fill" id="kpiBudgetBar" style="width:0%"></div>
                 </div>
-                <p class="text-[10px] opacity-40 mt-1.5 truncate" id="kpiBudgetLabel">Harcama oranı</p>
+                <p class="text-[10px] opacity-50 mt-1.5 truncate" id="kpiBudgetLabel">Harcama oranı</p>
             </div>
         </section>
 
@@ -532,7 +581,11 @@
                             </h2>
                             <p class="text-[11px] opacity-50" id="categoryChartSub">Seçili döneme ait harcamalar</p>
                         </div>
-                        <div class="flex gap-1">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <div class="flex rounded-lg bg-slate-900/60 p-0.5 border border-white/5 mr-0.5">
+                                <button onclick="setCategoryScope('actual')" class="px-2 py-0.5 rounded text-[10px] font-semibold transition-all bg-brand-500/20 text-brand-300" id="tabCatActual">Fiili</button>
+                                <button onclick="setCategoryScope('all')" class="px-2 py-0.5 rounded text-[10px] font-semibold transition-all text-slate-400 hover:text-white" id="tabCatAll">+Planlanan</button>
+                            </div>
                             <button onclick="setCategoryChartType('doughnut')" class="btn-secondary text-xs px-2.5 py-1" id="tabDoughnut">Pasta</button>
                             <button onclick="setCategoryChartType('bar')" class="btn-secondary text-xs px-2.5 py-1 opacity-60" id="tabBar">Sütun</button>
                         </div>
@@ -573,63 +626,154 @@
                     <span class="text-[10px] px-2 py-0.5 rounded-md bg-brand-500/10 text-brand-400" id="formTargetMonthLabel">Hedef: Otomatik</span>
                 </div>
 
-                <!-- Quick Preset Chips for Ultra-Fast Entry -->
+                <!-- Transaction Type Toggle Buttons -->
+                <div class="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-slate-900/60 border border-white/5 mb-3">
+                    <button type="button" onclick="setFormType('expense')" id="typeBtnExpense" class="py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all bg-red-500/20 text-red-400 border border-red-500/30 shadow-sm">
+                        <i class="fa-solid fa-arrow-trend-down text-xs"></i>
+                        <span>🔴 Gider (Masraf)</span>
+                    </button>
+                    <button type="button" onclick="setFormType('income')" id="typeBtnIncome" class="py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all text-slate-400 hover:text-white border border-transparent">
+                        <i class="fa-solid fa-arrow-trend-up text-xs"></i>
+                        <span>🟢 Gelir & Prim</span>
+                    </button>
+                </div>
+
+                <!-- Quick Presets -->
                 <div class="mb-3">
-                    <p class="text-[10px] opacity-50 mb-1.5 font-medium">Hızlı Şablonlar:</p>
-                    <div class="flex flex-wrap gap-1.5">
-                        <span class="quick-chip" onclick="applyQuickPreset('income', 'Maaş/Gelir', 'Aylık Maaş', 'Banka Kartı')"><i class="fa-solid fa-briefcase text-emerald-400 text-[10px]"></i> Maaş</span>
-                        <span class="quick-chip" onclick="applyQuickPreset('expense', 'Temel Yaşam', 'Market Alışverişi', 'Kredi Kartı')"><i class="fa-solid fa-basket-shopping text-blue-400 text-[10px]"></i> Market</span>
-                        <span class="quick-chip" onclick="applyQuickPreset('expense', 'Eski Ev Masrafı', 'Kira + Aidat Ödemesi', 'Havale/EFT')"><i class="fa-solid fa-house text-amber-400 text-[10px]"></i> Kira</span>
-                        <span class="quick-chip" onclick="applyQuickPreset('expense', 'Faturalar/Abonelik', 'Fatura Ödemesi', 'Kredi Kartı')"><i class="fa-solid fa-bolt text-pink-400 text-[10px]"></i> Fatura</span>
-                        <span class="quick-chip" onclick="applyQuickPreset('expense', 'Sosyal/Sigara/Kahvaltı', 'Sosyal Harcama / Yemek', 'Nakit')"><i class="fa-solid fa-mug-hot text-purple-400 text-[10px]"></i> Sosyal</span>
+                    <p class="text-[10px] opacity-50 mb-1.5 font-medium" id="quickPresetsHeader">Hızlı Gider Şablonları:</p>
+                    <div class="flex flex-wrap gap-1.5" id="quickChipsContainer">
+                        <!-- Injected dynamically by JS -->
                     </div>
                 </div>
 
                 <form id="transactionForm" class="space-y-2.5" onsubmit="return handleFormSubmit(event)">
                     <input type="hidden" id="editId" value="">
+                    <input type="hidden" id="txType" value="expense">
+
+                    <!-- Date -->
                     <div>
                         <label class="text-[11px] opacity-60 mb-1 flex items-center justify-between">
                             <span>İşlem Tarihi</span>
                             <span class="text-[10px] text-brand-400 cursor-pointer" onclick="setFormDateToday()">Bugün</span>
                         </label>
-                        <input type="date" id="txDate" class="input-field" required onchange="updateFormTargetMonth()">
+                        <input type="date" id="txDate" class="input-field" required onchange="handleDateChange()">
                     </div>
+
+                    <!-- Future Date Alert Banner -->
+                    <div id="futureDateNotice" class="hidden p-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] flex items-start gap-2">
+                        <i class="fa-regular fa-clock text-xs mt-0.5 shrink-0"></i>
+                        <span id="futureDateNoticeText">Bu işlem gelecek tarihli olarak kaydedilecek ve vadesi gelene kadar bugünkü nakit bakiyenizi etkilemeyecektir.</span>
+                    </div>
+
+                    <!-- Status Selector (Auto / Planned / Completed) -->
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="text-[11px] opacity-60 mb-1 block">İşlem Tipi</label>
-                            <select id="txType" class="input-field" required onchange="handleTypeChange()">
-                                <option value="expense">🔴 Gider (Masraf)</option>
-                                <option value="income">🟢 Gelir (Maaş)</option>
+                            <label class="text-[11px] opacity-60 mb-1 block">İşlem Durumu</label>
+                            <select id="txStatus" class="input-field" onchange="handleStatusChange()">
+                                <option value="auto">⚡ Otomatik (Tarihe Göre)</option>
+                                <option value="planned">⏳ Planlandı (Beklemede)</option>
+                                <option value="completed">✅ Gerçekleşti (Ödendi)</option>
                             </select>
                         </div>
                         <div>
-                            <label class="text-[11px] opacity-60 mb-1 block">Ödeme Yöntemi</label>
-                            <select id="txPaymentMethod" class="input-field">
-                                <option value="Kredi Kartı">💳 Kredi Kartı</option>
-                                <option value="Banka Kartı">🏦 Banka Kartı</option>
-                                <option value="Nakit">💵 Nakit</option>
-                                <option value="Havale/EFT">📱 Havale/EFT</option>
-                            </select>
+                            <label class="text-[11px] opacity-60 mb-1 block">Bakiye Etkisi</label>
+                            <div id="txStatusSummary" class="text-[10px] py-2 px-2.5 rounded-xl bg-slate-900/60 border border-white/5 opacity-90 flex items-center gap-1.5 truncate">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+                                <span class="truncate">Anında bakiyeye yansır</span>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <label class="text-[11px] opacity-60 mb-1 block">Kategori</label>
-                        <select id="txCategory" class="input-field" required>
-                            <option value="Maaş/Gelir">Maaş / Gelir</option>
-                            <option value="Kredi/Borç">Kredi / Borç</option>
-                            <option value="Eski Ev Masrafı">Eski Ev Masrafı (Kira/Aidat)</option>
-                            <option value="Temel Yaşam">Temel Yaşam (Yol/Market/Yemek)</option>
-                            <option value="Sosyal/Sigara/Kahvaltı">Sosyal / Sigara / Kahvaltı</option>
-                            <option value="Faturalar/Abonelik">Faturalar / Abonelik (Tel/Su/Net)</option>
-                            <option value="Diğer">Diğer / Sürpriz Masraf</option>
-                        </select>
+
+                    <!-- ================= GIDER ALANLARI ================= -->
+                    <div id="expenseFieldsGroup" class="space-y-2.5">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="text-[11px] opacity-60 mb-1 block">Gider Kategorisi</label>
+                                <select id="txCategory" class="input-field">
+                                    <option value="Temel Yaşam">Temel Yaşam (Yol/Market/Yemek)</option>
+                                    <option value="Kredi/Borç">Kredi / Borç</option>
+                                    <option value="Eski Ev Masrafı">Eski Ev Masrafı (Kira/Aidat)</option>
+                                    <option value="Sosyal/Sigara/Kahvaltı">Sosyal / Sigara / Kahvaltı</option>
+                                    <option value="Faturalar/Abonelik">Faturalar / Abonelik (Tel/Su/Net)</option>
+                                    <option value="Diğer">Diğer / Sürpriz Masraf</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[11px] opacity-60 mb-1 block">Ödeme Yöntemi</label>
+                                <select id="txPaymentMethod" class="input-field">
+                                    <option value="Kredi Kartı">💳 Kredi Kartı</option>
+                                    <option value="Banka Kartı">🏦 Banka Kartı</option>
+                                    <option value="Nakit">💵 Nakit</option>
+                                    <option value="Havale/EFT">📱 Havale/EFT</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- ================= GELIR ALANLARI ================= -->
+                    <div id="incomeFieldsGroup" class="space-y-2.5 hidden">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="text-[11px] font-medium text-purple-300 mb-1 flex items-center gap-1">
+                                    <i class="fa-solid fa-building-columns text-[10px]"></i>
+                                    <span>Aldığım Tür / Banka</span>
+                                </label>
+                                <select id="txBank" class="input-field border-purple-500/30 focus:border-purple-400">
+                                    <option value="Enpara">🟣 Enpara</option>
+                                    <option value="Hadi">🟡 Hadi (Tom Bank)</option>
+                                    <option value="Akbank">🔴 Akbank</option>
+                                    <option value="Ziraat">🟢 Ziraat Bankası</option>
+                                    <option value="Yapıkredi">🔵 Yapı Kredi</option>
+                                    <option value="Nakit">💵 Nakit / Elden</option>
+                                    <option value="Diğer">🌐 Diğer Hesap</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[11px] font-medium text-emerald-300 mb-1 flex items-center gap-1">
+                                    <i class="fa-solid fa-percent text-[10px]"></i>
+                                    <span>Gelir / Prim Türü</span>
+                                </label>
+                                <select id="txIncomeType" class="input-field border-emerald-500/30 focus:border-emerald-400" onchange="handleIncomeTypeChange()">
+                                    <option value="own_sale">🌟 Kendi Satışım (%5 Prim)</option>
+                                    <option value="support_sale">🤝 Satış Desteği (%1 Prim)</option>
+                                    <option value="salary">💼 Maaş / Sabit Gelir</option>
+                                    <option value="other_income">🎁 Ek Gelir / İade / Diğer</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Prim Hesaplama Kutusu (Kendi Satışı veya Satış Desteği seçilince görünür) -->
+                        <div id="primCalculationBox" class="prim-calc-box space-y-2">
+                            <div class="flex items-center justify-between text-[11px]">
+                                <span class="font-semibold text-amber-300 flex items-center gap-1">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    <span id="primModelTitle">Kendi Satış Prim Hesabı (%5)</span>
+                                </span>
+                                <span class="badge badge-prim-5" id="primRateBadge">%5 Prim</span>
+                            </div>
+                            <div>
+                                <label class="text-[11px] opacity-75 mb-1 block">Satış Tutarı / Ciro (₺)</label>
+                                <input type="number" id="txSaleAmount" class="input-field font-semibold text-sm bg-slate-950/60 border-amber-500/30 focus:border-amber-400" placeholder="Örn: 50000" step="0.01" min="0" oninput="calculateCommissionLive()">
+                            </div>
+                            <div class="flex items-center justify-between text-[11px] pt-1 text-slate-300 border-t border-amber-500/10">
+                                <span class="opacity-70">Hesaplanan Prim:</span>
+                                <span class="font-bold text-emerald-400 text-xs" id="primLiveResult">₺0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Açıklama -->
                     <div>
-                        <label class="text-[11px] opacity-60 mb-1 block">Açıklama</label>
+                        <label class="text-[11px] opacity-60 mb-1 block" id="descLabel">Açıklama</label>
                         <input type="text" id="txDesc" class="input-field" placeholder="Örn: Market harcaması..." required maxlength="100">
                     </div>
+
+                    <!-- Tutar -->
                     <div>
-                        <label class="text-[11px] opacity-60 mb-1 block">Tutar (₺)</label>
+                        <label class="text-[11px] opacity-60 mb-1 flex items-center justify-between">
+                            <span id="amountLabel">Tutar (₺)</span>
+                            <span id="amountSubHelp" class="text-[10px] text-emerald-400 hidden font-medium">Net Prim / Kazanç Tutarı</span>
+                        </label>
                         <input type="number" id="txAmount" class="input-field font-semibold text-sm" placeholder="0.00" step="0.01" min="0.01" max="99999999" required>
                     </div>
 
@@ -641,6 +785,60 @@
                         <i class="fa-solid fa-xmark"></i> Düzenlemeyi İptal Et
                     </button>
                 </form>
+            </div>
+        </section>
+
+        <!-- Gelecek & Planlanan İşlemler (Upcoming & Scheduled Transactions) -->
+        <section class="glass-card p-4 sm:p-5 fade-in mb-4 sm:mb-5" id="upcomingSection">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center text-sm shadow-sm">
+                        <i class="fa-regular fa-clock"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-sm font-semibold">Gelecek & Planlanan İşlemler</h2>
+                            <span class="badge badge-status-planned text-[10px]" id="upcomingCount">0 Bekleyen</span>
+                        </div>
+                        <p class="text-[11px] opacity-50">Vadesi henüz gelmemiş planlanan harcamalar ve beklenen gelirler (Nakit bakiyenizi etkilemez)</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                    <div class="flex items-center gap-2.5 text-xs bg-slate-900/60 px-3 py-1.5 rounded-xl border border-white/5">
+                        <span class="text-slate-400">Bekleyen Gider: <strong class="text-amber-400 financial-value" id="upcomingTotalExpense">₺0</strong></span>
+                        <span class="opacity-20">|</span>
+                        <span class="text-slate-400">Beklenen Gelir: <strong class="text-emerald-400 financial-value" id="upcomingTotalIncome">₺0</strong></span>
+                    </div>
+                    <button onclick="toggleUpcomingCollapse()" id="upcomingToggleBtn" class="btn-secondary text-xs px-2.5 py-1.5" title="Gizle / Göster">
+                        <i class="fa-solid fa-chevron-up" id="upcomingToggleIcon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div id="upcomingContentArea">
+                <div id="upcomingEmptyState" class="hidden text-center py-6 opacity-50 text-xs">
+                    <i class="fa-regular fa-calendar-check text-2xl mb-1.5 opacity-60"></i>
+                    <p>Bu dönemde bekleyen planlanmış işlem bulunmuyor.</p>
+                </div>
+                <div class="overflow-x-auto" id="upcomingTableWrap">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="border-b border-white/10 text-[11px] opacity-50">
+                                <th class="py-2 px-2.5">Vade Tarihi</th>
+                                <th class="py-2 px-2.5">Kalan Süre</th>
+                                <th class="py-2 px-2.5">Tür</th>
+                                <th class="py-2 px-2.5">Kategori / Kanal</th>
+                                <th class="py-2 px-2.5">Açıklama</th>
+                                <th class="py-2 px-2.5 text-right">Tutar</th>
+                                <th class="py-2 px-2.5 text-right">Hızlı İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="upcomingTableBody" class="divide-y divide-white/5">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
@@ -658,22 +856,51 @@
                 <div class="flex flex-wrap gap-2">
                     <div class="relative flex-1 min-w-[130px]">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-xs opacity-40"></i>
-                        <input type="text" id="searchInput" class="input-field pl-8 text-xs py-1.5" placeholder="Ara..." oninput="renderTransactions()" maxlength="50">
+                        <input type="text" id="searchInput" class="input-field pl-8 text-xs py-1.5" placeholder="Ara (Banka, Prim, Açıklama)..." oninput="renderTransactions()" maxlength="50">
                     </div>
                     <select id="filterCategory" class="input-field text-xs w-auto py-1.5" onchange="renderTransactions()">
-                        <option value="">Tüm Kategoriler</option>
-                        <option value="Maaş/Gelir">Maaş / Gelir</option>
-                        <option value="Kredi/Borç">Kredi / Borç</option>
-                        <option value="Eski Ev Masrafı">Eski Ev Masrafı</option>
-                        <option value="Temel Yaşam">Temel Yaşam</option>
-                        <option value="Sosyal/Sigara/Kahvaltı">Sosyal / Sigara / Kahvaltı</option>
-                        <option value="Faturalar/Abonelik">Faturalar / Abonelik</option>
-                        <option value="Diğer">Diğer</option>
+                        <option value="">Tüm Kategoriler / Türler</option>
+                        <optgroup label="Gelir & Prim Türleri">
+                            <option value="Kendi Satışım">🌟 Kendi Satışım (%5 Prim)</option>
+                            <option value="Satış Desteği">🤝 Satış Desteği (%1 Prim)</option>
+                            <option value="Maaş">💼 Maaş</option>
+                            <option value="Ek Gelir">🎁 Ek Gelir / İade</option>
+                            <option value="Maaş/Gelir">🟢 Maaş / Gelir (Genel)</option>
+                        </optgroup>
+                        <optgroup label="Gider Kategorileri">
+                            <option value="Temel Yaşam">Temel Yaşam</option>
+                            <option value="Kredi/Borç">Kredi / Borç</option>
+                            <option value="Eski Ev Masrafı">Eski Ev Masrafı</option>
+                            <option value="Sosyal/Sigara/Kahvaltı">Sosyal / Sigara / Kahvaltı</option>
+                            <option value="Faturalar/Abonelik">Faturalar / Abonelik</option>
+                            <option value="Diğer">Diğer</option>
+                        </optgroup>
+                    </select>
+                    <select id="filterBankOrPay" class="input-field text-xs w-auto py-1.5" onchange="renderTransactions()">
+                        <option value="">Tüm Banka & Ödemeler</option>
+                        <optgroup label="Bankalar (Gelir)">
+                            <option value="Enpara">🟣 Enpara</option>
+                            <option value="Hadi">🟡 Hadi (Tom Bank)</option>
+                            <option value="Akbank">🔴 Akbank</option>
+                            <option value="Ziraat">🟢 Ziraat Bankası</option>
+                            <option value="Yapıkredi">🔵 Yapı Kredi</option>
+                        </optgroup>
+                        <optgroup label="Ödeme Yöntemleri (Gider)">
+                            <option value="Kredi Kartı">💳 Kredi Kartı</option>
+                            <option value="Banka Kartı">🏦 Banka Kartı</option>
+                            <option value="Nakit">💵 Nakit</option>
+                            <option value="Havale/EFT">📱 Havale/EFT</option>
+                        </optgroup>
                     </select>
                     <select id="filterType" class="input-field text-xs w-auto py-1.5" onchange="renderTransactions()">
                         <option value="">Tüm Tipler</option>
                         <option value="income">Gelir (+)</option>
                         <option value="expense">Gider (-)</option>
+                    </select>
+                    <select id="filterStatus" class="input-field text-xs w-auto py-1.5" onchange="renderTransactions()">
+                        <option value="">Tüm Durumlar</option>
+                        <option value="completed">✅ Gerçekleşenler</option>
+                        <option value="planned">⏳ Planlananlar</option>
                     </select>
                     <select id="sortBy" class="input-field text-xs w-auto py-1.5" onchange="renderTransactions()">
                         <option value="date-desc">En Yeni Tarih</option>
@@ -690,9 +917,9 @@
                         <tr class="text-left opacity-50 text-[11px] uppercase tracking-wider border-b border-white/5">
                             <th class="pb-2.5 px-2 sm:px-3">Tarih</th>
                             <th class="pb-2.5 px-2 sm:px-3">Tip</th>
-                            <th class="pb-2.5 px-2 sm:px-3">Kategori</th>
+                            <th class="pb-2.5 px-2 sm:px-3">Kategori / Tür</th>
                             <th class="pb-2.5 px-2 sm:px-3 hidden sm:table-cell">Açıklama</th>
-                            <th class="pb-2.5 px-2 sm:px-3 hidden md:table-cell">Ödeme</th>
+                            <th class="pb-2.5 px-2 sm:px-3 hidden md:table-cell">Ödeme / Banka & Prim</th>
                             <th class="pb-2.5 px-2 sm:px-3 text-right">Tutar</th>
                             <th class="pb-2.5 px-2 sm:px-3 text-right">İşlemler</th>
                         </tr>
@@ -890,10 +1117,14 @@
     let enteredPin = '';
     let isPrivacyMode = false;
     let idleTimer = null;
-    let isAppLocked = false;
+    let currentFormType = 'expense';
 
     const CATEGORY_COLORS = {
         'Maaş/Gelir':              { bg: '#10b981', light: 'rgba(16,185,129,0.15)' },
+        'Kendi Satışım':          { bg: '#f59e0b', light: 'rgba(245,158,11,0.15)' },
+        'Satış Desteği':           { bg: '#3b82f6', light: 'rgba(59,130,246,0.15)' },
+        'Maaş':                    { bg: '#10b981', light: 'rgba(16,185,129,0.15)' },
+        'Ek Gelir':                { bg: '#8b5cf6', light: 'rgba(139,92,246,0.15)' },
         'Kredi/Borç':              { bg: '#ef4444', light: 'rgba(239,68,68,0.15)' },
         'Eski Ev Masrafı':         { bg: '#f59e0b', light: 'rgba(245,158,11,0.15)' },
         'Temel Yaşam':             { bg: '#3b82f6', light: 'rgba(59,130,246,0.15)' },
@@ -904,6 +1135,10 @@
 
     const CATEGORY_ICONS = {
         'Maaş/Gelir':             'fa-solid fa-briefcase',
+        'Kendi Satışım':          'fa-solid fa-star',
+        'Satış Desteği':          'fa-solid fa-handshake',
+        'Maaş':                   'fa-solid fa-briefcase',
+        'Ek Gelir':               'fa-solid fa-gift',
         'Kredi/Borç':             'fa-solid fa-credit-card',
         'Eski Ev Masrafı':        'fa-solid fa-house',
         'Temel Yaşam':            'fa-solid fa-basket-shopping',
@@ -917,6 +1152,94 @@
         'Banka Kartı': 'fa-solid fa-credit-card text-blue-400',
         'Nakit': 'fa-solid fa-money-bill-wave text-emerald-400',
         'Havale/EFT': 'fa-solid fa-mobile-screen-button text-purple-400'
+    };
+
+    const BANK_CONFIG = {
+        'Enpara': {
+            name: 'Enpara',
+            badgeClass: 'badge-bank-enpara',
+            color: '#a855f7',
+            icon: 'fa-solid fa-building-columns text-purple-400'
+        },
+        'Hadi': {
+            name: 'Hadi (Tom Bank)',
+            badgeClass: 'badge-bank-hadi',
+            color: '#eab308',
+            icon: 'fa-solid fa-bolt-lightning text-yellow-400'
+        },
+        'Akbank': {
+            name: 'Akbank',
+            badgeClass: 'badge-bank-akbank',
+            color: '#ef4444',
+            icon: 'fa-solid fa-landmark text-red-400'
+        },
+        'Ziraat': {
+            name: 'Ziraat Bankası',
+            badgeClass: 'badge-bank-ziraat',
+            color: '#10b981',
+            icon: 'fa-solid fa-wheat-awn text-emerald-400'
+        },
+        'Yapıkredi': {
+            name: 'Yapı Kredi',
+            badgeClass: 'badge-bank-yapikredi',
+            color: '#3b82f6',
+            icon: 'fa-solid fa-gem text-blue-400'
+        },
+        'Nakit': {
+            name: 'Nakit / Elden',
+            badgeClass: 'badge-bank-default',
+            color: '#14b8a6',
+            icon: 'fa-solid fa-money-bill-wave text-teal-400'
+        },
+        'Diğer': {
+            name: 'Diğer Banka',
+            badgeClass: 'badge-bank-default',
+            color: '#94a3b8',
+            icon: 'fa-solid fa-wallet text-slate-400'
+        }
+    };
+
+    const INCOME_TYPES = {
+        'own_sale': {
+            id: 'own_sale',
+            name: 'Kendi Satışım (%5 Prim)',
+            shortName: 'Kendi Satışım',
+            rate: 0.05,
+            rateLabel: '%5 Prim',
+            badgeClass: 'badge-prim-5',
+            icon: 'fa-solid fa-star text-amber-400',
+            hasSaleAmount: true
+        },
+        'support_sale': {
+            id: 'support_sale',
+            name: 'Satış Desteği (%1 Prim)',
+            shortName: 'Satış Desteği',
+            rate: 0.01,
+            rateLabel: '%1 Prim',
+            badgeClass: 'badge-prim-1',
+            icon: 'fa-solid fa-handshake text-blue-400',
+            hasSaleAmount: true
+        },
+        'salary': {
+            id: 'salary',
+            name: 'Maaş / Sabit Gelir',
+            shortName: 'Maaş',
+            rate: 0,
+            rateLabel: 'Primsiz',
+            badgeClass: 'badge-income',
+            icon: 'fa-solid fa-briefcase text-emerald-400',
+            hasSaleAmount: false
+        },
+        'other_income': {
+            id: 'other_income',
+            name: 'Ek Gelir / İade / Diğer',
+            shortName: 'Ek Gelir',
+            rate: 0,
+            rateLabel: 'Diğer',
+            badgeClass: 'badge-income',
+            icon: 'fa-solid fa-gift text-purple-400',
+            hasSaleAmount: false
+        }
     };
 
     // ============================================================
@@ -1161,7 +1484,69 @@
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
     // ============================================================
-    // DATA LAYER (Starts Clean / Empty)
+    // PLANNED & STATUS HELPERS
+    // ============================================================
+    function getTodayStr() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function getTxStatus(t) {
+        if (!t) return 'completed';
+        if (t.status === 'completed') return 'completed';
+        const today = getTodayStr();
+        if (t.date && t.date <= today) return 'completed';
+        return 'planned';
+    }
+
+    function isTxPlanned(t) {
+        return getTxStatus(t) === 'planned';
+    }
+
+    function isTxCompleted(t) {
+        return getTxStatus(t) === 'completed';
+    }
+
+    function getDaysUntil(dateStr) {
+        if (!dateStr) return '';
+        const today = getTodayStr();
+        if (dateStr === today) return 'Bugün';
+        const dToday = new Date(today + 'T00:00:00');
+        const dTarget = new Date(dateStr + 'T00:00:00');
+        const diffTime = dTarget - dToday;
+        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays === 1) return 'Yarın';
+        if (diffDays > 1) return `${diffDays} gün sonra`;
+        if (diffDays === -1) return 'Dün';
+        if (diffDays < -1) return `${Math.abs(diffDays)} gün önce`;
+        return '';
+    }
+
+    function markTransactionCompleted(id) {
+        const all = getTransactions();
+        const tx = all.find(t => t.id === id);
+        if (!tx) return;
+        updateTransaction(id, { status: 'completed' });
+        showToast(`"${tx.description}" işlemi gerçekleşti olarak işaretlendi ve nakit bakiyeye yansıtıldı!`);
+        refreshAll();
+    }
+
+    function toggleTransactionStatus(id) {
+        const all = getTransactions();
+        const tx = all.find(t => t.id === id);
+        if (!tx) return;
+        const current = getTxStatus(tx);
+        const next = current === 'completed' ? 'planned' : 'completed';
+        updateTransaction(id, { status: next });
+        showToast(`İşlem durumu "${next === 'completed' ? 'Gerçekleşti (Ödendi)' : 'Planlandı (Beklemede)'}" olarak güncellendi.`);
+        refreshAll();
+    }
+
+    // ============================================================
+    // DATA LAYER
     // ============================================================
     function loadTransactions() {
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -1195,12 +1580,13 @@
     }
 
     // ============================================================
-    // SAMPLE BUDGET TEMPLATE (On-Demand Loadable)
+    // SAMPLE BUDGET TEMPLATE (Includes Sales Commission & Banks)
     // ============================================================
     function getSampleTemplateData() {
         return [
             // AĞUSTOS 2026
-            { id: genId(), date: '2026-08-26', type: 'income', category: 'Maaş/Gelir', description: 'Ağustos Maaşı', paymentMethod: 'Banka Kartı', amount: 45000 },
+            { id: genId(), date: '2026-08-26', type: 'income', bank: 'Ziraat', incomeType: 'salary', category: 'Maaş', description: 'Ağustos Maaşı', paymentMethod: 'Ziraat Bankası', amount: 45000 },
+            { id: genId(), date: '2026-08-28', type: 'income', bank: 'Enpara', incomeType: 'own_sale', saleAmount: 60000, commissionRate: 5, commissionAmount: 3000, category: 'Kendi Satışım', description: 'Elektronik Ürün Satış Primi (%5)', paymentMethod: 'Enpara', amount: 3000 },
             { id: genId(), date: '2026-08-27', type: 'expense', category: 'Kredi/Borç', description: 'Ağustos Kredi Taksiti', paymentMethod: 'Havale/EFT', amount: 6620 },
             { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Kalan Günler Yol', paymentMethod: 'Kredi Kartı', amount: 1500 },
             { id: genId(), date: '2026-08-27', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Market / Mutfak', paymentMethod: 'Kredi Kartı', amount: 2000 },
@@ -1208,8 +1594,10 @@
             { id: genId(), date: '2026-08-28', type: 'expense', category: 'Temel Yaşam', description: 'Ağustos Kişisel Masraf', paymentMethod: 'Nakit', amount: 1000 },
 
             // EYLÜL 2026
-            { id: genId(), date: '2026-09-26', type: 'income', category: 'Maaş/Gelir', description: 'Eylül Maaşı', paymentMethod: 'Banka Kartı', amount: 45000 },
-            { id: genId(), date: '2026-09-01', type: 'income', category: 'Maaş/Gelir', description: 'Eski Ev Depozito İadesi', paymentMethod: 'Havale/EFT', amount: 7500 },
+            { id: genId(), date: '2026-09-01', type: 'income', bank: 'Enpara', incomeType: 'other_income', category: 'Ek Gelir', description: 'Eski Ev Depozito İadesi', paymentMethod: 'Enpara', amount: 7500 },
+            { id: genId(), date: '2026-09-15', type: 'income', bank: 'Akbank', incomeType: 'support_sale', saleAmount: 120000, commissionRate: 1, commissionAmount: 1200, category: 'Satış Desteği', description: 'Anadolu Yakası Satış Desteği (%1)', paymentMethod: 'Akbank', amount: 1200 },
+            { id: genId(), date: '2026-09-22', type: 'income', bank: 'Hadi', incomeType: 'own_sale', saleAmount: 85000, commissionRate: 5, commissionAmount: 4250, category: 'Kendi Satışım', description: 'Hadi Satış Hakedişi (%5)', paymentMethod: 'Hadi (Tom Bank)', amount: 4250 },
+            { id: genId(), date: '2026-09-26', type: 'income', bank: 'Ziraat', incomeType: 'salary', category: 'Maaş', description: 'Eylül Maaşı', paymentMethod: 'Ziraat Bankası', amount: 45000 },
             { id: genId(), date: '2026-09-01', type: 'expense', category: 'Eski Ev Masrafı', description: 'Eylül Kira + Aidat', paymentMethod: 'Havale/EFT', amount: 16200 },
             { id: genId(), date: '2026-09-05', type: 'expense', category: 'Kredi/Borç', description: 'Eylül Krediler Toplamı', paymentMethod: 'Havale/EFT', amount: 6620 },
             { id: genId(), date: '2026-09-10', type: 'expense', category: 'Faturalar/Abonelik', description: 'Telefon + İnternet Faturaları', paymentMethod: 'Kredi Kartı', amount: 1735 },
@@ -1224,7 +1612,9 @@
             { id: genId(), date: '2026-09-25', type: 'expense', category: 'Diğer', description: 'Eylül Sürpriz Rezerv Harcama', paymentMethod: 'Nakit', amount: 1000 },
 
             // EKİM 2026
-            { id: genId(), date: '2026-10-26', type: 'income', category: 'Maaş/Gelir', description: 'Ekim Maaşı', paymentMethod: 'Banka Kartı', amount: 45000 },
+            { id: genId(), date: '2026-10-12', type: 'income', bank: 'Yapıkredi', incomeType: 'own_sale', saleAmount: 110000, commissionRate: 5, commissionAmount: 5500, category: 'Kendi Satışım', description: 'Yapı Kredi Satış Primi (%5)', paymentMethod: 'Yapı Kredi', amount: 5500 },
+            { id: genId(), date: '2026-10-20', type: 'income', bank: 'Enpara', incomeType: 'support_sale', saleAmount: 90000, commissionRate: 1, commissionAmount: 900, category: 'Satış Desteği', description: 'Şube Satış Desteği (%1)', paymentMethod: 'Enpara', amount: 900 },
+            { id: genId(), date: '2026-10-26', type: 'income', bank: 'Ziraat', incomeType: 'salary', category: 'Maaş', description: 'Ekim Maaşı', paymentMethod: 'Ziraat Bankası', amount: 45000 },
             { id: genId(), date: '2026-10-01', type: 'expense', category: 'Eski Ev Masrafı', description: 'Ekim Kira + Aidat', paymentMethod: 'Havale/EFT', amount: 16200 },
             { id: genId(), date: '2026-10-05', type: 'expense', category: 'Kredi/Borç', description: 'Ekim Krediler Toplamı', paymentMethod: 'Havale/EFT', amount: 6620 },
             { id: genId(), date: '2026-10-10', type: 'expense', category: 'Faturalar/Abonelik', description: 'Telefon + İnternet Faturaları', paymentMethod: 'Kredi Kartı', amount: 1735 },
@@ -1243,7 +1633,7 @@
     function loadSampleBudgetTemplate() {
         saveTransactions(getSampleTemplateData());
         closeModal('importExportModal');
-        showToast('26 Ağu - 30 Eki örnek bütçe planı yüklendi!');
+        showToast('26 Ağu - 30 Eki banka ve primli bütçe planı yüklendi!');
         refreshAll();
     }
 
@@ -1371,20 +1761,23 @@
 
     function renderSmartInsights() {
         const periodTx = getTransactionsForSelectedPeriod();
-        const expenses = periodTx.filter(t => t.type === 'expense');
-        const incomes = periodTx.filter(t => t.type === 'income');
+        const actualExpenses = periodTx.filter(t => t.type === 'expense' && isTxCompleted(t));
+        const actualIncomes = periodTx.filter(t => t.type === 'income' && isTxCompleted(t));
+        const plannedExpenses = periodTx.filter(t => t.type === 'expense' && isTxPlanned(t));
 
-        const totalExpense = expenses.reduce((s, t) => s + t.amount, 0);
-        const totalIncome = incomes.reduce((s, t) => s + t.amount, 0);
+        const totalExpense = actualExpenses.reduce((s, t) => s + t.amount, 0);
+        const totalIncome = actualIncomes.reduce((s, t) => s + t.amount, 0);
+        const totalPlannedExpense = plannedExpenses.reduce((s, t) => s + t.amount, 0);
 
-        // Daily Avg
+        // Daily Avg (based on actual completed expenses)
         const daysInPeriod = selectedMonth === 'ALL' ? 66 : 30;
         const dailyAvg = totalExpense > 0 ? totalExpense / daysInPeriod : 0;
         document.getElementById('insightDailyAvg').textContent = formatCurrency(dailyAvg);
 
         // Top Category
         const catMap = {};
-        expenses.forEach(t => { catMap[t.category] = (catMap[t.category] || 0) + t.amount; });
+        const sourceForCats = actualExpenses.length > 0 ? actualExpenses : periodTx.filter(t => t.type === 'expense');
+        sourceForCats.forEach(t => { catMap[t.category] = (catMap[t.category] || 0) + t.amount; });
         let topCat = '—';
         let topAmt = 0;
         for (const [k, v] of Object.entries(catMap)) {
@@ -1392,7 +1785,7 @@
         }
         document.getElementById('insightTopCat').textContent = topCat;
 
-        // Savings Rate
+        // Savings Rate (Current Cash)
         const savings = totalIncome - totalExpense;
         const savingsRate = totalIncome > 0 ? Math.round((savings / totalIncome) * 100) : 0;
         const sRateEl = document.getElementById('insightSavingsRate');
@@ -1401,7 +1794,7 @@
 
         // Health Status
         const healthEl = document.getElementById('insightHealthStatus');
-        if (totalIncome === 0 && totalExpense === 0) {
+        if (totalIncome === 0 && totalExpense === 0 && totalPlannedExpense === 0) {
             healthEl.textContent = 'Veri Bekleniyor';
             healthEl.className = 'font-bold text-slate-400';
         } else if (savingsRate >= 30) {
@@ -1418,6 +1811,16 @@
             healthEl.className = 'font-bold text-red-400';
         }
 
+        // Sales & Commission Tracking (From actual received income)
+        const salesTx = actualIncomes.filter(t => t.incomeType === 'own_sale' || t.incomeType === 'support_sale' || (t.commissionRate && t.commissionRate > 0));
+        const totalCommission = salesTx.reduce((s, t) => s + (t.commissionAmount || t.amount), 0);
+        const totalSalesVolume = salesTx.reduce((s, t) => s + (t.saleAmount || 0), 0);
+
+        document.getElementById('insightPrimEarned').textContent = formatCurrency(totalCommission);
+        document.getElementById('insightPrimSales').textContent = totalSalesVolume > 0
+            ? `Ciro: ${formatCurrency(totalSalesVolume)}`
+            : 'Primli Satış Yok';
+
         // Budget Limit Label
         const budgetLimit = localStorage.getItem(BUDGET_LIMIT_KEY);
         const limitBtn = document.getElementById('budgetLimitBtnLabel');
@@ -1429,41 +1832,96 @@
     }
 
     // ============================================================
-    // KPI RENDERING
+    // KPI RENDERING (Separates Actual Cash from Planned Commitments)
     // ============================================================
     function renderKPIs() {
         const periodTx = getTransactionsForSelectedPeriod();
-        const totalIncome = periodTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-        const totalExpense = periodTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+        const actualIncomes = periodTx.filter(t => t.type === 'income' && isTxCompleted(t));
+        const actualExpenses = periodTx.filter(t => t.type === 'expense' && isTxCompleted(t));
+        const plannedIncomes = periodTx.filter(t => t.type === 'income' && isTxPlanned(t));
+        const plannedExpenses = periodTx.filter(t => t.type === 'expense' && isTxPlanned(t));
+
+        // Actual Figures (Directly affects cash balance)
+        const totalIncome = actualIncomes.reduce((s, t) => s + t.amount, 0);
+        const totalExpense = actualExpenses.reduce((s, t) => s + t.amount, 0);
         const balance = totalIncome - totalExpense;
 
+        // Planned Figures
+        const totalPlannedIncome = plannedIncomes.reduce((s, t) => s + t.amount, 0);
+        const totalPlannedExpense = plannedExpenses.reduce((s, t) => s + t.amount, 0);
+        const projectedBalance = balance + totalPlannedIncome - totalPlannedExpense;
+
+        const salesTx = actualIncomes.filter(t => t.incomeType === 'own_sale' || t.incomeType === 'support_sale' || (t.commissionRate && t.commissionRate > 0));
+        const totalCommission = salesTx.reduce((s, t) => s + (t.commissionAmount || t.amount), 0);
+
+        // Budget & Commitments
         const budgetLimit = parseFloat(localStorage.getItem(BUDGET_LIMIT_KEY) || '0');
         const denominator = budgetLimit > 0 ? budgetLimit : (totalIncome > 0 ? totalIncome : 0);
-        const budgetPct = denominator > 0 ? Math.round((totalExpense / denominator) * 100) : 0;
+        
+        const spentPct = denominator > 0 ? Math.round((totalExpense / denominator) * 100) : 0;
+        const totalCommittedExpense = totalExpense + totalPlannedExpense;
+        const totalCommittedPct = denominator > 0 ? Math.round((totalCommittedExpense / denominator) * 100) : 0;
 
         const periodTitle = selectedMonth === 'ALL' ? 'Tüm Dönem' : getMonthDisplayName(selectedMonth);
 
-        document.getElementById('kpiIncomeLabel').textContent = `${periodTitle} Gelir`;
-        document.getElementById('kpiExpenseLabel').textContent = `${periodTitle} Gider`;
-        document.getElementById('kpiBalanceLabel').textContent = `${periodTitle} Net Bakiye`;
+        document.getElementById('kpiIncomeLabel').textContent = `${periodTitle} Fiili Gelir`;
+        document.getElementById('kpiExpenseLabel').textContent = `${periodTitle} Fiili Gider`;
+        document.getElementById('kpiBalanceLabel').textContent = `${periodTitle} Net Nakit Bakiye`;
 
         document.getElementById('kpiIncome').textContent = formatCurrency(totalIncome);
         document.getElementById('kpiExpense').textContent = formatCurrency(totalExpense);
+
+        const kpiIncomeSub = document.getElementById('kpiIncomeSub');
+        if (kpiIncomeSub) {
+            let sub = totalCommission > 0 ? `${formatCurrency(totalCommission)} Prim dahil` : 'Tahsil Edilen';
+            if (totalPlannedIncome > 0) sub += ` (⏳ +${formatCurrency(totalPlannedIncome)})`;
+            kpiIncomeSub.textContent = sub;
+        }
+
+        const kpiExpenseSub = document.getElementById('kpiExpenseSub');
+        if (kpiExpenseSub) {
+            kpiExpenseSub.textContent = totalPlannedExpense > 0
+                ? `Fiili Harcama · ⏳ Planlanan: ${formatCurrency(totalPlannedExpense)}`
+                : 'Gerçekleşen Harcamalar';
+        }
 
         const balEl = document.getElementById('kpiBalance');
         balEl.textContent = `${balance >= 0 ? '+' : ''}${formatCurrency(balance)}`;
         balEl.className = `text-lg sm:text-2xl font-bold ${balance >= 0 ? 'text-emerald-400' : 'text-red-400'}`;
 
-        document.getElementById('kpiBudgetPct').textContent = budgetPct + '%';
+        const balSub = document.getElementById('kpiBalanceSub');
+        if (balSub) {
+            balSub.textContent = (totalPlannedIncome > 0 || totalPlannedExpense > 0)
+                ? `Planlanan Sonrası Beklenen: ${formatCurrency(projectedBalance)}`
+                : 'Fiili Kasa / Nakit';
+        }
+
+        // Budget Bar (Dual Layer: Solid = Actual, Stripes = Planned Commitments)
+        document.getElementById('kpiBudgetPct').textContent = spentPct + '%';
+        const committedSub = document.getElementById('kpiBudgetCommittedSub');
+        if (committedSub) {
+            committedSub.textContent = totalPlannedExpense > 0 ? `+${totalCommittedPct - spentPct}% Planlanan (Toplam %${totalCommittedPct})` : '';
+        }
+
         const bar = document.getElementById('kpiBudgetBar');
-        bar.style.width = Math.min(budgetPct, 100) + '%';
-        bar.className = `progress-bar-fill ${budgetPct > 100 ? 'over-budget' : ''}`;
+        bar.style.width = Math.min(spentPct, 100) + '%';
+        bar.className = `progress-bar-fill ${spentPct > 100 ? 'over-budget' : ''}`;
+
+        const plannedBar = document.getElementById('kpiBudgetPlannedBar');
+        if (plannedBar) {
+            plannedBar.style.width = Math.min(totalCommittedPct, 100) + '%';
+            plannedBar.className = `progress-bar-planned ${totalCommittedPct > 100 ? 'over-budget-planned' : ''}`;
+        }
 
         const lbl = document.getElementById('kpiBudgetLabel');
         if (budgetLimit > 0) {
-            lbl.textContent = `Aylık ₺${budgetLimit.toLocaleString('tr-TR')} limitine göre`;
+            lbl.textContent = totalPlannedExpense > 0
+                ? `Harcandı: ${formatCurrency(totalExpense)} | Planlanan: ${formatCurrency(totalPlannedExpense)} / Limit: ${formatCurrency(budgetLimit)}`
+                : `Harcandı: ${formatCurrency(totalExpense)} / Limit: ${formatCurrency(budgetLimit)}`;
         } else {
-            lbl.textContent = 'Gelire göre harcama oranı';
+            lbl.textContent = totalPlannedExpense > 0
+                ? `Harcama: %${spentPct} | Planlanan Dahil: %${totalCommittedPct}`
+                : 'Gelire göre harcama oranı';
         }
 
         document.getElementById('categoryChartTitle').textContent = `Kategori Dağılımı (${periodTitle})`;
@@ -1471,6 +1929,98 @@
         document.getElementById('historyPeriodNotice').textContent = selectedMonth === 'ALL'
             ? 'Tüm kayıtlar listeleniyor'
             : `${getMonthDisplayName(selectedMonth)} ayına ait işlemler`;
+    }
+
+    // ============================================================
+    // GELECEK & PLANLANAN İŞLEMLER WIDGET
+    // ============================================================
+    let isUpcomingCollapsed = false;
+    function toggleUpcomingCollapse() {
+        isUpcomingCollapsed = !isUpcomingCollapsed;
+        const area = document.getElementById('upcomingContentArea');
+        const icon = document.getElementById('upcomingToggleIcon');
+        if (isUpcomingCollapsed) {
+            area.classList.add('hidden');
+            icon.className = 'fa-solid fa-chevron-down';
+        } else {
+            area.classList.remove('hidden');
+            icon.className = 'fa-solid fa-chevron-up';
+        }
+    }
+
+    function renderUpcomingSection() {
+        const periodTx = getTransactionsForSelectedPeriod();
+        const plannedList = periodTx.filter(t => isTxPlanned(t)).sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+        const countEl = document.getElementById('upcomingCount');
+        const totalExpEl = document.getElementById('upcomingTotalExpense');
+        const totalIncEl = document.getElementById('upcomingTotalIncome');
+        const emptyEl = document.getElementById('upcomingEmptyState');
+        const tableWrap = document.getElementById('upcomingTableWrap');
+        const tbody = document.getElementById('upcomingTableBody');
+
+        if (!countEl || !tbody) return;
+
+        const totalExpense = plannedList.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+        const totalIncome = plannedList.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+
+        countEl.textContent = `${plannedList.length} Bekleyen`;
+        totalExpEl.textContent = formatCurrency(totalExpense);
+        totalIncEl.textContent = formatCurrency(totalIncome);
+
+        if (plannedList.length === 0) {
+            emptyEl.classList.remove('hidden');
+            tableWrap.classList.add('hidden');
+            tbody.innerHTML = '';
+            return;
+        }
+
+        emptyEl.classList.add('hidden');
+        tableWrap.classList.remove('hidden');
+
+        tbody.innerHTML = plannedList.map(t => {
+            const isIncome = t.type === 'income';
+            const daysText = getDaysUntil(t.date);
+
+            return `
+                <tr class="table-row border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
+                    <td class="py-2.5 px-2.5 whitespace-nowrap font-medium">
+                        ${escapeHTML(formatDate(t.date))}
+                    </td>
+                    <td class="py-2.5 px-2.5 whitespace-nowrap">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/25">
+                            <i class="fa-regular fa-clock text-[8px]"></i> ${daysText}
+                        </span>
+                    </td>
+                    <td class="py-2.5 px-2.5 whitespace-nowrap">
+                        <span class="badge ${isIncome ? 'badge-income' : 'badge-expense'}">
+                            <i class="fa-solid ${isIncome ? 'fa-arrow-up' : 'fa-arrow-down'} text-[8px]"></i>
+                            ${isIncome ? 'Gelir' : 'Gider'}
+                        </span>
+                    </td>
+                    <td class="py-2.5 px-2.5 whitespace-nowrap">
+                        ${escapeHTML(t.category || (isIncome ? 'Gelir' : 'Gider'))}
+                    </td>
+                    <td class="py-2.5 px-2.5 max-w-[180px] truncate opacity-80">
+                        ${escapeHTML(t.description)}
+                    </td>
+                    <td class="py-2.5 px-2.5 text-right font-semibold whitespace-nowrap ${isIncome ? 'text-emerald-400' : 'text-amber-400'}">
+                        ${isIncome ? '+' : '-'}${formatCurrency(t.amount)}
+                    </td>
+                    <td class="py-2.5 px-2.5 text-right whitespace-nowrap">
+                        <button onclick="markTransactionCompleted('${escapeHTML(t.id)}')" class="btn-secondary text-[11px] py-1 px-2.5 mr-1 text-emerald-400 hover:text-emerald-300 border-emerald-500/30" title="Şimdi Gerçekleştir (Ödendi İşaretle)">
+                            <i class="fa-solid fa-check text-[10px]"></i> <span class="hidden sm:inline">Şimdi Tamamla</span>
+                        </button>
+                        <button onclick="editTransaction('${escapeHTML(t.id)}')" class="btn-secondary py-1 px-2 mr-1" title="Düzenle">
+                            <i class="fa-solid fa-pen text-[10px]"></i>
+                        </button>
+                        <button onclick="promptDelete('${escapeHTML(t.id)}')" class="btn-danger py-1 px-2" title="Sil">
+                            <i class="fa-solid fa-trash text-[10px]"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
     }
 
     // ============================================================
@@ -1495,9 +2045,27 @@
         renderComparisonChart();
     }
 
+    let categoryScope = 'actual'; // 'actual' or 'all'
+
+    function setCategoryScope(scope) {
+        categoryScope = scope;
+        const btnAct = document.getElementById('tabCatActual');
+        const btnAll = document.getElementById('tabCatAll');
+        if (btnAct && btnAll) {
+            if (scope === 'actual') {
+                btnAct.className = 'px-2 py-0.5 rounded text-[10px] font-semibold transition-all bg-brand-500/20 text-brand-300';
+                btnAll.className = 'px-2 py-0.5 rounded text-[10px] font-semibold transition-all text-slate-400 hover:text-white';
+            } else {
+                btnAct.className = 'px-2 py-0.5 rounded text-[10px] font-semibold transition-all text-slate-400 hover:text-white';
+                btnAll.className = 'px-2 py-0.5 rounded text-[10px] font-semibold transition-all bg-amber-500/20 text-amber-300';
+            }
+        }
+        renderCategoryChart();
+    }
+
     function renderCategoryChart() {
         const periodTx = getTransactionsForSelectedPeriod();
-        const expenses = periodTx.filter(t => t.type === 'expense');
+        const expenses = periodTx.filter(t => t.type === 'expense' && (categoryScope === 'all' || isTxCompleted(t)));
         const grouped = {};
         expenses.forEach(t => {
             grouped[t.category] = (grouped[t.category] || 0) + t.amount;
@@ -1577,11 +2145,15 @@
         const monthLabels = months.map(m => getMonthDisplayName(m));
 
         const incomeData = months.map(m => {
-            return all.filter(t => t.date && t.date.startsWith(m) && t.type === 'income').reduce((s, t) => s + t.amount, 0);
+            return all.filter(t => t.date && t.date.startsWith(m) && t.type === 'income' && isTxCompleted(t)).reduce((s, t) => s + t.amount, 0);
         });
 
         const expenseData = months.map(m => {
-            return all.filter(t => t.date && t.date.startsWith(m) && t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+            return all.filter(t => t.date && t.date.startsWith(m) && t.type === 'expense' && isTxCompleted(t)).reduce((s, t) => s + t.amount, 0);
+        });
+
+        const plannedExpenseData = months.map(m => {
+            return all.filter(t => t.date && t.date.startsWith(m) && t.type === 'expense' && isTxPlanned(t)).reduce((s, t) => s + t.amount, 0);
         });
 
         if (comparisonChart) comparisonChart.destroy();
@@ -1595,7 +2167,7 @@
                 labels: monthLabels,
                 datasets: [
                     {
-                        label: 'Gelir (₺)',
+                        label: 'Fiili Gelir (₺)',
                         data: incomeData,
                         backgroundColor: isBar ? 'rgba(16,185,129,0.75)' : 'rgba(16,185,129,0.1)',
                         borderColor: '#10b981',
@@ -1607,13 +2179,26 @@
                         pointHoverRadius: 7
                     },
                     {
-                        label: 'Masraf (₺)',
+                        label: 'Fiili Masraf (₺)',
                         data: expenseData,
                         backgroundColor: isBar ? 'rgba(239,68,68,0.75)' : 'rgba(239,68,68,0.1)',
                         borderColor: '#ef4444',
                         borderWidth: 2,
                         borderRadius: isBar ? 6 : 0,
                         fill: !isBar,
+                        tension: 0.35,
+                        pointRadius: 4,
+                        pointHoverRadius: 7
+                    },
+                    {
+                        label: 'Planlanan Masraf (₺)',
+                        data: plannedExpenseData,
+                        backgroundColor: isBar ? 'rgba(245,158,11,0.5)' : 'rgba(245,158,11,0.08)',
+                        borderColor: '#f59e0b',
+                        borderWidth: 2,
+                        borderDash: isBar ? [] : [5, 5],
+                        borderRadius: isBar ? 6 : 0,
+                        fill: false,
                         tension: 0.35,
                         pointRadius: 4,
                         pointHoverRadius: 7
@@ -1651,24 +2236,375 @@
     }
 
     // ============================================================
-    // TRANSACTION TABLE
+    // FORM & DYNAMIC FIELD CONTROLS
+    // ============================================================
+    function initForm() {
+        setFormDateToday();
+        setFormType('expense');
+        const statusEl = document.getElementById('txStatus');
+        if (statusEl) statusEl.value = 'auto';
+        updateStatusDisplay();
+    }
+
+    function setFormDateToday() {
+        const today = getTodayStr();
+        document.getElementById('txDate').value = today;
+        updateFormTargetMonth();
+        updateStatusDisplay();
+    }
+
+    function handleDateChange() {
+        updateFormTargetMonth();
+        updateStatusDisplay();
+    }
+
+    function handleStatusChange() {
+        updateStatusDisplay();
+    }
+
+    function updateStatusDisplay() {
+        const dateVal = document.getElementById('txDate')?.value;
+        const statusVal = document.getElementById('txStatus')?.value;
+        const today = getTodayStr();
+        const notice = document.getElementById('futureDateNotice');
+        const noticeText = document.getElementById('futureDateNoticeText');
+        const summary = document.getElementById('txStatusSummary');
+
+        if (!notice || !summary) return;
+
+        const isFuture = dateVal && dateVal > today;
+
+        if (statusVal === 'planned' || (statusVal === 'auto' && isFuture)) {
+            notice.classList.remove('hidden');
+            if (isFuture) {
+                const daysText = getDaysUntil(dateVal);
+                noticeText.textContent = `Bu işlem ${daysText} (${formatDate(dateVal)}) için planlanacak ve o güne kadar bugünkü nakit bakiyenizi etkilemeyecektir.`;
+            } else {
+                noticeText.textContent = 'Bu işlem planlanan (beklemede) olarak kaydedilecek ve fiili nakit bakiyenizden düşülmeyecektir.';
+            }
+            summary.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0"></span><span class="text-amber-300 font-medium truncate">Beklemede (Bakiyeden Düşmez)</span>';
+        } else {
+            notice.classList.add('hidden');
+            if (isFuture && statusVal === 'completed') {
+                summary.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span><span class="text-emerald-300 font-medium truncate">Erken Ödeme (Anında Yansır)</span>';
+            } else {
+                summary.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span><span class="text-emerald-300 font-medium truncate">Fiili İşlem (Anında Yansır)</span>';
+            }
+        }
+    }
+
+    function updateFormTargetMonth() {
+        const dateVal = document.getElementById('txDate').value;
+        if (dateVal) {
+            const key = getMonthKey(dateVal);
+            document.getElementById('formTargetMonthLabel').textContent = `Hedef: ${getMonthDisplayName(key)}`;
+        }
+    }
+
+    function setFormType(type) {
+        currentFormType = type;
+        document.getElementById('txType').value = type;
+
+        const btnExpense = document.getElementById('typeBtnExpense');
+        const btnIncome = document.getElementById('typeBtnIncome');
+        const expenseGroup = document.getElementById('expenseFieldsGroup');
+        const incomeGroup = document.getElementById('incomeFieldsGroup');
+        const descInput = document.getElementById('txDesc');
+        const descLabel = document.getElementById('descLabel');
+        const amountHelp = document.getElementById('amountSubHelp');
+
+        if (type === 'expense') {
+            btnExpense.className = 'py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all bg-red-500/20 text-red-400 border border-red-500/30 shadow-sm';
+            btnIncome.className = 'py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all text-slate-400 hover:text-white border border-transparent';
+            expenseGroup.classList.remove('hidden');
+            incomeGroup.classList.add('hidden');
+            descLabel.textContent = 'Gider Açıklaması';
+            descInput.placeholder = 'Örn: Market harcaması, Kira vb.';
+            amountHelp.classList.add('hidden');
+        } else {
+            btnExpense.className = 'py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all text-slate-400 hover:text-white border border-transparent';
+            btnIncome.className = 'py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-sm';
+            expenseGroup.classList.add('hidden');
+            incomeGroup.classList.remove('hidden');
+            descLabel.textContent = 'Gelir / Prim Açıklaması';
+            amountHelp.classList.remove('hidden');
+            handleIncomeTypeChange();
+        }
+
+        renderQuickChips();
+    }
+
+    function handleIncomeTypeChange() {
+        const itype = document.getElementById('txIncomeType').value;
+        const calcBox = document.getElementById('primCalculationBox');
+        const titleEl = document.getElementById('primModelTitle');
+        const badgeEl = document.getElementById('primRateBadge');
+        const descInput = document.getElementById('txDesc');
+
+        if (itype === 'own_sale') {
+            calcBox.classList.remove('hidden');
+            titleEl.textContent = 'Kendi Satış Prim Hesabı (%5)';
+            badgeEl.textContent = '%5 Prim';
+            badgeEl.className = 'badge badge-prim-5';
+            if (!descInput.value || descInput.value.includes('Maaş') || descInput.value.includes('Destek')) {
+                descInput.placeholder = 'Örn: Kendi Satışım / Ürün Satışı Primi';
+            }
+        } else if (itype === 'support_sale') {
+            calcBox.classList.remove('hidden');
+            titleEl.textContent = 'Satış Desteği Prim Hesabı (%1)';
+            badgeEl.textContent = '%1 Prim';
+            badgeEl.className = 'badge badge-prim-1';
+            if (!descInput.value || descInput.value.includes('Maaş') || descInput.value.includes('Kendi Satış')) {
+                descInput.placeholder = 'Örn: Şube / Ekip Satış Desteği Primi';
+            }
+        } else if (itype === 'salary') {
+            calcBox.classList.add('hidden');
+            descInput.placeholder = 'Örn: Aylık Maaş Ödemesi';
+        } else {
+            calcBox.classList.add('hidden');
+            descInput.placeholder = 'Örn: Ek gelir, iade, freelance vb.';
+        }
+
+        calculateCommissionLive();
+    }
+
+    function calculateCommissionLive() {
+        const itype = document.getElementById('txIncomeType').value;
+        const saleVal = parseFloat(document.getElementById('txSaleAmount').value);
+        const resultEl = document.getElementById('primLiveResult');
+        const amountInput = document.getElementById('txAmount');
+
+        if (itype === 'own_sale') {
+            if (!isNaN(saleVal) && saleVal > 0) {
+                const comm = saleVal * 0.05;
+                resultEl.textContent = `${formatCurrency(comm)} (Satış: ${formatCurrency(saleVal)} x %5)`;
+                amountInput.value = comm.toFixed(2);
+            } else {
+                resultEl.textContent = '₺0 (%5)';
+            }
+        } else if (itype === 'support_sale') {
+            if (!isNaN(saleVal) && saleVal > 0) {
+                const comm = saleVal * 0.01;
+                resultEl.textContent = `${formatCurrency(comm)} (Satış: ${formatCurrency(saleVal)} x %1)`;
+                amountInput.value = comm.toFixed(2);
+            } else {
+                resultEl.textContent = '₺0 (%1)';
+            }
+        } else {
+            resultEl.textContent = '—';
+        }
+    }
+
+    function renderQuickChips() {
+        const container = document.getElementById('quickChipsContainer');
+        const header = document.getElementById('quickPresetsHeader');
+
+        if (currentFormType === 'expense') {
+            header.textContent = 'Hızlı Gider Şablonları:';
+            container.innerHTML = `
+                <span class="quick-chip" onclick="applyQuickExpense('Temel Yaşam', 'Market Alışverişi', 'Kredi Kartı')"><i class="fa-solid fa-basket-shopping text-blue-400 text-[10px]"></i> Market</span>
+                <span class="quick-chip" onclick="applyQuickExpense('Eski Ev Masrafı', 'Kira + Aidat Ödemesi', 'Havale/EFT')"><i class="fa-solid fa-house text-amber-400 text-[10px]"></i> Kira</span>
+                <span class="quick-chip" onclick="applyQuickExpense('Faturalar/Abonelik', 'Fatura Ödemesi', 'Kredi Kartı')"><i class="fa-solid fa-bolt text-pink-400 text-[10px]"></i> Fatura</span>
+                <span class="quick-chip" onclick="applyQuickExpense('Sosyal/Sigara/Kahvaltı', 'Sosyal Harcama / Yemek', 'Nakit')"><i class="fa-solid fa-mug-hot text-purple-400 text-[10px]"></i> Sosyal</span>
+                <span class="quick-chip" onclick="applyQuickExpense('Kredi/Borç', 'Kredi Taksiti', 'Havale/EFT')"><i class="fa-solid fa-credit-card text-red-400 text-[10px]"></i> Kredi</span>
+            `;
+        } else {
+            header.textContent = 'Hızlı Gelir & Prim Şablonları:';
+            container.innerHTML = `
+                <span class="quick-chip" onclick="applyQuickIncome('own_sale', 'Enpara', 'Kendi Satış Primi', 60000)"><i class="fa-solid fa-star text-amber-400 text-[10px]"></i> 🌟 Enpara (%5)</span>
+                <span class="quick-chip" onclick="applyQuickIncome('support_sale', 'Akbank', 'Şube Satış Desteği', 100000)"><i class="fa-solid fa-handshake text-blue-400 text-[10px]"></i> 🤝 Akbank (%1)</span>
+                <span class="quick-chip" onclick="applyQuickIncome('own_sale', 'Hadi', 'Hadi Satış Primi', 50000)"><i class="fa-solid fa-bolt text-yellow-400 text-[10px]"></i> ⚡ Hadi (%5)</span>
+                <span class="quick-chip" onclick="applyQuickIncome('own_sale', 'Yapıkredi', 'Yapı Kredi Satış Primi', 80000)"><i class="fa-solid fa-gem text-blue-400 text-[10px]"></i> 🔵 Yapıkredi (%5)</span>
+                <span class="quick-chip" onclick="applyQuickIncome('salary', 'Ziraat', 'Aylık Maaş', 45000)"><i class="fa-solid fa-briefcase text-emerald-400 text-[10px]"></i> 🟢 Ziraat Maaş</span>
+            `;
+        }
+    }
+
+    function applyQuickExpense(category, desc, payment) {
+        document.getElementById('txCategory').value = category;
+        document.getElementById('txDesc').value = desc;
+        if (payment) document.getElementById('txPaymentMethod').value = payment;
+        document.getElementById('txAmount').focus();
+    }
+
+    function applyQuickIncome(incomeType, bank, desc, saleOrAmt) {
+        document.getElementById('txBank').value = bank;
+        document.getElementById('txIncomeType').value = incomeType;
+        handleIncomeTypeChange();
+        document.getElementById('txDesc').value = desc;
+
+        if (incomeType === 'own_sale' || incomeType === 'support_sale') {
+            document.getElementById('txSaleAmount').value = saleOrAmt;
+            calculateCommissionLive();
+        } else {
+            document.getElementById('txAmount').value = saleOrAmt;
+        }
+
+        document.getElementById('txAmount').focus();
+    }
+
+    function handleFormSubmit(e) {
+        e.preventDefault();
+        const editId = document.getElementById('editId').value;
+        const formType = currentFormType;
+        const rawAmount = parseFloat(document.getElementById('txAmount').value);
+        const txDate = document.getElementById('txDate').value;
+        const selectedStatus = document.getElementById('txStatus').value;
+        const today = getTodayStr();
+
+        if (isNaN(rawAmount) || rawAmount <= 0) {
+            showToast('Lütfen geçerli bir tutar girin!', 'error');
+            return;
+        }
+
+        let finalStatus = selectedStatus;
+        if (selectedStatus === 'auto') {
+            finalStatus = txDate > today ? 'planned' : 'completed';
+        }
+
+        let data = {
+            date: txDate,
+            type: formType,
+            status: finalStatus,
+            description: document.getElementById('txDesc').value.trim(),
+            amount: rawAmount
+        };
+
+        if (formType === 'expense') {
+            data.category = document.getElementById('txCategory').value;
+            data.paymentMethod = document.getElementById('txPaymentMethod').value;
+        } else {
+            const bank = document.getElementById('txBank').value;
+            const incomeType = document.getElementById('txIncomeType').value;
+            const isPrim = (incomeType === 'own_sale' || incomeType === 'support_sale');
+            const saleAmount = isPrim ? (parseFloat(document.getElementById('txSaleAmount').value) || 0) : 0;
+            const commissionRate = incomeType === 'own_sale' ? 5 : (incomeType === 'support_sale' ? 1 : 0);
+
+            data.bank = bank;
+            data.incomeType = incomeType;
+            data.saleAmount = saleAmount;
+            data.commissionRate = commissionRate;
+            data.commissionAmount = rawAmount;
+            data.category = INCOME_TYPES[incomeType]?.shortName || 'Gelir';
+            data.paymentMethod = bank;
+        }
+
+        if (editId) {
+            updateTransaction(editId, data);
+            showToast('İşlem güncellendi!');
+            cancelEditMode();
+        } else {
+            data.id = genId();
+            addTransaction(data);
+            const isPlannedItem = finalStatus === 'planned';
+            showToast(isPlannedItem ? 'Gelecek tarihli işlem planlanan olarak eklendi!' : 'İşlem eklendi!');
+        }
+
+        document.getElementById('transactionForm').reset();
+        initForm();
+        refreshAll();
+    }
+
+    function editTransaction(id) {
+        const all = getTransactions();
+        const tx = all.find(t => t.id === id);
+        if (!tx) return;
+
+        document.getElementById('editId').value = tx.id;
+        document.getElementById('txDate').value = tx.date;
+        document.getElementById('txDesc').value = tx.description;
+        document.getElementById('txAmount').value = tx.amount;
+
+        const statusSelect = document.getElementById('txStatus');
+        if (statusSelect) {
+            statusSelect.value = tx.status || 'auto';
+        }
+
+        setFormType(tx.type);
+
+        if (tx.type === 'income') {
+            document.getElementById('txBank').value = tx.bank || tx.paymentMethod || 'Enpara';
+            document.getElementById('txIncomeType').value = tx.incomeType || (tx.category === 'Kendi Satışım' ? 'own_sale' : (tx.category === 'Satış Desteği' ? 'support_sale' : (tx.category === 'Maaş' ? 'salary' : 'other_income')));
+            handleIncomeTypeChange();
+            if (tx.saleAmount) {
+                document.getElementById('txSaleAmount').value = tx.saleAmount;
+                calculateCommissionLive();
+            }
+        } else {
+            document.getElementById('txCategory').value = tx.category || 'Temel Yaşam';
+            document.getElementById('txPaymentMethod').value = tx.paymentMethod || 'Kredi Kartı';
+        }
+
+        document.getElementById('formTitle').textContent = 'İşlemi Düzenle';
+        document.getElementById('formSubmitText').textContent = 'Güncelle';
+        document.getElementById('cancelEdit').classList.remove('hidden');
+        updateFormTargetMonth();
+        updateStatusDisplay();
+
+        scrollToSection('formCard');
+    }
+
+    function cancelEditMode() {
+        document.getElementById('editId').value = '';
+        document.getElementById('formTitle').textContent = 'İşlem Ekle';
+        document.getElementById('formSubmitText').textContent = 'Kaydet';
+        document.getElementById('cancelEdit').classList.add('hidden');
+        document.getElementById('transactionForm').reset();
+        initForm();
+    }
+
+    function promptDelete(id) {
+        document.getElementById('confirmTitle').textContent = 'İşlemi Sil';
+        document.getElementById('confirmMessage').textContent = 'Bu işlem kaydı kalıcı olarak silinecek. Emin misiniz?';
+        document.getElementById('confirmAction').onclick = () => {
+            deleteTransaction(id);
+            closeModal('confirmModal');
+            showToast('İşlem silindi!', 'error');
+            refreshAll();
+        };
+        openModal('confirmModal');
+    }
+
+    // ============================================================
+    // TRANSACTION TABLE RENDERING
     // ============================================================
     function getFilteredTransactions() {
         let list = getTransactionsForSelectedPeriod();
         const search = document.getElementById('searchInput').value.toLowerCase().trim();
         const catFilter = document.getElementById('filterCategory').value;
+        const bankOrPayFilter = document.getElementById('filterBankOrPay').value;
         const typeFilter = document.getElementById('filterType').value;
+        const statusFilter = document.getElementById('filterStatus')?.value;
         const sortOpt = document.getElementById('sortBy').value;
 
         if (search) {
             list = list.filter(t =>
                 (t.description && t.description.toLowerCase().includes(search)) ||
                 (t.category && t.category.toLowerCase().includes(search)) ||
+                (t.bank && t.bank.toLowerCase().includes(search)) ||
+                (t.paymentMethod && t.paymentMethod.toLowerCase().includes(search)) ||
+                (t.incomeType && t.incomeType.toLowerCase().includes(search)) ||
                 (t.amount && t.amount.toString().includes(search))
             );
         }
-        if (catFilter) list = list.filter(t => t.category === catFilter);
-        if (typeFilter) list = list.filter(t => t.type === typeFilter);
+
+        if (catFilter) {
+            list = list.filter(t => t.category === catFilter || (t.incomeType && INCOME_TYPES[t.incomeType]?.shortName === catFilter));
+        }
+
+        if (bankOrPayFilter) {
+            list = list.filter(t => (t.bank === bankOrPayFilter) || (t.paymentMethod === bankOrPayFilter));
+        }
+
+        if (typeFilter) {
+            list = list.filter(t => t.type === typeFilter);
+        }
+
+        if (statusFilter === 'completed') {
+            list = list.filter(t => isTxCompleted(t));
+        } else if (statusFilter === 'planned') {
+            list = list.filter(t => isTxPlanned(t));
+        }
 
         // Sorting
         list.sort((a, b) => {
@@ -1706,40 +2642,100 @@
         const paged = filtered.slice(start, start + PER_PAGE);
 
         tbody.innerHTML = paged.map(t => {
-            const icon = CATEGORY_ICONS[t.category] || 'fa-solid fa-ellipsis';
-            const color = CATEGORY_COLORS[t.category]?.bg || '#6b7280';
             const isIncome = t.type === 'income';
-            const payIcon = PAYMENT_ICONS[t.paymentMethod] || 'fa-solid fa-money-bill text-slate-400';
+            const isPlanned = isTxPlanned(t);
+            const daysText = isPlanned ? getDaysUntil(t.date) : '';
+
+            // Category & Type Badge
+            let categoryDisplay = '';
+            if (isIncome) {
+                if (t.incomeType === 'own_sale' || t.category === 'Kendi Satışım') {
+                    categoryDisplay = `<span class="badge badge-prim-5"><i class="fa-solid fa-star text-[9px]"></i> Kendi Satışım (%5)</span>`;
+                } else if (t.incomeType === 'support_sale' || t.category === 'Satış Desteği') {
+                    categoryDisplay = `<span class="badge badge-prim-1"><i class="fa-solid fa-handshake text-[9px]"></i> Satış Desteği (%1)</span>`;
+                } else if (t.incomeType === 'salary' || t.category === 'Maaş') {
+                    categoryDisplay = `<span class="badge badge-income"><i class="fa-solid fa-briefcase text-[9px]"></i> Maaş</span>`;
+                } else {
+                    categoryDisplay = `<span class="badge badge-income"><i class="fa-solid fa-gift text-[9px]"></i> ${escapeHTML(t.category || 'Ek Gelir')}</span>`;
+                }
+            } else {
+                const icon = CATEGORY_ICONS[t.category] || 'fa-solid fa-ellipsis';
+                const color = CATEGORY_COLORS[t.category]?.bg || '#6b7280';
+                categoryDisplay = `
+                    <span class="flex items-center gap-1.5">
+                        <i class="${icon} text-[10px]" style="color:${color}"></i>
+                        <span class="text-xs">${escapeHTML(t.category)}</span>
+                    </span>
+                `;
+            }
+
+            // Payment or Bank Badge
+            let payOrBankDisplay = '';
+            if (isIncome) {
+                const bankKey = t.bank || t.paymentMethod || 'Diğer';
+                const bConfig = BANK_CONFIG[bankKey] || BANK_CONFIG['Diğer'];
+                const saleText = (t.saleAmount && t.saleAmount > 0)
+                    ? `<span class="text-[10px] text-amber-400 font-semibold block mt-0.5"><i class="fa-solid fa-coins text-[8px]"></i> Ciro: ${formatCurrency(t.saleAmount)} (%${t.commissionRate || (t.incomeType === 'support_sale' ? 1 : 5)})</span>`
+                    : '';
+
+                payOrBankDisplay = `
+                    <span class="inline-flex items-center gap-1 text-[11px]">
+                        <span class="badge ${bConfig.badgeClass}">
+                            <i class="${bConfig.icon} text-[9px]"></i>
+                            <span>${escapeHTML(bConfig.name)}</span>
+                        </span>
+                    </span>
+                    ${saleText}
+                `;
+            } else {
+                const payIcon = PAYMENT_ICONS[t.paymentMethod] || 'fa-solid fa-money-bill text-slate-400';
+                payOrBankDisplay = `
+                    <span class="inline-flex items-center gap-1 text-[11px]">
+                        <i class="${payIcon}"></i>
+                        <span>${escapeHTML(t.paymentMethod || 'Diğer')}</span>
+                    </span>
+                `;
+            }
 
             return `
-                <tr class="table-row border-b border-white/5 last:border-0">
+                <tr class="table-row border-b border-white/5 last:border-0 ${isPlanned ? 'bg-amber-500/[0.02]' : ''}">
                     <td class="py-2.5 px-2 sm:px-3 whitespace-nowrap">
                         <span class="font-medium">${escapeHTML(formatDate(t.date))}</span>
                         <span class="block text-[10px] opacity-40">${escapeHTML(getMonthDisplayName(getMonthKey(t.date)))}</span>
                     </td>
-                    <td class="py-2.5 px-2 sm:px-3">
-                        <span class="badge ${isIncome ? 'badge-income' : 'badge-expense'}">
-                            <i class="fa-solid ${isIncome ? 'fa-arrow-up' : 'fa-arrow-down'} text-[8px]"></i>
-                            ${isIncome ? 'Gelir' : 'Gider'}
-                        </span>
+                    <td class="py-2.5 px-2 sm:px-3 whitespace-nowrap">
+                        <div class="flex items-center gap-1 flex-wrap">
+                            <span class="badge ${isIncome ? 'badge-income' : 'badge-expense'}">
+                                <i class="fa-solid ${isIncome ? 'fa-arrow-up' : 'fa-arrow-down'} text-[8px]"></i>
+                                ${isIncome ? 'Gelir' : 'Gider'}
+                            </span>
+                            <span class="badge ${isPlanned ? 'badge-status-planned' : 'badge-status-completed'}" title="${isPlanned ? 'Planlandı: ' + daysText : 'Gerçekleşti'}">
+                                <i class="fa-solid ${isPlanned ? 'fa-clock' : 'fa-check'} text-[8px]"></i>
+                                ${isPlanned ? 'Planlandı' : 'Gerçekleşti'}
+                            </span>
+                        </div>
                     </td>
-                    <td class="py-2.5 px-2 sm:px-3">
-                        <span class="flex items-center gap-1.5">
-                            <i class="${icon} text-[10px]" style="color:${color}"></i>
-                            <span class="text-xs">${escapeHTML(t.category)}</span>
-                        </span>
+                    <td class="py-2.5 px-2 sm:px-3 whitespace-nowrap">
+                        ${categoryDisplay}
                     </td>
                     <td class="py-2.5 px-2 sm:px-3 hidden sm:table-cell opacity-75 max-w-[200px] truncate">${escapeHTML(t.description)}</td>
-                    <td class="py-2.5 px-2 sm:px-3 hidden md:table-cell whitespace-nowrap opacity-70">
-                        <span class="inline-flex items-center gap-1 text-[11px]">
-                            <i class="${payIcon}"></i>
-                            <span>${escapeHTML(t.paymentMethod || 'Diğer')}</span>
-                        </span>
+                    <td class="py-2.5 px-2 sm:px-3 hidden md:table-cell whitespace-nowrap opacity-90">
+                        ${payOrBankDisplay}
                     </td>
-                    <td class="py-2.5 px-2 sm:px-3 text-right font-semibold whitespace-nowrap ${isIncome ? 'text-emerald-400' : 'text-red-400'}">
+                    <td class="py-2.5 px-2 sm:px-3 text-right font-semibold whitespace-nowrap ${isPlanned ? 'text-amber-400' : (isIncome ? 'text-emerald-400' : 'text-red-400')}">
                         ${isIncome ? '+' : '-'}${formatCurrency(t.amount)}
+                        ${isPlanned ? `<span class="block text-[9px] text-amber-300 font-normal"><i class="fa-regular fa-clock text-[8px]"></i> ${daysText}</span>` : ''}
                     </td>
                     <td class="py-2.5 px-2 sm:px-3 text-right whitespace-nowrap">
+                        ${isPlanned ? `
+                            <button onclick="markTransactionCompleted('${escapeHTML(t.id)}')" class="btn-secondary mr-1 text-emerald-400 hover:text-emerald-300 border-emerald-500/30" title="Şimdi Gerçekleşti (Ödendi) Olarak İşaretle">
+                                <i class="fa-solid fa-check text-[10px]"></i>
+                            </button>
+                        ` : `
+                            <button onclick="toggleTransactionStatus('${escapeHTML(t.id)}')" class="btn-secondary mr-1 opacity-50 hover:opacity-100" title="Durumu 'Planlandı' Olarak Değiştir">
+                                <i class="fa-solid fa-rotate text-[10px]"></i>
+                            </button>
+                        `}
                         <button onclick="editTransaction('${escapeHTML(t.id)}')" class="btn-secondary mr-1" title="Düzenle">
                             <i class="fa-solid fa-pen text-[10px]"></i>
                         </button>
@@ -1768,119 +2764,7 @@
     }
 
     // ============================================================
-    // FORM & QUICK PRESETS
-    // ============================================================
-    function initForm() {
-        setFormDateToday();
-    }
-
-    function setFormDateToday() {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('txDate').value = today;
-        updateFormTargetMonth();
-    }
-
-    function updateFormTargetMonth() {
-        const dateVal = document.getElementById('txDate').value;
-        if (dateVal) {
-            const key = getMonthKey(dateVal);
-            document.getElementById('formTargetMonthLabel').textContent = `Hedef: ${getMonthDisplayName(key)}`;
-        }
-    }
-
-    function applyQuickPreset(type, category, desc, payment) {
-        document.getElementById('txType').value = type;
-        document.getElementById('txCategory').value = category;
-        document.getElementById('txDesc').value = desc;
-        if (payment) document.getElementById('txPaymentMethod').value = payment;
-        document.getElementById('txAmount').focus();
-    }
-
-    function handleTypeChange() {
-        const type = document.getElementById('txType').value;
-        const catSelect = document.getElementById('txCategory');
-        if (type === 'income') catSelect.value = 'Maaş/Gelir';
-        else if (catSelect.value === 'Maaş/Gelir') catSelect.value = 'Temel Yaşam';
-    }
-
-    function handleFormSubmit(e) {
-        e.preventDefault();
-        const editId = document.getElementById('editId').value;
-        const rawAmount = parseFloat(document.getElementById('txAmount').value);
-
-        if (isNaN(rawAmount) || rawAmount <= 0) {
-            showToast('Lütfen geçerli bir tutar girin!', 'error');
-            return;
-        }
-
-        const data = {
-            date: document.getElementById('txDate').value,
-            type: document.getElementById('txType').value,
-            category: document.getElementById('txCategory').value,
-            paymentMethod: document.getElementById('txPaymentMethod').value,
-            description: document.getElementById('txDesc').value.trim(),
-            amount: rawAmount,
-        };
-
-        if (editId) {
-            updateTransaction(editId, data);
-            showToast('İşlem güncellendi!');
-            cancelEditMode();
-        } else {
-            data.id = genId();
-            addTransaction(data);
-            showToast('İşlem eklendi!');
-        }
-
-        document.getElementById('transactionForm').reset();
-        initForm();
-        refreshAll();
-    }
-
-    function editTransaction(id) {
-        const all = getTransactions();
-        const tx = all.find(t => t.id === id);
-        if (!tx) return;
-
-        document.getElementById('editId').value = tx.id;
-        document.getElementById('txDate').value = tx.date;
-        document.getElementById('txType').value = tx.type;
-        document.getElementById('txCategory').value = tx.category;
-        document.getElementById('txPaymentMethod').value = tx.paymentMethod || 'Kredi Kartı';
-        document.getElementById('txDesc').value = tx.description;
-        document.getElementById('txAmount').value = tx.amount;
-
-        document.getElementById('formTitle').textContent = 'İşlemi Düzenle';
-        document.getElementById('formSubmitText').textContent = 'Güncelle';
-        document.getElementById('cancelEdit').classList.remove('hidden');
-        updateFormTargetMonth();
-
-        scrollToSection('formCard');
-    }
-
-    function cancelEditMode() {
-        document.getElementById('editId').value = '';
-        document.getElementById('formTitle').textContent = 'İşlem Ekle';
-        document.getElementById('formSubmitText').textContent = 'Kaydet';
-        document.getElementById('cancelEdit').classList.add('hidden');
-        document.getElementById('transactionForm').reset();
-        initForm();
-    }
-
-    function promptDelete(id) {
-        document.getElementById('confirmTitle').textContent = 'İşlemi Sil';
-        document.getElementById('confirmMessage').textContent = 'Bu işlem kaydı kalıcı olarak silinecek. Emin misiniz?';
-        document.getElementById('confirmAction').onclick = () => {
-            deleteTransaction(id);
-            closeModal('confirmModal');
-            showToast('İşlem silindi!', 'error');
-            refreshAll();
-        };
-        openModal('confirmModal');
-    }
-
-    // ============================================================
-    // IMPORT / EXPORT
+    // IMPORT / EXPORT (With Bank & Commission support)
     // ============================================================
     function openImportExportModal() { openModal('importExportModal'); }
 
@@ -1894,8 +2778,19 @@
 
     function exportCSV() {
         const data = getTransactions();
-        const headers = ['Tarih', 'Tip', 'Kategori', 'Ödeme_Yöntemi', 'Açıklama', 'Tutar'];
-        const rows = data.map(t => [t.date, t.type === 'income' ? 'Gelir' : 'Gider', t.category, t.paymentMethod || 'Banka Kartı', `"${t.description}"`, t.amount]);
+        const headers = ['Tarih', 'Tip', 'Durum', 'Kategori', 'Banka_Odeme', 'Prim_Turu', 'Satis_Tutari', 'Prim_Orani', 'Aciklama', 'Tutar'];
+        const rows = data.map(t => [
+            t.date,
+            t.type === 'income' ? 'Gelir' : 'Gider',
+            isTxPlanned(t) ? 'Planlandı' : 'Gerçekleşti',
+            t.category,
+            t.bank || t.paymentMethod || 'Diğer',
+            t.incomeType || '',
+            t.saleAmount || 0,
+            t.commissionRate || 0,
+            `"${t.description}"`,
+            t.amount
+        ]);
         const csv = '\uFEFF' + [headers.join(';'), ...rows.map(r => r.join(';'))].join('\n');
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         downloadFile(blob, `hesap-takip-${new Date().toISOString().slice(0,10)}.csv`);
@@ -1934,8 +2829,14 @@
                     id: genId(),
                     date: t.date || new Date().toISOString().slice(0, 10),
                     type: t.type === 'income' ? 'income' : 'expense',
+                    status: t.status || (t.Durum === 'Planlandı' ? 'planned' : (t.Durum === 'Gerçekleşti' ? 'completed' : undefined)),
                     category: t.category || 'Diğer',
-                    paymentMethod: t.paymentMethod || 'Banka Kartı',
+                    bank: t.bank || (t.type === 'income' ? (t.paymentMethod || 'Enpara') : undefined),
+                    incomeType: t.incomeType || (t.type === 'income' ? 'own_sale' : undefined),
+                    saleAmount: parseFloat(t.saleAmount) || 0,
+                    commissionRate: parseFloat(t.commissionRate) || 0,
+                    commissionAmount: parseFloat(t.commissionAmount) || (parseFloat(t.amount) || 0),
+                    paymentMethod: t.paymentMethod || t.bank || 'Banka Kartı',
                     description: escapeHTML(t.description || 'İşlem'),
                     amount: parseFloat(t.amount) || 0
                 }))];
@@ -1957,15 +2858,36 @@
         return lines.slice(1).map(line => {
             const parts = line.split(';');
             if (parts.length < 5) return null;
-            return {
-                id: genId(),
-                date: parts[0].trim(),
-                type: parts[1].trim().toLowerCase() === 'gelir' ? 'income' : 'expense',
-                category: parts[2].trim(),
-                paymentMethod: parts.length > 5 ? parts[3].trim() : 'Banka Kartı',
-                description: parts[parts.length > 5 ? 4 : 3].trim().replace(/"/g, ''),
-                amount: parseFloat(parts[parts.length > 5 ? 5 : 4].trim()) || 0
-            };
+
+            const isExtended = parts.length >= 8;
+            const type = parts[1].trim().toLowerCase() === 'gelir' ? 'income' : 'expense';
+
+            if (isExtended) {
+                return {
+                    id: genId(),
+                    date: parts[0].trim(),
+                    type: type,
+                    category: parts[2].trim(),
+                    bank: type === 'income' ? parts[3].trim() : undefined,
+                    paymentMethod: parts[3].trim(),
+                    incomeType: parts[4]?.trim() || undefined,
+                    saleAmount: parseFloat(parts[5]?.trim()) || 0,
+                    commissionRate: parseFloat(parts[6]?.trim()) || 0,
+                    description: parts[7]?.trim().replace(/"/g, '') || '',
+                    amount: parseFloat(parts[8]?.trim()) || 0
+                };
+            } else {
+                return {
+                    id: genId(),
+                    date: parts[0].trim(),
+                    type: type,
+                    category: parts[2].trim(),
+                    paymentMethod: parts[3].trim(),
+                    bank: type === 'income' ? parts[3].trim() : undefined,
+                    description: parts[4].trim().replace(/"/g, ''),
+                    amount: parseFloat(parts[5] || parts[4]).trim() || 0
+                };
+            }
         }).filter(Boolean);
     }
 
@@ -1977,6 +2899,7 @@
         renderSmartInsights();
         renderKPIs();
         renderCharts();
+        renderUpcomingSection();
         renderTransactions();
     }
 
