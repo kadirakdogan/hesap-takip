@@ -509,6 +509,21 @@
             </div>
         </section>
 
+        <!-- KPI Header / Scope Controls -->
+        <div class="flex items-center justify-between gap-2 mb-2.5 px-1 flex-wrap">
+            <div class="flex items-center gap-1.5">
+                <span class="text-xs font-semibold opacity-75">Bakiye Hesaplama Görünümü:</span>
+            </div>
+            <div class="flex rounded-xl bg-slate-900/60 p-1 border border-white/5 text-xs">
+                <button type="button" onclick="setBalanceScope('all')" id="btnScopeAll" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-500 text-white shadow-sm transition-all">
+                    <i class="fa-solid fa-coins mr-1"></i> Tüm Bakiye (Genel)
+                </button>
+                <button type="button" onclick="setBalanceScope('cash')" id="btnScopeCash" class="px-2.5 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all">
+                    <i class="fa-solid fa-wallet mr-1"></i> Sadece Fiili Nakit
+                </button>
+            </div>
+        </div>
+
         <!-- KPI Cards (Reflects selected month / period) -->
         <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 fade-in" id="kpiSection">
             <!-- Toplam Gelir -->
@@ -1496,10 +1511,17 @@
 
     function getTxStatus(t) {
         if (!t) return 'completed';
+        // If explicitly set to completed, it's completed (e.g. paid early)
         if (t.status === 'completed') return 'completed';
-        const today = getTodayStr();
-        if (t.date && t.date <= today) return 'completed';
-        return 'planned';
+        // If explicitly set to planned:
+        if (t.status === 'planned') {
+            const today = getTodayStr();
+            // Automatically becomes completed once the day passes
+            if (t.date && t.date <= today) return 'completed';
+            return 'planned';
+        }
+        // Backward compatibility: existing transactions without a status field default to 'completed'
+        return 'completed';
     }
 
     function isTxPlanned(t) {
@@ -1546,13 +1568,43 @@
     }
 
     // ============================================================
-    // DATA LAYER
+    // DATA LAYER (With multi-version recovery)
     // ============================================================
     function loadTransactions() {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return [];
-        try { return JSON.parse(raw); }
-        catch { return []; }
+        const allKeys = [
+            STORAGE_KEY,
+            'hesapTakipTransactions_v2',
+            'hesapTakipTransactions',
+            'hesapTakip_transactions'
+        ];
+        const allFound = [];
+        const seenIds = new Set();
+
+        for (const key of allKeys) {
+            const raw = localStorage.getItem(key);
+            if (raw) {
+                try {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        for (const item of parsed) {
+                            if (item && item.id && !seenIds.has(item.id)) {
+                                seenIds.add(item.id);
+                                allFound.push(item);
+                            } else if (item && !item.id) {
+                                item.id = genId();
+                                allFound.push(item);
+                            }
+                        }
+                    }
+                } catch {}
+            }
+        }
+
+        if (allFound.length > 0) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(allFound));
+            return allFound;
+        }
+        return [];
     }
 
     function saveTransactions(data) {
