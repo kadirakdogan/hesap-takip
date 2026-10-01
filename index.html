@@ -809,8 +809,8 @@
                                     <span>Gelir / Prim Türü</span>
                                 </label>
                                 <select id="txIncomeType" class="input-field border-emerald-500/30 focus:border-emerald-400" onchange="handleIncomeTypeChange()">
+                                    <option value="own_sale" selected>🌟 Kendi Satışım (Maaş Üstü Prim / %5)</option>
                                     <option value="salary">💼 Maaş / Sabit Gelir</option>
-                                    <option value="own_sale">🌟 Kendi Satışım (%5 Prim)</option>
                                     <option value="support_sale">🤝 Satış Desteği (%1 Prim)</option>
                                     <option value="freelance">💻 Serbest Meslek / Freelance</option>
                                     <option value="other_income">🎁 Ek Gelir / İade / Diğer</option>
@@ -818,22 +818,80 @@
                             </div>
                         </div>
 
-                        <!-- Prim Hesaplama Kutusu (Kendi Satışı veya Satış Desteği seçilince görünür) -->
-                        <div id="primCalculationBox" class="prim-calc-box space-y-2">
-                            <div class="flex items-center justify-between text-[11px]">
+                        <!-- Prim Hesaplama Kutusu (Maaş Üstü Artan Para & Yüzdelik Prim) -->
+                        <div id="primCalculationBox" class="prim-calc-box space-y-2.5">
+                            <div class="flex items-center justify-between text-[11px] pb-1 border-b border-amber-500/10">
                                 <span class="font-semibold text-amber-300 flex items-center gap-1">
-                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                    <span id="primModelTitle">Kendi Satış Prim Hesabı (%5)</span>
+                                    <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                                    <span id="primModelTitle">Kendi Satış Prim Hesabı</span>
                                 </span>
-                                <span class="badge badge-prim-5" id="primRateBadge">%5 Prim</span>
+                                <span class="badge badge-prim-5" id="primRateBadge">Maaş Üstü Prim</span>
                             </div>
-                            <div>
-                                <label class="text-[11px] opacity-75 mb-1 block">Satış Tutarı / Ciro (₺)</label>
-                                <input type="number" id="txSaleAmount" class="input-field font-semibold text-sm bg-slate-950/60 border-amber-500/30 focus:border-amber-400" placeholder="Örn: 50000" step="0.01" min="0" oninput="calculateCommissionLive()">
+
+                            <!-- Kendi Satışım Hesaplama Modu Seçici (Maaş Üstü vs %5 Ciro) -->
+                            <div id="ownSaleModeSwitch" class="grid grid-cols-2 gap-1 p-0.5 rounded-lg bg-slate-900/80 border border-white/5 text-[11px]">
+                                <button type="button" onclick="setOwnSaleMode('salary_excess')" id="btnOwnSaleModeExcess" class="py-1 px-1.5 sm:px-2 rounded-md font-semibold bg-blue-600 text-white transition-all text-center">
+                                    <i class="fa-solid fa-scale-balanced mr-1"></i> Maaş Üstü Artan Para
+                                </button>
+                                <button type="button" onclick="setOwnSaleMode('percent_sales')" id="btnOwnSaleModePercent" class="py-1 px-1.5 sm:px-2 rounded-md font-medium text-slate-400 hover:text-white transition-all text-center">
+                                    <i class="fa-solid fa-percent mr-1"></i> %5 Ciro Primi
+                                </button>
                             </div>
-                            <div class="flex items-center justify-between text-[11px] pt-1 text-slate-300 border-t border-amber-500/10">
-                                <span class="opacity-70">Hesaplanan Prim:</span>
-                                <span class="font-bold text-emerald-400 text-xs" id="primLiveResult">₺0</span>
+
+                            <!-- MOD 1: MAAŞ ÜSTÜ ARTAN PARA HESAPLAMA (Örn: Maaş 45.000 TL, Üstünü Alınca Artanı Prime Ayır) -->
+                            <div id="ownSaleExcessContainer" class="space-y-2">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="text-[11px] opacity-75 mb-1 flex items-center justify-between">
+                                            <span>Taban Maaşım (₺)</span>
+                                            <button type="button" onclick="saveCurrentBaseSalaryAsDefault()" class="text-[10px] text-blue-400 hover:text-blue-300 underline" title="Bu tutarı varsayılan maaşım olarak kaydet">Varsayılan Yap</button>
+                                        </label>
+                                        <input type="number" id="txBaseSalary" class="input-field font-semibold text-xs bg-slate-950/60 border-blue-500/30 focus:border-blue-400" placeholder="Örn: 45000" step="0.01" min="0" oninput="calculateCommissionLive()">
+                                    </div>
+                                    <div>
+                                        <label class="text-[11px] text-amber-300 font-medium mb-1 block">Alınan Toplam Tutar (₺)</label>
+                                        <input type="number" id="txTotalIncomeReceived" class="input-field font-bold text-xs bg-slate-950/60 border-amber-500/30 focus:border-amber-400 text-amber-300" placeholder="Örn: 55000" step="0.01" min="0" oninput="calculateCommissionLive()">
+                                    </div>
+                                </div>
+
+                                <!-- Canlı Dağılım Kartı -->
+                                <div class="p-2.5 rounded-xl bg-slate-950/80 border border-white/5 space-y-1.5 text-xs">
+                                    <div class="flex items-center justify-between text-[11px]">
+                                        <span class="opacity-60 flex items-center gap-1">
+                                            <i class="fa-solid fa-briefcase text-blue-400"></i> Sabit Maaş Payı:
+                                        </span>
+                                        <span class="font-semibold text-slate-200" id="primSummaryBaseSalary">₺45.000</span>
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs pt-1 border-t border-white/5">
+                                        <span class="font-bold text-amber-300 flex items-center gap-1">
+                                            <i class="fa-solid fa-star text-amber-400"></i> Prime Ayrılan Artan Tutar:
+                                        </span>
+                                        <span class="font-bold text-emerald-400 text-sm financial-value" id="primSummaryExcess">₺0</span>
+                                    </div>
+                                    <p class="text-[10px] opacity-70 leading-relaxed text-slate-300" id="primExcessNote">
+                                        Örnek: Maaşınız 45.000 ₺ ise, bundan üstünü aldığınızda artan tutar otomatik olarak Kendi Satış Primi'ne ayrılır.
+                                    </p>
+                                </div>
+
+                                <!-- Akıllı İkili Kayıt Butonu (Hem Maaş Hem Prim) -->
+                                <div id="splitSaveBtnWrap" class="hidden pt-1">
+                                    <button type="button" onclick="saveSplitSalaryAndCommission()" class="w-full py-1.5 px-2.5 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all shadow-sm">
+                                        <i class="fa-solid fa-code-fork"></i>
+                                        <span id="splitSaveBtnLabel">Maaş (₺45.000) ve Primi (₺10.000) Ayrı Ayrı Kaydet</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- MOD 2: SABİT YÜZDE CİRO HESAPLAMA (support_sale or percent own_sale) -->
+                            <div id="ownSalePercentContainer" class="space-y-2 hidden">
+                                <div>
+                                    <label class="text-[11px] opacity-75 mb-1 block" id="saleAmountLabel">Satış Tutarı / Ciro (₺)</label>
+                                    <input type="number" id="txSaleAmount" class="input-field font-semibold text-sm bg-slate-950/60 border-amber-500/30 focus:border-amber-400" placeholder="Örn: 50000" step="0.01" min="0" oninput="calculateCommissionLive()">
+                                </div>
+                                <div class="flex items-center justify-between text-[11px] pt-1 text-slate-300 border-t border-amber-500/10">
+                                    <span class="opacity-70">Hesaplanan Prim:</span>
+                                    <span class="font-bold text-emerald-400 text-xs" id="primLiveResult">₺0</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -3503,11 +3561,24 @@
     // ============================================================
     // FORM & DYNAMIC FIELD CONTROLS
     // ============================================================
+    const BASE_SALARY_KEY = 'hesap_takip_base_salary';
+    function getBaseSalary() {
+        const val = localStorage.getItem(BASE_SALARY_KEY);
+        return val ? parseFloat(val) : 45000;
+    }
+    function setBaseSalary(val) {
+        if (!isNaN(val) && val >= 0) {
+            localStorage.setItem(BASE_SALARY_KEY, String(val));
+        }
+    }
+
     function initForm() {
         setFormDateToday();
         setFormType('expense');
         const statusEl = document.getElementById('txStatus');
         if (statusEl) statusEl.value = 'auto';
+        const baseSalaryEl = document.getElementById('txBaseSalary');
+        if (baseSalaryEl) baseSalaryEl.value = getBaseSalary();
         updateStatusDisplay();
     }
 
@@ -3599,23 +3670,74 @@
         renderQuickChips();
     }
 
+    let currentOwnSaleMode = 'salary_excess'; // 'salary_excess' veya 'percent_sales'
+
+    function setOwnSaleMode(mode) {
+        currentOwnSaleMode = mode;
+        const btnExcess = document.getElementById('btnOwnSaleModeExcess');
+        const btnPercent = document.getElementById('btnOwnSaleModePercent');
+        const excessCont = document.getElementById('ownSaleExcessContainer');
+        const percentCont = document.getElementById('ownSalePercentContainer');
+        const badgeEl = document.getElementById('primRateBadge');
+
+        if (mode === 'salary_excess') {
+            if (btnExcess) btnExcess.className = 'py-1 px-1.5 sm:px-2 rounded-md font-semibold bg-blue-600 text-white transition-all text-center';
+            if (btnPercent) btnPercent.className = 'py-1 px-1.5 sm:px-2 rounded-md font-medium text-slate-400 hover:text-white transition-all text-center';
+            if (excessCont) excessCont.classList.remove('hidden');
+            if (percentCont) percentCont.classList.add('hidden');
+            if (badgeEl) {
+                badgeEl.textContent = 'Maaş Üstü Prim';
+                badgeEl.className = 'badge badge-prim-5';
+            }
+            const baseInput = document.getElementById('txBaseSalary');
+            if (baseInput && !baseInput.value) baseInput.value = getBaseSalary();
+        } else {
+            if (btnExcess) btnExcess.className = 'py-1 px-1.5 sm:px-2 rounded-md font-medium text-slate-400 hover:text-white transition-all text-center';
+            if (btnPercent) btnPercent.className = 'py-1 px-1.5 sm:px-2 rounded-md font-semibold bg-blue-600 text-white transition-all text-center';
+            if (excessCont) excessCont.classList.add('hidden');
+            if (percentCont) percentCont.classList.remove('hidden');
+            if (badgeEl) {
+                badgeEl.textContent = '%5 Ciro Primi';
+                badgeEl.className = 'badge badge-prim-5';
+            }
+        }
+        calculateCommissionLive();
+    }
+
+    function saveCurrentBaseSalaryAsDefault() {
+        const val = parseFloat(document.getElementById('txBaseSalary').value);
+        if (!isNaN(val) && val > 0) {
+            setBaseSalary(val);
+            showToast(`Varsayılan taban maaşınız ${formatCurrency(val)} olarak kaydedildi!`);
+            calculateCommissionLive();
+        } else {
+            showToast('Lütfen geçerli bir maaş tutarı girin!', 'error');
+        }
+    }
+
     function handleIncomeTypeChange() {
         const itype = document.getElementById('txIncomeType').value;
         const calcBox = document.getElementById('primCalculationBox');
         const titleEl = document.getElementById('primModelTitle');
         const badgeEl = document.getElementById('primRateBadge');
         const descInput = document.getElementById('txDesc');
+        const ownSaleModeSwitch = document.getElementById('ownSaleModeSwitch');
+        const excessCont = document.getElementById('ownSaleExcessContainer');
+        const percentCont = document.getElementById('ownSalePercentContainer');
 
         if (itype === 'own_sale') {
             calcBox.classList.remove('hidden');
-            titleEl.textContent = 'Kendi Satış Prim Hesabı (%5)';
-            badgeEl.textContent = '%5 Prim';
-            badgeEl.className = 'badge badge-prim-5';
+            if (ownSaleModeSwitch) ownSaleModeSwitch.classList.remove('hidden');
+            titleEl.textContent = 'Kendi Satış Prim Hesabı';
+            setOwnSaleMode(currentOwnSaleMode || 'salary_excess');
             if (!descInput.value || descInput.value.includes('Maaş') || descInput.value.includes('Destek')) {
-                descInput.placeholder = 'Örn: Kendi Satışım / Ürün Satışı Primi';
+                descInput.placeholder = 'Örn: Kendi Satışım / Artan Prim';
             }
         } else if (itype === 'support_sale') {
             calcBox.classList.remove('hidden');
+            if (ownSaleModeSwitch) ownSaleModeSwitch.classList.add('hidden');
+            if (excessCont) excessCont.classList.add('hidden');
+            if (percentCont) percentCont.classList.remove('hidden');
             titleEl.textContent = 'Satış Desteği Prim Hesabı (%1)';
             badgeEl.textContent = '%1 Prim';
             badgeEl.className = 'badge badge-prim-1';
@@ -3635,29 +3757,133 @@
 
     function calculateCommissionLive() {
         const itype = document.getElementById('txIncomeType').value;
-        const saleVal = parseFloat(document.getElementById('txSaleAmount').value);
-        const resultEl = document.getElementById('primLiveResult');
         const amountInput = document.getElementById('txAmount');
+        const descInput = document.getElementById('txDesc');
 
         if (itype === 'own_sale') {
-            if (!isNaN(saleVal) && saleVal > 0) {
-                const comm = saleVal * 0.05;
-                resultEl.textContent = `${formatCurrency(comm)} (Satış: ${formatCurrency(saleVal)} x %5)`;
-                amountInput.value = comm.toFixed(2);
+            if (currentOwnSaleMode === 'salary_excess') {
+                const baseSalaryVal = parseFloat(document.getElementById('txBaseSalary').value) || getBaseSalary();
+                const receivedVal = parseFloat(document.getElementById('txTotalIncomeReceived').value);
+                const summaryBase = document.getElementById('primSummaryBaseSalary');
+                const summaryExcess = document.getElementById('primSummaryExcess');
+                const noteEl = document.getElementById('primExcessNote');
+                const splitBtnWrap = document.getElementById('splitSaveBtnWrap');
+                const splitBtnLabel = document.getElementById('splitSaveBtnLabel');
+
+                if (summaryBase) summaryBase.textContent = formatCurrency(baseSalaryVal);
+
+                if (!isNaN(receivedVal) && receivedVal > 0) {
+                    if (receivedVal > baseSalaryVal) {
+                        const excess = receivedVal - baseSalaryVal;
+                        if (summaryExcess) summaryExcess.textContent = `+${formatCurrency(excess)}`;
+                        amountInput.value = excess.toFixed(2);
+                        if (noteEl) {
+                            noteEl.innerHTML = `Toplam <strong>${formatCurrency(receivedVal)}</strong> tahsil edildi. <strong>${formatCurrency(baseSalaryVal)}</strong> taban maaşınız ayrıldı; artan <strong>${formatCurrency(excess)}</strong> tutar Kendi Satış Primi'ne aktarıldı.`;
+                        }
+                        if (splitBtnWrap) {
+                            splitBtnWrap.classList.remove('hidden');
+                            if (splitBtnLabel) splitBtnLabel.textContent = `Maaş (${formatCurrency(baseSalaryVal)}) ve Primi (${formatCurrency(excess)}) Ayrı Ayrı Kaydet`;
+                        }
+                        if (!descInput.value || descInput.value.includes('Maaş') || descInput.value.includes('Kendi Satış')) {
+                            descInput.value = `Kendi Satış Primi (${formatCurrency(baseSalaryVal)} Maaş Üstü: ${formatCurrency(excess)} Artan)`;
+                        }
+                    } else {
+                        if (summaryExcess) summaryExcess.textContent = '₺0';
+                        amountInput.value = receivedVal.toFixed(2);
+                        if (noteEl) {
+                            noteEl.innerHTML = `Alınan tutar (<strong>${formatCurrency(receivedVal)}</strong>), taban maaş olan <strong>${formatCurrency(baseSalaryVal)}</strong> tutarını aşmadığı için prime ayrılacak artan tutar oluşmadı. Bu tutar sabit maaş / gelir olarak kaydedilir.`;
+                        }
+                        if (splitBtnWrap) splitBtnWrap.classList.add('hidden');
+                        if (!descInput.value || descInput.value.includes('Maaş') || descInput.value.includes('Kendi Satış')) {
+                            descInput.value = 'Aylık Maaş / Gelir';
+                        }
+                    }
+                } else {
+                    if (summaryExcess) summaryExcess.textContent = '₺0';
+                    if (noteEl) noteEl.textContent = `Örnek: Maaşınız ${formatCurrency(baseSalaryVal)} ise, bundan üstünü aldığınızda artan tutar otomatik olarak Kendi Satış Primi'ne ayrılır.`;
+                    if (splitBtnWrap) splitBtnWrap.classList.add('hidden');
+                }
             } else {
-                resultEl.textContent = '₺0 (%5)';
+                // Yüzdelik Satış Modu (%5)
+                const saleVal = parseFloat(document.getElementById('txSaleAmount').value);
+                const resultEl = document.getElementById('primLiveResult');
+                if (!isNaN(saleVal) && saleVal > 0) {
+                    const comm = saleVal * 0.05;
+                    if (resultEl) resultEl.textContent = `${formatCurrency(comm)} (Satış: ${formatCurrency(saleVal)} x %5)`;
+                    amountInput.value = comm.toFixed(2);
+                } else {
+                    if (resultEl) resultEl.textContent = '₺0 (%5)';
+                }
             }
         } else if (itype === 'support_sale') {
+            const saleVal = parseFloat(document.getElementById('txSaleAmount').value);
+            const resultEl = document.getElementById('primLiveResult');
             if (!isNaN(saleVal) && saleVal > 0) {
                 const comm = saleVal * 0.01;
-                resultEl.textContent = `${formatCurrency(comm)} (Satış: ${formatCurrency(saleVal)} x %1)`;
+                if (resultEl) resultEl.textContent = `${formatCurrency(comm)} (Satış: ${formatCurrency(saleVal)} x %1)`;
                 amountInput.value = comm.toFixed(2);
             } else {
-                resultEl.textContent = '₺0 (%1)';
+                if (resultEl) resultEl.textContent = '₺0 (%1)';
             }
-        } else {
-            resultEl.textContent = '—';
         }
+    }
+
+    function saveSplitSalaryAndCommission() {
+        const txDate = document.getElementById('txDate').value;
+        const selectedStatus = document.getElementById('txStatus').value;
+        const today = getTodayStr();
+        let finalStatus = selectedStatus === 'auto' ? (txDate > today ? 'planned' : 'completed') : selectedStatus;
+        const bank = document.getElementById('txBank').value || 'Enpara';
+
+        const baseSalaryVal = parseFloat(document.getElementById('txBaseSalary').value) || getBaseSalary();
+        const receivedVal = parseFloat(document.getElementById('txTotalIncomeReceived').value);
+
+        if (isNaN(receivedVal) || receivedVal <= baseSalaryVal) {
+            showToast('Alınan tutar taban maaşı aşmadığı için ayrım yapılamadı!', 'error');
+            return;
+        }
+
+        const excess = receivedVal - baseSalaryVal;
+
+        // 1. Sabit Maaş Kaydı
+        const salaryTx = {
+            id: genId(),
+            date: txDate,
+            type: 'income',
+            status: finalStatus,
+            incomeType: 'salary',
+            category: 'Maaş',
+            bank: bank,
+            paymentMethod: bank,
+            amount: baseSalaryVal,
+            description: 'Aylık Sabit Maaş'
+        };
+
+        // 2. Kendi Satış Primi Kaydı (Maaş Üstü Artan)
+        const primTx = {
+            id: genId(),
+            date: txDate,
+            type: 'income',
+            status: finalStatus,
+            incomeType: 'own_sale',
+            category: 'Kendi Satışım',
+            commissionModel: 'salary_excess',
+            baseSalary: baseSalaryVal,
+            saleAmount: receivedVal,
+            commissionAmount: excess,
+            amount: excess,
+            bank: bank,
+            paymentMethod: bank,
+            description: document.getElementById('txDesc').value.trim() || `Kendi Satış Primi (${formatCurrency(baseSalaryVal)} Maaş Üstü: ${formatCurrency(excess)} Artan)`
+        };
+
+        addTransaction(salaryTx);
+        addTransaction(primTx);
+
+        showToast(`Maaş (${formatCurrency(baseSalaryVal)}) ve Satış Primi (${formatCurrency(excess)}) başarıyla kaydedildi!`);
+        document.getElementById('transactionForm').reset();
+        initForm();
+        refreshAll();
     }
 
     function renderQuickChips() {
@@ -3676,11 +3902,11 @@
         } else {
             header.textContent = 'Hızlı Gelir & Prim Şablonları:';
             container.innerHTML = `
-                <span class="quick-chip" onclick="applyQuickIncome('own_sale', 'Enpara', 'Kendi Satış Primi', 60000)"><i class="fa-solid fa-star text-amber-400 text-[10px]"></i> 🌟 Enpara (%5)</span>
-                <span class="quick-chip" onclick="applyQuickIncome('support_sale', 'Akbank', 'Şube Satış Desteği', 100000)"><i class="fa-solid fa-handshake text-blue-400 text-[10px]"></i> 🤝 Akbank (%1)</span>
-                <span class="quick-chip" onclick="applyQuickIncome('own_sale', 'Hadi', 'Hadi Satış Primi', 50000)"><i class="fa-solid fa-bolt text-yellow-400 text-[10px]"></i> ⚡ Hadi (%5)</span>
-                <span class="quick-chip" onclick="applyQuickIncome('own_sale', 'Yapıkredi', 'Yapı Kredi Satış Primi', 80000)"><i class="fa-solid fa-gem text-blue-400 text-[10px]"></i> 🔵 Yapıkredi (%5)</span>
-                <span class="quick-chip" onclick="applyQuickIncome('salary', 'Ziraat', 'Aylık Maaş', 45000)"><i class="fa-solid fa-briefcase text-emerald-400 text-[10px]"></i> 🟢 Ziraat Maaş</span>
+                <span class="quick-chip" onclick="applyQuickIncome('own_sale', 'Enpara', 'Kendi Satış Primi', 55000, 'salary_excess')"><i class="fa-solid fa-star text-amber-400 text-[10px]"></i> 🌟 55.000 ₺ (45k Maaş + 10k Prim)</span>
+                <span class="quick-chip" onclick="applyQuickIncome('own_sale', 'Enpara', 'Kendi Satış Primi', 60000, 'salary_excess')"><i class="fa-solid fa-star text-amber-400 text-[10px]"></i> 🌟 60.000 ₺ (45k Maaş + 15k Prim)</span>
+                <span class="quick-chip" onclick="applyQuickIncome('salary', 'Ziraat', 'Aylık Maaş', 45000)"><i class="fa-solid fa-briefcase text-emerald-400 text-[10px]"></i> 💼 45.000 ₺ Sabit Maaş</span>
+                <span class="quick-chip" onclick="applyQuickIncome('support_sale', 'Akbank', 'Şube Satış Desteği', 100000)"><i class="fa-solid fa-handshake text-blue-400 text-[10px]"></i> 🤝 Akbank (%1 Destek)</span>
+                <span class="quick-chip" onclick="applyQuickIncome('own_sale', 'Hadi', 'Hadi Satış Primi', 50000, 'percent_sales')"><i class="fa-solid fa-bolt text-yellow-400 text-[10px]"></i> ⚡ Hadi (%5 Ciro)</span>
             `;
         }
     }
@@ -3712,13 +3938,22 @@
         document.getElementById('txAmount').focus();
     }
 
-    function applyQuickIncome(incomeType, bank, desc, saleOrAmt) {
+    function applyQuickIncome(incomeType, bank, desc, saleOrAmt, mode = 'salary_excess') {
         document.getElementById('txBank').value = bank;
         document.getElementById('txIncomeType').value = incomeType;
         handleIncomeTypeChange();
         document.getElementById('txDesc').value = desc;
 
-        if (incomeType === 'own_sale' || incomeType === 'support_sale') {
+        if (incomeType === 'own_sale') {
+            setOwnSaleMode(mode);
+            if (mode === 'salary_excess') {
+                document.getElementById('txBaseSalary').value = getBaseSalary();
+                document.getElementById('txTotalIncomeReceived').value = saleOrAmt;
+            } else {
+                document.getElementById('txSaleAmount').value = saleOrAmt;
+            }
+            calculateCommissionLive();
+        } else if (incomeType === 'support_sale') {
             document.getElementById('txSaleAmount').value = saleOrAmt;
             calculateCommissionLive();
         } else {
@@ -3761,17 +3996,42 @@
         } else {
             const bank = document.getElementById('txBank').value;
             const incomeType = document.getElementById('txIncomeType').value;
-            const isPrim = (incomeType === 'own_sale' || incomeType === 'support_sale');
-            const saleAmount = isPrim ? (parseFloat(document.getElementById('txSaleAmount').value) || 0) : 0;
-            const commissionRate = incomeType === 'own_sale' ? 5 : (incomeType === 'support_sale' ? 1 : 0);
 
             data.bank = bank;
             data.incomeType = incomeType;
-            data.saleAmount = saleAmount;
-            data.commissionRate = commissionRate;
-            data.commissionAmount = rawAmount;
-            data.category = INCOME_TYPES[incomeType]?.shortName || 'Gelir';
             data.paymentMethod = bank;
+
+            if (incomeType === 'own_sale') {
+                if (currentOwnSaleMode === 'salary_excess') {
+                    const baseSalary = parseFloat(document.getElementById('txBaseSalary').value) || getBaseSalary();
+                    const totalReceived = parseFloat(document.getElementById('txTotalIncomeReceived').value) || (baseSalary + rawAmount);
+                    data.commissionModel = 'salary_excess';
+                    data.baseSalary = baseSalary;
+                    data.saleAmount = totalReceived;
+                    data.commissionRate = 0;
+                    data.commissionAmount = rawAmount;
+                    data.category = 'Kendi Satışım';
+                } else {
+                    const saleAmount = parseFloat(document.getElementById('txSaleAmount').value) || 0;
+                    data.commissionModel = 'percent_sales';
+                    data.saleAmount = saleAmount;
+                    data.commissionRate = 5;
+                    data.commissionAmount = rawAmount;
+                    data.category = 'Kendi Satışım';
+                }
+            } else if (incomeType === 'support_sale') {
+                const saleAmount = parseFloat(document.getElementById('txSaleAmount').value) || 0;
+                data.commissionModel = 'percent_sales';
+                data.saleAmount = saleAmount;
+                data.commissionRate = 1;
+                data.commissionAmount = rawAmount;
+                data.category = 'Satış Desteği';
+            } else {
+                data.saleAmount = 0;
+                data.commissionRate = 0;
+                data.commissionAmount = 0;
+                data.category = INCOME_TYPES[incomeType]?.shortName || 'Gelir';
+            }
         }
 
         if (editId) {
@@ -3809,9 +4069,22 @@
 
         if (tx.type === 'income') {
             document.getElementById('txBank').value = tx.bank || tx.paymentMethod || 'Enpara';
-            document.getElementById('txIncomeType').value = tx.incomeType || (tx.category === 'Kendi Satışım' ? 'own_sale' : (tx.category === 'Satış Desteği' ? 'support_sale' : (tx.category === 'Maaş' ? 'salary' : 'other_income')));
+            const incomeType = tx.incomeType || (tx.category === 'Kendi Satışım' ? 'own_sale' : (tx.category === 'Satış Desteği' ? 'support_sale' : (tx.category === 'Maaş' ? 'salary' : 'other_income')));
+            document.getElementById('txIncomeType').value = incomeType;
             handleIncomeTypeChange();
-            if (tx.saleAmount) {
+
+            if (incomeType === 'own_sale') {
+                if (tx.commissionModel === 'salary_excess' || tx.baseSalary) {
+                    setOwnSaleMode('salary_excess');
+                    const baseSal = tx.baseSalary || getBaseSalary();
+                    document.getElementById('txBaseSalary').value = baseSal;
+                    document.getElementById('txTotalIncomeReceived').value = tx.saleAmount || (baseSal + tx.amount);
+                } else {
+                    setOwnSaleMode('percent_sales');
+                    if (tx.saleAmount) document.getElementById('txSaleAmount').value = tx.saleAmount;
+                }
+                calculateCommissionLive();
+            } else if (tx.saleAmount) {
                 document.getElementById('txSaleAmount').value = tx.saleAmount;
                 calculateCommissionLive();
             }
@@ -3941,7 +4214,8 @@
             let categoryDisplay = '';
             if (isIncome) {
                 if (t.incomeType === 'own_sale' || t.category === 'Kendi Satışım') {
-                    categoryDisplay = `<span class="badge badge-prim-5"><i class="fa-solid fa-star text-[9px]"></i> Kendi Satışım (%5)</span>`;
+                    const modelBadge = t.commissionModel === 'salary_excess' ? 'Maaş Üstü' : (t.commissionRate ? `%${t.commissionRate}` : '%5');
+                    categoryDisplay = `<span class="badge badge-prim-5"><i class="fa-solid fa-star text-[9px]"></i> Kendi Satışım (${modelBadge})</span>`;
                 } else if (t.incomeType === 'support_sale' || t.category === 'Satış Desteği') {
                     categoryDisplay = `<span class="badge badge-prim-1"><i class="fa-solid fa-handshake text-[9px]"></i> Satış Desteği (%1)</span>`;
                 } else if (t.incomeType === 'salary' || t.category === 'Maaş') {
@@ -3967,18 +4241,21 @@
             if (isIncome) {
                 const bankKey = t.bank || t.paymentMethod || 'Diğer';
                 const bConfig = BANK_CONFIG[bankKey] || BANK_CONFIG['Diğer'];
-                const saleText = (t.saleAmount && t.saleAmount > 0)
-                    ? `<span class="text-[10px] text-amber-400 font-semibold block mt-0.5"><i class="fa-solid fa-coins text-[8px]"></i> Ciro: ${formatCurrency(t.saleAmount)} (%${t.commissionRate || (t.incomeType === 'support_sale' ? 1 : 5)})</span>`
-                    : '';
+                let saleText = '';
+                if (t.commissionModel === 'salary_excess') {
+                    saleText = `<span class="text-[10px] text-amber-400 font-semibold block mt-0.5"><i class="fa-solid fa-coins text-[8px]"></i> Alınan: ${formatCurrency(t.saleAmount || 0)} (Maaş: ${formatCurrency(t.baseSalary || 45000)})</span>`;
+                } else if (t.saleAmount && t.saleAmount > 0) {
+                    saleText = `<span class="text-[10px] text-amber-400 font-semibold block mt-0.5"><i class="fa-solid fa-coins text-[8px]"></i> Ciro: ${formatCurrency(t.saleAmount)} (%${t.commissionRate || (t.incomeType === 'support_sale' ? 1 : 5)})</span>`;
+                }
 
                 payOrBankDisplay = `
-                    <span class="inline-flex items-center gap-1 text-[11px]">
+                    <span class="inline-flex flex-col gap-0.5 text-[11px]">
                         <span class="badge ${bConfig.badgeClass}">
                             <i class="${bConfig.icon} text-[9px]"></i>
                             <span>${escapeHTML(bConfig.name)}</span>
                         </span>
+                        ${saleText}
                     </span>
-                    ${saleText}
                 `;
             } else {
                 const method = t.paymentMethod || 'Diğer';
