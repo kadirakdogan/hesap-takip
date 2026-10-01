@@ -724,12 +724,33 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="text-[11px] opacity-60 mb-1 block">Ödeme Yöntemi</label>
+                                <label class="text-[11px] opacity-60 mb-1 block">Ödeme Yöntemi / Kredi Kartı</label>
                                 <select id="txPaymentMethod" class="input-field">
-                                    <option value="Kredi Kartı">💳 Kredi Kartı</option>
-                                    <option value="Banka Kartı">🏦 Banka Kartı</option>
-                                    <option value="Nakit">💵 Nakit</option>
-                                    <option value="Havale/EFT">📱 Havale/EFT</option>
+                                    <optgroup label="💳 Kredi Kartlarım">
+                                        <option value="Kredi Kartı - İş Bankası Maximum">💳 İş Bankası Maximum</option>
+                                        <option value="Kredi Kartı - Garanti BBVA Bonus">💳 Garanti BBVA Bonus</option>
+                                        <option value="Kredi Kartı - Yapı Kredi World">💳 Yapı Kredi World</option>
+                                        <option value="Kredi Kartı - Akbank Axess">💳 Akbank Axess</option>
+                                        <option value="Kredi Kartı - Enpara Kredi Kartı">💳 Enpara Kredi Kartı</option>
+                                        <option value="Kredi Kartı - QNB CardFinans">💳 QNB CardFinans</option>
+                                        <option value="Kredi Kartı - Ziraat Bankkart Combo">💳 Ziraat Bankkart Combo</option>
+                                        <option value="Kredi Kartı - Halkbank Paraf">💳 Halkbank Paraf</option>
+                                        <option value="Kredi Kartı (Diğer)">💳 Kredi Kartı (Diğer)</option>
+                                    </optgroup>
+                                    <optgroup label="🏦 Banka Kartı & Vadesiz">
+                                        <option value="Banka Kartı (Maaş / Vadesiz)">🏦 Banka Kartı (Maaş / Vadesiz)</option>
+                                        <option value="Banka Kartı - Enpara">🟣 Banka Kartı (Enpara)</option>
+                                        <option value="Banka Kartı - Hadi (Tom Bank)">🟡 Banka Kartı (Hadi)</option>
+                                        <option value="Banka Kartı - Garanti BBVA">🟢 Banka Kartı (Garanti BBVA)</option>
+                                        <option value="Banka Kartı - İş Bankası">🔵 Banka Kartı (İş Bankası)</option>
+                                        <option value="Banka Kartı - Ziraat">🟢 Banka Kartı (Ziraat)</option>
+                                        <option value="Banka Kartı - Akbank">🔴 Banka Kartı (Akbank)</option>
+                                        <option value="Banka Kartı - Yapı Kredi">🔵 Banka Kartı (Yapı Kredi)</option>
+                                    </optgroup>
+                                    <optgroup label="💵 Nakit & Transfer">
+                                        <option value="Nakit">💵 Nakit</option>
+                                        <option value="Havale/EFT">📱 Havale/EFT</option>
+                                    </optgroup>
                                 </select>
                             </div>
                         </div>
@@ -872,7 +893,7 @@
 
         <!-- ================= MARKET LİSTESİ & ÖDEME DANIŞMANI ================= -->
         <section class="glass-card p-4 sm:p-5 fade-in mb-4 sm:mb-5" id="marketSection">
-            <!-- Header with stats -->
+            <!-- Header with tabs & stats -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                 <div class="flex items-center gap-2.5">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 text-emerald-400 flex items-center justify-center text-lg shadow-sm border border-emerald-500/30">
@@ -881,19 +902,27 @@
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
                             <h2 class="text-sm sm:text-base font-bold text-slate-100">Akıllı Market Listesi & Ödeme Hesaplayıcı</h2>
-                            <span class="badge text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30" id="marketItemCountBadge">0 Kalem</span>
+                            <span class="badge text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30" id="marketItemCountBadge">0 Bekleyen</span>
                         </div>
-                        <p class="text-[11px] opacity-60">Alışveriş listenizi oluşturun; kasanızdaki nakit ve bütçenizle neyle ödeyebileceğinizi anlık hesaplayın.</p>
+                        <p class="text-[11px] opacity-60">Ürünlerinizi adet ve birim fiyatıyla kaydedin; kasanız ve kredi kartlarınızla en uygun ödemeyi hesaplayın.</p>
                     </div>
                 </div>
 
-                <!-- Action / Summary Pills -->
+                <!-- Navigation Tabs & Collapse -->
                 <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                    <div class="flex items-center gap-2.5 text-xs bg-slate-900/60 px-3 py-1.5 rounded-xl border border-white/5">
-                        <span class="text-slate-400">Sepette: <strong class="text-emerald-400 financial-value" id="marketCartTotal">₺0</strong></span>
-                        <span class="opacity-20">|</span>
-                        <span class="text-slate-400">Liste Toplamı: <strong class="text-indigo-400 financial-value" id="marketTotalCost">₺0</strong></span>
+                    <div class="flex rounded-xl bg-slate-900/70 p-1 border border-white/5 text-xs">
+                        <button type="button" onclick="setMarketTab('active')" id="marketTabActiveBtn" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500 text-white shadow-sm transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            <span>Alışveriş Listesi</span>
+                            <span class="badge text-[9px] px-1 py-0 bg-white/20 text-white rounded-full" id="marketActiveBadge">0</span>
+                        </button>
+                        <button type="button" onclick="setMarketTab('history')" id="marketTabHistoryBtn" class="px-2.5 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            <span>Alınanlar & Geçmiş</span>
+                            <span class="badge text-[9px] px-1 py-0 bg-white/10 text-slate-300 rounded-full" id="marketHistoryBadge">0</span>
+                        </button>
                     </div>
+
                     <button onclick="toggleMarketCollapse()" id="marketToggleBtn" class="btn-secondary text-xs px-2.5 py-1.5" title="Gizle / Göster">
                         <i class="fa-solid fa-chevron-up" id="marketToggleIcon"></i>
                     </button>
@@ -901,203 +930,266 @@
             </div>
 
             <div id="marketContentArea" class="space-y-4">
-                <!-- Form + Presets -->
-                <div class="grid lg:grid-cols-12 gap-3 bg-slate-900/40 p-3 sm:p-4 rounded-xl border border-white/5">
-                    <div class="lg:col-span-8">
-                        <form id="marketAddForm" onsubmit="return handleMarketAdd(event)" class="space-y-2.5">
-                            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
-                                <div class="sm:col-span-4">
-                                    <label class="text-[11px] opacity-60 mb-1 block">Ürün / Alınacak</label>
-                                    <input type="text" id="marketItemName" class="input-field text-xs" placeholder="Örn: Süt, Yumurta, Zeytinyağı..." required maxlength="60">
+                
+                <!-- ================= TAB 1: AKTİF ALIŞVERİŞ LİSTESİ ================= -->
+                <div id="marketActiveView" class="space-y-4">
+                    <!-- Form + Quick Presets (NO CATEGORY REQUIREMENT, QUANTITY x UNIT PRICE) -->
+                    <div class="grid lg:grid-cols-12 gap-3 bg-slate-900/40 p-3 sm:p-4 rounded-xl border border-white/5">
+                        <div class="lg:col-span-8">
+                            <form id="marketAddForm" onsubmit="return handleMarketAdd(event)" class="space-y-2.5">
+                                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                                    <!-- Ürün Adı -->
+                                    <div class="sm:col-span-5">
+                                        <label class="text-[11px] opacity-60 mb-1 block">Ürün / Alınacak</label>
+                                        <input type="text" id="marketItemName" class="input-field text-xs" placeholder="Örn: Süt, Yumurta, Zeytinyağı, Peynir..." required maxlength="70">
+                                    </div>
+                                    <!-- Adet / Miktar -->
+                                    <div class="sm:col-span-2">
+                                        <label class="text-[11px] opacity-60 mb-1 block">Adet / Miktar</label>
+                                        <div class="flex items-center">
+                                            <button type="button" onclick="adjustMarketQty(-1)" class="w-6 h-[34px] rounded-l-lg bg-white/5 hover:bg-white/10 text-slate-300 text-xs flex items-center justify-center border border-r-0 border-white/10">-</button>
+                                            <input type="number" id="marketItemQuantity" class="input-field text-xs text-center font-semibold rounded-none px-1" value="1" step="any" min="0.01" required oninput="calculateMarketItemTotalLive('qty')">
+                                            <button type="button" onclick="adjustMarketQty(1)" class="w-6 h-[34px] rounded-r-lg bg-white/5 hover:bg-white/10 text-slate-300 text-xs flex items-center justify-center border border-l-0 border-white/10">+</button>
+                                        </div>
+                                    </div>
+                                    <!-- Birim Fiyat (₺) -->
+                                    <div class="sm:col-span-2">
+                                        <label class="text-[11px] opacity-60 mb-1 block">Birim Fiyat (₺)</label>
+                                        <input type="number" id="marketItemUnitPrice" class="input-field text-xs font-semibold" placeholder="0.00" step="0.01" min="0.01" required oninput="calculateMarketItemTotalLive('unit')">
+                                    </div>
+                                    <!-- Toplam Tutar (₺) (Adete göre otomatik hesaplanır) -->
+                                    <div class="sm:col-span-3">
+                                        <label class="text-[11px] text-emerald-400 font-medium mb-1 flex items-center justify-between">
+                                            <span>Toplam (₺)</span>
+                                            <span class="text-[9px] opacity-60 font-normal">Adet x Fiyat</span>
+                                        </label>
+                                        <input type="number" id="marketItemTotalAmount" class="input-field text-xs font-bold text-emerald-300 bg-emerald-950/20 border-emerald-500/30" placeholder="0.00" step="0.01" min="0.01" required oninput="calculateMarketItemTotalLive('total')">
+                                    </div>
                                 </div>
-                                <div class="sm:col-span-3">
-                                    <label class="text-[11px] opacity-60 mb-1 block">Tahmini Fiyat (₺)</label>
-                                    <input type="number" id="marketItemAmount" class="input-field text-xs font-semibold" placeholder="0.00" step="0.5" min="0.5" required>
+
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
+                                    <div class="flex items-center gap-1 overflow-x-auto text-[11px] py-1 opacity-90" id="marketQuickChips">
+                                        <span class="text-[10px] opacity-50 mr-1 whitespace-nowrap">Hızlı:</span>
+                                        <button type="button" onclick="quickFillMarketItem('Süt (1 Lt)', 1, 35)" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🥛 Süt (₺35)</button>
+                                        <button type="button" onclick="quickFillMarketItem('Yumurta (30\'lu)', 1, 120)" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🥚 Yumurta (₺120)</button>
+                                        <button type="button" onclick="quickFillMarketItem('Ekmek', 2, 15)" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🍞 Ekmek (2x₺15)</button>
+                                        <button type="button" onclick="quickFillMarketItem('Peynir (500g)', 1, 180)" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🧀 Peynir (₺180)</button>
+                                        <button type="button" onclick="quickFillMarketItem('Zeytinyağı (1 Lt)', 1, 350)" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🫒 Zeytinyağı (₺350)</button>
+                                        <button type="button" onclick="quickFillMarketItem('Deterjan / Temizlik', 1, 195)" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🧼 Deterjan (₺195)</button>
+                                        <button type="button" onclick="quickFillMarketItem('Meyve / Sebze', 2, 50)" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🍏 Meyve/Sebze (2x₺50)</button>
+                                        <button type="button" onclick="quickFillMarketItem('Kıyma / Et (1 Kg)', 1, 420)" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🥩 Kıyma (₺420)</button>
+                                    </div>
+                                    <button type="submit" class="btn-primary text-xs py-1.5 px-3 flex items-center justify-center gap-1.5 whitespace-nowrap shadow-md shadow-brand-500/20">
+                                        <i class="fa-solid fa-plus"></i> Listeye Ekle
+                                    </button>
                                 </div>
-                                <div class="sm:col-span-3">
-                                    <label class="text-[11px] opacity-60 mb-1 block">Kategori</label>
-                                    <select id="marketItemCategory" class="input-field text-xs">
-                                        <option value="Süt & Kahvaltılık">🥛 Süt & Kahvaltılık</option>
-                                        <option value="Temel Gıda">🍞 Temel Gıda</option>
-                                        <option value="Sebze & Meyve">🍏 Sebze & Meyve</option>
-                                        <option value="Temizlik & Hijyen">🧼 Temizlik & Hijyen</option>
-                                        <option value="Et & Şarküteri">🥩 Et & Şarküteri</option>
-                                        <option value="İçecek & Atıştırmalık">☕ İçecek & Atıştırmalık</option>
-                                        <option value="Diğer">📦 Diğer Market</option>
-                                    </select>
+                            </form>
+                        </div>
+
+                        <!-- Live Shopping Summary Box inside form -->
+                        <div class="lg:col-span-4 bg-slate-950/60 rounded-xl p-3 border border-white/5 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between text-xs mb-1.5">
+                                    <span class="opacity-60">Alışveriş Tutarı:</span>
+                                    <span class="font-bold text-slate-200 text-sm" id="marketAdvisorTargetAmount">₺0</span>
                                 </div>
-                                <div class="sm:col-span-2">
-                                    <label class="text-[11px] opacity-60 mb-1 block">Miktar / Birim</label>
-                                    <input type="text" id="marketItemQuantity" class="input-field text-xs" placeholder="1 Adet / 1 Kg" value="1 Adet" maxlength="20">
+                                <div class="flex items-center justify-between text-[11px] mb-1">
+                                    <span class="opacity-50">Hesap Kapsamı:</span>
+                                    <span class="text-slate-300 font-medium" id="marketAdvisorModeText">Tüm Liste</span>
+                                </div>
+                                <div class="flex items-center justify-between text-[11px] mb-1">
+                                    <span class="opacity-50">Sepetteki Kalem:</span>
+                                    <span class="text-emerald-400 font-semibold" id="marketCartTotal">₺0</span>
+                                </div>
+                                <p class="text-[10px] opacity-40 leading-relaxed">İşaretlediğiniz ürünlere göre veya tüm listeye göre ödeme hesaplanır.</p>
+                            </div>
+                            <div class="flex gap-1.5 pt-2 border-t border-white/5 mt-2">
+                                <button type="button" onclick="toggleAllMarketItems()" class="btn-secondary text-[10px] py-1 px-2 flex-1 text-center" id="marketSelectAllBtn">Tümünü Seç</button>
+                                <button type="button" onclick="uncheckAllMarketItems()" class="btn-secondary text-[10px] py-1 px-2 flex-1 text-center text-slate-400 hover:text-white" title="Sepet seçimlerini kaldır">Seçimi Kaldır</button>
+                                <button type="button" onclick="clearAllActiveMarketItems()" class="btn-secondary text-[10px] py-1 px-2 text-red-400 hover:text-red-300" title="Aktif listeyi temizle"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DYNAMIC ADVISOR: "NEYLE ÖDEYEBİLİRİM?" KARTI -->
+                    <div class="rounded-2xl p-4 bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/90 border border-emerald-500/25 shadow-xl relative overflow-hidden" id="marketPaymentAdvisorCard">
+                        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xs sm:text-sm font-bold text-slate-100 flex items-center gap-2">
+                                        <span>Ödeme Karar & Kredi Kartı Danışmanı</span>
+                                        <span class="badge text-[10px]" id="marketAdvisorBadge">Analiz Ediliyor</span>
+                                    </h3>
+                                    <p class="text-[11px] opacity-60" id="marketAdvisorSubTitle">Kasadaki fiili nakdiniz ve kredi kartlarınıza göre en akıllı ödeme yöntemi hesaplandı.</p>
                                 </div>
                             </div>
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
-                                <div class="flex items-center gap-1 overflow-x-auto text-[11px] py-1 opacity-90" id="marketQuickChips">
-                                    <span class="text-[10px] opacity-50 mr-1 whitespace-nowrap">Hızlı:</span>
-                                    <button type="button" onclick="quickAddMarketItem('Süt (1 Lt)', 35, 'Süt & Kahvaltılık', '1 Lt')" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🥛 Süt (₺35)</button>
-                                    <button type="button" onclick="quickAddMarketItem('Yumurta (30\'lu)', 120, 'Süt & Kahvaltılık', '1 Koli')" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🥚 Yumurta (₺120)</button>
-                                    <button type="button" onclick="quickAddMarketItem('Ekmek', 15, 'Temel Gıda', '2 Adet')" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🍞 Ekmek (₺15)</button>
-                                    <button type="button" onclick="quickAddMarketItem('Peynir (Kaşar/Beyaz)', 180, 'Süt & Kahvaltılık', '500g')" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🧀 Peynir (₺180)</button>
-                                    <button type="button" onclick="quickAddMarketItem('Zeytinyağı (1 Lt)', 350, 'Temel Gıda', '1 Lt')" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🫒 Zeytinyağı (₺350)</button>
-                                    <button type="button" onclick="quickAddMarketItem('Deterjan / Temizlik', 195, 'Temizlik & Hijyen', '1 Adet')" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🧼 Deterjan (₺195)</button>
-                                    <button type="button" onclick="quickAddMarketItem('Meyve & Sebze', 150, 'Sebze & Meyve', 'Karışık')" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-all whitespace-nowrap">🍏 Meyve/Sebze (₺150)</button>
+
+                            <!-- Live Cash Indicator -->
+                            <div class="flex items-center gap-2 text-xs bg-slate-950/80 px-3 py-1.5 rounded-xl border border-white/10">
+                                <span class="opacity-60">Mevcut Kasa / Nakit:</span>
+                                <span class="font-bold financial-value" id="marketAdvisorCurrentCash">₺0</span>
+                            </div>
+                        </div>
+
+                        <!-- Analysis Comparison Cards (Nakit vs Kredi Kartı vs Bütçe) -->
+                        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3.5">
+                            <!-- Nakit / Vadesiz Seçeneği -->
+                            <div class="p-3 rounded-xl bg-slate-950/70 border border-white/5 relative transition-all" id="marketOptionCashCard">
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <div class="flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
+                                        <i class="fa-solid fa-money-bill-wave"></i>
+                                        <span>Nakit / Banka Kartı</span>
+                                    </div>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full font-bold" id="marketCashFeasibilityBadge">—</span>
                                 </div>
-                                <button type="submit" class="btn-primary text-xs py-1.5 px-3 flex items-center justify-center gap-1.5 whitespace-nowrap shadow-md shadow-brand-500/20">
-                                    <i class="fa-solid fa-plus"></i> Listeye Ekle
+                                <p class="text-[11px] opacity-75 mb-2" id="marketCashDescription">Fiili nakit durumu değerlendiriliyor...</p>
+                                <div class="text-[10px] opacity-50 flex items-center justify-between pt-1.5 border-t border-white/5">
+                                    <span>Ödeme Sonrası Kasa:</span>
+                                    <strong class="font-semibold financial-value" id="marketPostCashAmount">₺0</strong>
+                                </div>
+                            </div>
+
+                            <!-- Kredi Kartı Seçeneği -->
+                            <div class="p-3 rounded-xl bg-slate-950/70 border border-white/5 relative transition-all" id="marketOptionCreditCard">
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <div class="flex items-center gap-1.5 text-xs font-semibold text-amber-400">
+                                        <i class="fa-regular fa-credit-card"></i>
+                                        <span>Kredi Kartı (Erteleme)</span>
+                                    </div>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">Nakit Korur</span>
+                                </div>
+                                <p class="text-[11px] opacity-75 mb-2" id="marketCreditDescription">Ödemeyi ekstre dönemine erteleyerek nakit kasanızı korur.</p>
+                                <div class="text-[10px] opacity-50 flex items-center justify-between pt-1.5 border-t border-white/5">
+                                    <span>Mevcut Nakit Durumu:</span>
+                                    <span class="text-slate-300 font-semibold">₺0 Dokunulmaz</span>
+                                </div>
+                            </div>
+
+                            <!-- Aylık Bütçe Etkisi -->
+                            <div class="p-3 rounded-xl bg-slate-950/70 border border-white/5 relative sm:col-span-2 lg:col-span-1" id="marketOptionBudgetCard">
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <div class="flex items-center gap-1.5 text-xs font-semibold text-purple-400">
+                                        <i class="fa-solid fa-bullseye"></i>
+                                        <span>Aylık Bütçe Sınırı</span>
+                                    </div>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full font-bold" id="marketBudgetImpactBadge">—</span>
+                                </div>
+                                <p class="text-[11px] opacity-75 mb-2" id="marketBudgetDescription">Bütçe durumu kontrol ediliyor...</p>
+                                <div class="text-[10px] opacity-50 flex items-center justify-between pt-1.5 border-t border-white/5">
+                                    <span>Kalan Bütçe Payı:</span>
+                                    <strong class="font-semibold financial-value" id="marketBudgetRemainingAfter">₺0</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fast Action: 1-Click Checkout to Expenses WITH ALL CREDIT CARDS -->
+                        <div class="bg-slate-950/90 rounded-xl p-3 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-sm flex-shrink-0">
+                                    <i class="fa-solid fa-receipt"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-100">Alışverişi Gidere İşle & Kaydet</p>
+                                    <p class="text-[10px] opacity-60">Seçtiğiniz kredi kartı veya yöntem ile gider defterine işler; ürünleri 'Alınanlar & Geçmiş' sekmesinde saklar.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                                <select id="marketCheckoutPaymentMethod" class="input-field text-xs py-1.5 px-2 bg-slate-900 border-white/10" style="width: auto; min-width: 170px;" onchange="this.dataset.userChanged = 'true'">
+                                    <optgroup label="💳 Kredi Kartlarım">
+                                        <option value="Kredi Kartı - İş Bankası Maximum" selected>💳 İş Bankası Maximum</option>
+                                        <option value="Kredi Kartı - Garanti BBVA Bonus">💳 Garanti BBVA Bonus</option>
+                                        <option value="Kredi Kartı - Yapı Kredi World">💳 Yapı Kredi World</option>
+                                        <option value="Kredi Kartı - Akbank Axess">💳 Akbank Axess</option>
+                                        <option value="Kredi Kartı - Enpara Kredi Kartı">💳 Enpara Kredi Kartı</option>
+                                        <option value="Kredi Kartı - QNB CardFinans">💳 QNB CardFinans</option>
+                                        <option value="Kredi Kartı - Ziraat Bankkart Combo">💳 Ziraat Bankkart Combo</option>
+                                        <option value="Kredi Kartı - Halkbank Paraf">💳 Halkbank Paraf</option>
+                                        <option value="Kredi Kartı (Diğer)">💳 Kredi Kartı (Diğer)</option>
+                                    </optgroup>
+                                    <optgroup label="🏦 Banka Kartı & Vadesiz">
+                                        <option value="Banka Kartı (Maaş / Vadesiz)">🏦 Banka Kartı (Maaş / Vadesiz)</option>
+                                        <option value="Banka Kartı - Enpara">🟣 Banka Kartı (Enpara)</option>
+                                        <option value="Banka Kartı - Hadi (Tom Bank)">🟡 Banka Kartı (Hadi)</option>
+                                        <option value="Banka Kartı - Garanti BBVA">🟢 Banka Kartı (Garanti BBVA)</option>
+                                        <option value="Banka Kartı - İş Bankası">🔵 Banka Kartı (İş Bankası)</option>
+                                        <option value="Banka Kartı - Ziraat">🟢 Banka Kartı (Ziraat)</option>
+                                        <option value="Banka Kartı - Akbank">🔴 Banka Kartı (Akbank)</option>
+                                        <option value="Banka Kartı - Yapı Kredi">🔵 Banka Kartı (Yapı Kredi)</option>
+                                    </optgroup>
+                                    <optgroup label="💵 Nakit & Transfer">
+                                        <option value="Nakit">💵 Nakit</option>
+                                        <option value="Havale/EFT">📱 Havale/EFT</option>
+                                    </optgroup>
+                                </select>
+                                <button type="button" onclick="checkoutMarketToExpense()" class="btn-primary text-xs py-1.5 px-3 flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-500/20 whitespace-nowrap" id="marketCheckoutBtn">
+                                    <i class="fa-solid fa-check-double"></i>
+                                    <span>Gidere Kaydet (<span id="marketCheckoutAmountBtn">₺0</span>)</span>
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
 
-                    <!-- Live Shopping Summary Box inside form -->
-                    <div class="lg:col-span-4 bg-slate-950/60 rounded-xl p-3 border border-white/5 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between text-xs mb-1.5">
-                                <span class="opacity-60">Alışveriş Tutarı:</span>
-                                <span class="font-bold text-slate-200 text-sm" id="marketAdvisorTargetAmount">₺0</span>
-                            </div>
-                            <div class="flex items-center justify-between text-[11px] mb-1">
-                                <span class="opacity-50">Hesap Modu:</span>
-                                <span class="text-slate-300 font-medium" id="marketAdvisorModeText">Tüm Liste</span>
-                            </div>
-                            <p class="text-[10px] opacity-40 leading-relaxed">Ürünleri sepete attıkça (işaretledikçe) sadece işaretlileri veya tüm listeyi baz alarak ödeme analizini yapar.</p>
+                    <!-- Active Items Table / List -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="border-b border-white/10 text-[11px] opacity-50">
+                                    <th class="py-2 px-2.5 w-10 text-center">Sepet</th>
+                                    <th class="py-2 px-2.5">Ürün / Alınacak</th>
+                                    <th class="py-2 px-2.5 text-center">Adet / Miktar</th>
+                                    <th class="py-2 px-2.5 text-right">Birim Fiyat</th>
+                                    <th class="py-2 px-2.5 text-right">Toplam Fiyat</th>
+                                    <th class="py-2 px-2.5 text-right">İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody id="marketTableBody" class="divide-y divide-white/5">
+                                <!-- Injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty State for Active List -->
+                    <div id="marketEmptyState" class="hidden text-center py-8 opacity-60 text-xs">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mx-auto mb-2">
+                            <i class="fa-solid fa-cart-arrow-down"></i>
                         </div>
-                        <div class="flex gap-1.5 pt-2 border-t border-white/5 mt-2">
-                            <button type="button" onclick="toggleAllMarketItems()" class="btn-secondary text-[10px] py-1 px-2 flex-1 text-center" id="marketSelectAllBtn">Tümünü Seç</button>
-                            <button type="button" onclick="clearCheckedMarketItems()" class="btn-secondary text-[10px] py-1 px-2 flex-1 text-center text-amber-300 hover:text-amber-200" title="Alınan / Sepetteki ürünleri listeden temizle">Sepeti Boşalt</button>
-                            <button type="button" onclick="clearAllMarketItems()" class="btn-secondary text-[10px] py-1 px-2 text-red-400 hover:text-red-300" title="Tüm listeyi temizle"><i class="fa-solid fa-trash"></i></button>
-                        </div>
+                        <p class="font-semibold text-slate-200">Alışveriş Listeniz Boş</p>
+                        <p class="text-[11px] opacity-70 mt-0.5">Yukarıdaki formdan ürün adı, adet ve birim fiyat girerek listeye ekleyebilirsiniz.</p>
                     </div>
                 </div>
 
-                <!-- DYNAMIC ADVISOR: "NEYLE ÖDEYEBİLİRİM?" KARTI -->
-                <div class="rounded-2xl p-4 bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/90 border border-emerald-500/25 shadow-xl relative overflow-hidden" id="marketPaymentAdvisorCard">
-                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-3">
+                <!-- ================= TAB 2: ALINANLAR & GİDERE İŞLENEN GEÇMİŞ ================= -->
+                <div id="marketHistoryView" class="space-y-3 hidden">
+                    <div class="flex items-center justify-between bg-slate-900/50 p-2.5 rounded-xl border border-white/5 text-xs">
                         <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-xs sm:text-sm font-bold text-slate-100 flex items-center gap-2">
-                                    <span>Ödeme Karar & Bütçe Danışmanı</span>
-                                    <span class="badge text-[10px]" id="marketAdvisorBadge">Analiz Ediliyor</span>
-                                </h3>
-                                <p class="text-[11px] opacity-60" id="marketAdvisorSubTitle">Kasadaki fiili nakdiniz ve aylık bütçenize göre en akıllı ödeme yöntemi hesaplandı.</p>
-                            </div>
+                            <i class="fa-solid fa-receipt text-emerald-400"></i>
+                            <span class="font-semibold text-slate-200">Gidere Kaydedilmiş Market Alışverişleri</span>
+                            <span class="text-[11px] opacity-50">(Tüm ürünler ve fiyat detayları burada saklanır)</span>
                         </div>
-
-                        <!-- Live Cash Indicator -->
-                        <div class="flex items-center gap-2 text-xs bg-slate-950/80 px-3 py-1.5 rounded-xl border border-white/10">
-                            <span class="opacity-60">Mevcut Kasa / Nakit:</span>
-                            <span class="font-bold financial-value" id="marketAdvisorCurrentCash">₺0</span>
-                        </div>
+                        <button type="button" onclick="clearMarketHistory()" class="btn-secondary text-[10px] py-1 px-2 text-red-400 hover:text-red-300" title="Geçmişi Temizle">
+                            <i class="fa-solid fa-trash mr-1"></i> Geçmişi Temizle
+                        </button>
                     </div>
 
-                    <!-- Analysis Comparison Cards (Nakit vs Kredi Kartı vs Bütçe) -->
-                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3.5">
-                        <!-- Nakit / Vadesiz Seçeneği -->
-                        <div class="p-3 rounded-xl bg-slate-950/70 border border-white/5 relative transition-all" id="marketOptionCashCard">
-                            <div class="flex items-center justify-between mb-1.5">
-                                <div class="flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
-                                    <i class="fa-solid fa-money-bill-wave"></i>
-                                    <span>Nakit / Banka Kartı</span>
-                                </div>
-                                <span class="text-[10px] px-2 py-0.5 rounded-full font-bold" id="marketCashFeasibilityBadge">—</span>
-                            </div>
-                            <p class="text-[11px] opacity-75 mb-2" id="marketCashDescription">Fiili nakit durumu değerlendiriliyor...</p>
-                            <div class="text-[10px] opacity-50 flex items-center justify-between pt-1.5 border-t border-white/5">
-                                <span>Ödeme Sonrası Kasa:</span>
-                                <strong class="font-semibold financial-value" id="marketPostCashAmount">₺0</strong>
-                            </div>
-                        </div>
-
-                        <!-- Kredi Kartı Seçeneği -->
-                        <div class="p-3 rounded-xl bg-slate-950/70 border border-white/5 relative transition-all" id="marketOptionCreditCard">
-                            <div class="flex items-center justify-between mb-1.5">
-                                <div class="flex items-center gap-1.5 text-xs font-semibold text-amber-400">
-                                    <i class="fa-regular fa-credit-card"></i>
-                                    <span>Kredi Kartı (Erteleme)</span>
-                                </div>
-                                <span class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">Nakit Korur</span>
-                            </div>
-                            <p class="text-[11px] opacity-75 mb-2" id="marketCreditDescription">Ödemeyi ekstre dönemine erteleyerek nakit kasanızı korur.</p>
-                            <div class="text-[10px] opacity-50 flex items-center justify-between pt-1.5 border-t border-white/5">
-                                <span>Mevcut Nakit Durumu:</span>
-                                <span class="text-slate-300 font-semibold">₺0 Dokunulmaz</span>
-                            </div>
-                        </div>
-
-                        <!-- Aylık Bütçe Etkisi -->
-                        <div class="p-3 rounded-xl bg-slate-950/70 border border-white/5 relative sm:col-span-2 lg:col-span-1" id="marketOptionBudgetCard">
-                            <div class="flex items-center justify-between mb-1.5">
-                                <div class="flex items-center gap-1.5 text-xs font-semibold text-purple-400">
-                                    <i class="fa-solid fa-bullseye"></i>
-                                    <span>Aylık Bütçe Sınırı</span>
-                                </div>
-                                <span class="text-[10px] px-2 py-0.5 rounded-full font-bold" id="marketBudgetImpactBadge">—</span>
-                            </div>
-                            <p class="text-[11px] opacity-75 mb-2" id="marketBudgetDescription">Bütçe durumu kontrol ediliyor...</p>
-                            <div class="text-[10px] opacity-50 flex items-center justify-between pt-1.5 border-t border-white/5">
-                                <span>Kalan Bütçe Payı:</span>
-                                <strong class="font-semibold financial-value" id="marketBudgetRemainingAfter">₺0</strong>
-                            </div>
-                        </div>
+                    <!-- History List Container -->
+                    <div id="marketHistoryContainer" class="space-y-3">
+                        <!-- Injected by JS -->
                     </div>
 
-                    <!-- Fast Action: 1-Click Checkout to Expenses -->
-                    <div class="bg-slate-950/90 rounded-xl p-3 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-sm flex-shrink-0">
-                                <i class="fa-solid fa-receipt"></i>
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold text-slate-100">Alışverişi Gidere İşle & Kaydet</p>
-                                <p class="text-[10px] opacity-60">Seçtiğiniz ödeme yöntemi ile tek tıkla 'Temel Yaşam (Market)' gideri olarak ana deftere kaydeder.</p>
-                            </div>
+                    <!-- History Empty State -->
+                    <div id="marketHistoryEmptyState" class="hidden text-center py-8 opacity-60 text-xs">
+                        <div class="w-12 h-12 rounded-xl bg-slate-800 text-slate-400 flex items-center justify-center text-xl mx-auto mb-2">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
                         </div>
-
-                        <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                            <select id="marketCheckoutPaymentMethod" class="input-field text-xs py-1.5 px-2 bg-slate-900 border-white/10" style="width: auto; min-width: 140px;" onchange="this.dataset.userChanged = 'true'">
-                                <option value="Nakit">💵 Nakit</option>
-                                <option value="Banka Kartı">🏦 Banka Kartı</option>
-                                <option value="Kredi Kartı" selected>💳 Kredi Kartı</option>
-                                <option value="Havale/EFT">📱 Havale/EFT</option>
-                            </select>
-                            <button type="button" onclick="checkoutMarketToExpense()" class="btn-primary text-xs py-1.5 px-3 flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-500/20 whitespace-nowrap" id="marketCheckoutBtn">
-                                <i class="fa-solid fa-check-double"></i>
-                                <span>Gidere Kaydet (<span id="marketCheckoutAmountBtn">₺0</span>)</span>
-                            </button>
-                        </div>
+                        <p class="font-semibold text-slate-200">Henüz Gidere İşlenmiş Alışveriş Bulunmuyor</p>
+                        <p class="text-[11px] opacity-70 mt-0.5">Alışveriş listenizi hazırlayıp 'Gidere Kaydet' dediğinizde aldığınız tüm ürünler fiyatlarıyla birlikte burada arşivlenir.</p>
                     </div>
                 </div>
 
-                <!-- Market Items Table / List -->
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs">
-                        <thead>
-                            <tr class="border-b border-white/10 text-[11px] opacity-50">
-                                <th class="py-2 px-2.5 w-10 text-center">Durum</th>
-                                <th class="py-2 px-2.5">Ürün / Alınacak</th>
-                                <th class="py-2 px-2.5">Kategori</th>
-                                <th class="py-2 px-2.5">Miktar</th>
-                                <th class="py-2 px-2.5 text-right">Tahmini Fiyat</th>
-                                <th class="py-2 px-2.5 text-right">İşlem</th>
-                            </tr>
-                        </thead>
-                        <tbody id="marketTableBody" class="divide-y border-white/5">
-                            <!-- Injected by JS -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Empty State -->
-                <div id="marketEmptyState" class="hidden text-center py-8 opacity-60 text-xs">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mx-auto mb-2">
-                        <i class="fa-solid fa-cart-arrow-down"></i>
-                    </div>
-                    <p class="font-semibold text-slate-200">Market Listeniz Henüz Boş</p>
-                    <p class="text-[11px] opacity-70 mt-0.5">Yukarıdaki formdan veya hızlı ürün butonlarından sepete ürün ekleyebilirsiniz.</p>
-                </div>
             </div>
         </section>
 
@@ -1150,9 +1242,27 @@
                             <option value="Nakit">💵 Nakit / Elden</option>
                             <option value="Diğer">🌐 Diğer</option>
                         </optgroup>
-                        <optgroup label="Ödeme Yöntemleri (Gider)">
-                            <option value="Kredi Kartı">💳 Kredi Kartı</option>
-                            <option value="Banka Kartı">🏦 Banka Kartı</option>
+                        <optgroup label="💳 Kredi Kartlarım">
+                            <option value="Kredi Kartı">Tüm Kredi Kartları (Genel)</option>
+                            <option value="Kredi Kartı - İş Bankası Maximum">💳 İş Bankası Maximum</option>
+                            <option value="Kredi Kartı - Garanti BBVA Bonus">💳 Garanti BBVA Bonus</option>
+                            <option value="Kredi Kartı - Yapı Kredi World">💳 Yapı Kredi World</option>
+                            <option value="Kredi Kartı - Akbank Axess">💳 Akbank Axess</option>
+                            <option value="Kredi Kartı - Enpara Kredi Kartı">💳 Enpara Kredi Kartı</option>
+                            <option value="Kredi Kartı - QNB CardFinans">💳 QNB CardFinans</option>
+                            <option value="Kredi Kartı - Ziraat Bankkart Combo">💳 Ziraat Bankkart Combo</option>
+                            <option value="Kredi Kartı - Halkbank Paraf">💳 Halkbank Paraf</option>
+                        </optgroup>
+                        <optgroup label="🏦 Banka Kartları & Hesaplar">
+                            <option value="Banka Kartı">Tüm Banka Kartları</option>
+                            <option value="Banka Kartı (Maaş / Vadesiz)">🏦 Maaş / Vadesiz</option>
+                            <option value="Banka Kartı - Enpara">🟣 Enpara</option>
+                            <option value="Banka Kartı - Garanti BBVA">🟢 Garanti BBVA</option>
+                            <option value="Banka Kartı - İş Bankası">🔵 İş Bankası</option>
+                            <option value="Banka Kartı - Ziraat">🟢 Ziraat</option>
+                            <option value="Banka Kartı - Akbank">🔴 Akbank</option>
+                        </optgroup>
+                        <optgroup label="💵 Nakit & Transfer">
                             <option value="Nakit">💵 Nakit</option>
                             <option value="Havale/EFT">📱 Havale/EFT</option>
                         </optgroup>
@@ -1357,6 +1467,48 @@
             <div class="flex gap-2">
                 <button onclick="closeModal('confirmModal')" class="flex-1 btn-secondary py-2">İptal</button>
                 <button id="confirmAction" class="flex-1 btn-danger py-2">Onayla</button>
+            </div>
+    <!-- Market Alışveriş Fiş Detayı Modalı -->
+    <div class="modal-overlay" id="marketReceiptModal">
+        <div class="modal-content max-w-lg">
+            <div class="flex items-center justify-between mb-3 pb-2 border-b border-white/10">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-100" id="receiptModalTitle">Market Alışveriş Fiş Detayı</h3>
+                        <p class="text-[10px] opacity-60" id="receiptModalSubtitle">Tarih & Ödeme Yöntemi</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('marketReceiptModal')" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/10 transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="overflow-x-auto max-h-[55vh] overflow-y-auto mb-3">
+                <table class="w-full text-left text-xs">
+                    <thead>
+                        <tr class="border-b border-white/10 text-[10px] opacity-50 uppercase tracking-wider">
+                            <th class="py-1.5 px-2">Ürün</th>
+                            <th class="py-1.5 px-2 text-center">Adet</th>
+                            <th class="py-1.5 px-2 text-right">Birim Fiyat</th>
+                            <th class="py-1.5 px-2 text-right">Toplam</th>
+                        </tr>
+                    </thead>
+                    <tbody id="receiptModalTableBody" class="divide-y divide-white/5">
+                        <!-- Injected by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/80 border border-white/5 text-xs">
+                <span class="opacity-70">Toplam Fiş Tutarı:</span>
+                <span class="font-bold text-base text-emerald-400 financial-value" id="receiptModalTotal">₺0</span>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-3">
+                <button onclick="closeModal('marketReceiptModal')" class="btn-secondary text-xs py-1.5 px-4">Kapat</button>
             </div>
         </div>
     </div>
@@ -2422,6 +2574,8 @@
     // MARKET LİSTESİ & ÖDEME DANIŞMANI (Shopping List & Affordability Advisor)
     // ============================================================
     let isMarketCollapsed = false;
+    let currentMarketTab = 'active'; // 'active' or 'history'
+
     function toggleMarketCollapse() {
         isMarketCollapsed = !isMarketCollapsed;
         const area = document.getElementById('marketContentArea');
@@ -2433,6 +2587,31 @@
             area?.classList.remove('hidden');
             if (icon) icon.className = 'fa-solid fa-chevron-up';
         }
+    }
+
+    function setMarketTab(tab) {
+        currentMarketTab = tab;
+        const activeBtn = document.getElementById('marketTabActiveBtn');
+        const historyBtn = document.getElementById('marketTabHistoryBtn');
+        const activeView = document.getElementById('marketActiveView');
+        const historyView = document.getElementById('marketHistoryView');
+
+        if (tab === 'active') {
+            activeBtn?.classList.add('bg-emerald-500', 'text-white');
+            activeBtn?.classList.remove('text-slate-400');
+            historyBtn?.classList.remove('bg-emerald-500', 'text-white');
+            historyBtn?.classList.add('text-slate-400');
+            activeView?.classList.remove('hidden');
+            historyView?.classList.add('hidden');
+        } else {
+            historyBtn?.classList.add('bg-emerald-500', 'text-white');
+            historyBtn?.classList.remove('text-slate-400');
+            activeBtn?.classList.remove('bg-emerald-500', 'text-white');
+            activeBtn?.classList.add('text-slate-400');
+            activeView?.classList.add('hidden');
+            historyView?.classList.remove('hidden');
+        }
+        renderMarketSection();
     }
 
     function getMarketList() {
@@ -2449,55 +2628,103 @@
         localStorage.setItem(MARKET_STORAGE_KEY, JSON.stringify(items));
     }
 
+    // Live calculation: Adet x Birim Fiyat = Toplam Fiyat (küsuratlı ve anlık)
+    function calculateMarketItemTotalLive(triggeredBy) {
+        const qtyInput = document.getElementById('marketItemQuantity');
+        const unitPriceInput = document.getElementById('marketItemUnitPrice');
+        const totalInput = document.getElementById('marketItemTotalAmount');
+
+        const qty = parseFloat(qtyInput.value);
+        const unitPrice = parseFloat(unitPriceInput.value);
+        const total = parseFloat(totalInput.value);
+
+        if (triggeredBy === 'total') {
+            if (!isNaN(total) && total > 0 && !isNaN(qty) && qty > 0) {
+                unitPriceInput.value = (total / qty).toFixed(2);
+            }
+        } else {
+            if (!isNaN(qty) && qty > 0 && !isNaN(unitPrice) && unitPrice >= 0) {
+                totalInput.value = (qty * unitPrice).toFixed(2);
+            }
+        }
+    }
+
+    function adjustMarketQty(delta) {
+        const qtyInput = document.getElementById('marketItemQuantity');
+        let current = parseFloat(qtyInput.value) || 1;
+        let next = Math.max(0.5, current + delta);
+        qtyInput.value = next;
+        calculateMarketItemTotalLive('qty');
+    }
+
+    function quickFillMarketItem(name, qty, unitPrice) {
+        const nameInput = document.getElementById('marketItemName');
+        const qtyInput = document.getElementById('marketItemQuantity');
+        const unitPriceInput = document.getElementById('marketItemUnitPrice');
+        const totalInput = document.getElementById('marketItemTotalAmount');
+
+        if (nameInput) nameInput.value = name;
+        if (qtyInput) qtyInput.value = qty;
+        if (unitPriceInput) unitPriceInput.value = Number(unitPrice).toFixed(2);
+        if (totalInput) totalInput.value = (qty * unitPrice).toFixed(2);
+        nameInput?.focus();
+    }
+
     function handleMarketAdd(e) {
         e.preventDefault();
         const nameInput = document.getElementById('marketItemName');
-        const amountInput = document.getElementById('marketItemAmount');
-        const catInput = document.getElementById('marketItemCategory');
         const qtyInput = document.getElementById('marketItemQuantity');
+        const unitPriceInput = document.getElementById('marketItemUnitPrice');
+        const totalInput = document.getElementById('marketItemTotalAmount');
 
         const name = nameInput.value.trim();
-        const amount = parseFloat(amountInput.value);
-        const category = catInput.value;
-        const quantity = qtyInput.value.trim() || '1 Adet';
+        const quantity = parseFloat(qtyInput.value) || 1;
+        const unitPrice = parseFloat(unitPriceInput.value) || 0;
+        const totalAmount = parseFloat(totalInput.value) || (quantity * unitPrice);
 
-        if (!name || isNaN(amount) || amount <= 0) {
+        if (!name || totalAmount <= 0) {
             showToast('Lütfen geçerli ürün adı ve fiyatı girin!', 'error');
             return;
         }
+
+        const calculatedUnitPrice = unitPrice > 0 ? unitPrice : (quantity > 0 ? totalAmount / quantity : totalAmount);
 
         const items = getMarketList();
         items.push({
             id: 'mkt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
             name,
-            amount,
-            category,
             quantity,
+            unitPrice: calculatedUnitPrice,
+            amount: totalAmount,
             checked: false,
+            status: 'active',
             createdAt: new Date().toISOString()
         });
 
         saveMarketList(items);
         nameInput.value = '';
-        amountInput.value = '';
+        qtyInput.value = '1';
+        unitPriceInput.value = '';
+        totalInput.value = '';
         nameInput.focus();
-        showToast(`${name} market listesine eklendi!`);
+        showToast(`${name} (${quantity} Adet - ${formatCurrency(totalAmount)}) listeye eklendi!`);
         renderMarketSection();
     }
 
-    function quickAddMarketItem(name, amount, category, quantity) {
+    function updateItemQty(id, delta) {
         const items = getMarketList();
-        items.push({
-            id: 'mkt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-            name,
-            amount,
-            category,
-            quantity: quantity || '1 Adet',
-            checked: false,
-            createdAt: new Date().toISOString()
-        });
+        const item = items.find(i => i.id === id);
+        if (!item) return;
+
+        const currentQty = parseFloat(item.quantity) || 1;
+        const newQty = Math.max(1, currentQty + delta);
+        const unitPrice = parseFloat(item.unitPrice) || (item.amount / currentQty);
+
+        item.quantity = newQty;
+        item.unitPrice = unitPrice;
+        item.amount = parseFloat((newQty * unitPrice).toFixed(2));
+
         saveMarketList(items);
-        showToast(`${name} market listesine eklendi!`);
         renderMarketSection();
     }
 
@@ -2521,71 +2748,216 @@
 
     function toggleAllMarketItems() {
         const items = getMarketList();
-        if (items.length === 0) return;
-        const allChecked = items.every(i => i.checked);
-        items.forEach(i => i.checked = !allChecked);
+        const activeItems = items.filter(i => i.status !== 'purchased');
+        if (activeItems.length === 0) return;
+        const allChecked = activeItems.every(i => i.checked);
+        activeItems.forEach(i => i.checked = !allChecked);
         saveMarketList(items);
         renderMarketSection();
     }
 
-    function clearCheckedMarketItems() {
-        let items = getMarketList();
-        const initialLen = items.length;
-        items = items.filter(i => !i.checked);
-        if (items.length === initialLen) {
-            showToast('Sepette işaretli ürün bulunmuyor.');
-            return;
-        }
-        saveMarketList(items);
-        showToast('Alınan ürünler listeden kaldırıldı.');
-        renderMarketSection();
-    }
-
-    function clearAllMarketItems() {
+    function uncheckAllMarketItems() {
         const items = getMarketList();
-        if (items.length === 0) return;
-        if (confirm('Market listesindeki tüm ürünleri silmek istediğinizden emin misiniz?')) {
-            saveMarketList([]);
-            showToast('Market listesi temizlendi.');
+        items.forEach(i => i.checked = false);
+        saveMarketList(items);
+        renderMarketSection();
+    }
+
+    function clearAllActiveMarketItems() {
+        const items = getMarketList();
+        const activeItems = items.filter(i => i.status !== 'purchased');
+        if (activeItems.length === 0) return;
+        if (confirm('Aktif alışveriş listesindeki tüm ürünleri silmek istediğinizden emin misiniz?')) {
+            const historyOnly = items.filter(i => i.status === 'purchased');
+            saveMarketList(historyOnly);
+            showToast('Aktif alışveriş listesi temizlendi.');
             renderMarketSection();
         }
     }
 
+    function clearMarketHistory() {
+        if (!confirm('Gidere işlenmiş tüm geçmiş market alışverişlerini silmek istediğinize emin misiniz? (Ana defterdeki kayıtlar korunur)')) {
+            return;
+        }
+        let items = getMarketList();
+        items = items.filter(i => i.status !== 'purchased');
+        saveMarketList(items);
+        showToast('Market alışveriş geçmişi temizlendi.');
+        renderMarketSection();
+    }
+
+    function readdSingleMarketItem(id) {
+        const items = getMarketList();
+        const item = items.find(i => i.id === id);
+        if (!item) return;
+
+        items.push({
+            id: 'mkt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+            name: item.name,
+            quantity: item.quantity || 1,
+            unitPrice: item.unitPrice || item.amount,
+            amount: item.amount,
+            checked: false,
+            status: 'active',
+            createdAt: new Date().toISOString()
+        });
+
+        saveMarketList(items);
+        showToast(`${item.name} aktif alışveriş listesine eklendi!`);
+        currentMarketTab = 'active';
+        setMarketTab('active');
+    }
+
+    function readdAllFromBatch(batchId) {
+        const items = getMarketList();
+        const batchItems = items.filter(i => (i.txId || i.purchasedAt || 'other') === batchId);
+        if (batchItems.length === 0) return;
+
+        batchItems.forEach(item => {
+            items.push({
+                id: 'mkt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                name: item.name,
+                quantity: item.quantity || 1,
+                unitPrice: item.unitPrice || item.amount,
+                amount: item.amount,
+                checked: false,
+                status: 'active',
+                createdAt: new Date().toISOString()
+            });
+        });
+
+        saveMarketList(items);
+        showToast(`${batchItems.length} ürün aktif alışveriş listesine eklendi!`);
+        currentMarketTab = 'active';
+        setMarketTab('active');
+    }
+
+    function renderMarketHistoryView() {
+        const items = getMarketList();
+        const purchasedItems = items.filter(i => i.status === 'purchased');
+        const container = document.getElementById('marketHistoryContainer');
+        const emptyEl = document.getElementById('marketHistoryEmptyState');
+        const historyBadge = document.getElementById('marketHistoryBadge');
+
+        if (historyBadge) historyBadge.textContent = purchasedItems.length;
+        if (!container) return;
+
+        if (purchasedItems.length === 0) {
+            container.innerHTML = '';
+            emptyEl?.classList.remove('hidden');
+            return;
+        }
+
+        emptyEl?.classList.add('hidden');
+
+        // Group purchased items by txId or timestamp
+        const groups = {};
+        purchasedItems.forEach(item => {
+            const key = item.txId || item.purchasedAt || 'other';
+            if (!groups[key]) {
+                groups[key] = {
+                    id: key,
+                    date: item.purchasedDate || (item.purchasedAt ? item.purchasedAt.slice(0, 10) : ''),
+                    time: item.purchasedAt ? new Date(item.purchasedAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) : '',
+                    paymentMethod: item.purchasedPaymentMethod || 'Kredi Kartı',
+                    items: []
+                };
+            }
+            groups[key].items.push(item);
+        });
+
+        const sortedGroups = Object.values(groups).sort((a, b) => (b.items[0]?.purchasedAt || '').localeCompare(a.items[0]?.purchasedAt || ''));
+
+        container.innerHTML = sortedGroups.map(group => {
+            const groupTotal = group.items.reduce((s, i) => s + (Number(i.amount) || 0), 0);
+            const cardDisplay = group.paymentMethod.replace('Kredi Kartı - ', '');
+
+            const itemsRows = group.items.map(item => `
+                <tr class="table-row hover:bg-white/5 transition-colors border-b border-white/5 last:border-0">
+                    <td class="py-1.5 px-2 text-slate-200 font-medium">${escapeHTML(item.name)}</td>
+                    <td class="py-1.5 px-2 text-center text-slate-400 font-semibold">${item.quantity || 1}</td>
+                    <td class="py-1.5 px-2 text-right text-slate-400 financial-value">${formatCurrency(item.unitPrice || item.amount)}</td>
+                    <td class="py-1.5 px-2 text-right font-semibold text-emerald-400 financial-value">${formatCurrency(item.amount)}</td>
+                    <td class="py-1.5 px-2 text-right">
+                        <button type="button" onclick="readdSingleMarketItem('${escapeHTML(item.id)}')" class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 border border-emerald-500/30 transition-all whitespace-nowrap" title="Tekrar Alışveriş Listeme Ekle">
+                            <i class="fa-solid fa-plus mr-0.5"></i> Listeye Al
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            return `
+                <div class="p-3 rounded-xl bg-slate-950/80 border border-white/10 shadow-sm space-y-2">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-white/5">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-xs font-bold text-slate-200">
+                                <i class="fa-solid fa-calendar-day text-brand-400 mr-1"></i> ${escapeHTML(formatDate(group.date))} ${group.time ? `<span class="opacity-40 text-[10px]">${group.time}</span>` : ''}
+                            </span>
+                            <span class="badge text-[10px] bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                                <i class="fa-regular fa-credit-card mr-0.5"></i> ${escapeHTML(cardDisplay)}
+                            </span>
+                            <span class="text-[11px] opacity-60">(${group.items.length} Kalem)</span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-emerald-400 financial-value">${formatCurrency(groupTotal)}</span>
+                            <button type="button" onclick="readdAllFromBatch('${escapeHTML(group.id)}')" class="btn-secondary text-[10px] py-1 px-2 text-emerald-400 hover:text-emerald-300 border-emerald-500/30" title="Bu alışverişteki tüm ürünleri aktif listeye aktar">
+                                <i class="fa-solid fa-rotate-right mr-1"></i> Tümünü Listeye Ekle
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="text-[10px] opacity-40 uppercase tracking-wider border-b border-white/5">
+                                    <th class="py-1 px-2">Ürün</th>
+                                    <th class="py-1 px-2 text-center">Adet</th>
+                                    <th class="py-1 px-2 text-right">Birim Fiyat</th>
+                                    <th class="py-1 px-2 text-right">Toplam</th>
+                                    <th class="py-1 px-2 text-right">İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5">
+                                ${itemsRows}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
     function renderMarketSection() {
         const items = getMarketList();
+        const activeItems = items.filter(i => i.status !== 'purchased');
+        const purchasedItems = items.filter(i => i.status === 'purchased');
+
         const tbody = document.getElementById('marketTableBody');
         const emptyEl = document.getElementById('marketEmptyState');
         const countBadge = document.getElementById('marketItemCountBadge');
+        const activeBadge = document.getElementById('marketActiveBadge');
+        const historyBadge = document.getElementById('marketHistoryBadge');
         const cartTotalEl = document.getElementById('marketCartTotal');
-        const listTotalEl = document.getElementById('marketTotalCost');
         const navBadge = document.getElementById('navMarketBadge');
 
-        const totalListCost = items.reduce((s, i) => s + (Number(i.amount) || 0), 0);
-        const checkedItems = items.filter(i => i.checked);
+        const totalActiveCost = activeItems.reduce((s, i) => s + (Number(i.amount) || 0), 0);
+        const checkedItems = activeItems.filter(i => i.checked);
         const checkedCost = checkedItems.reduce((s, i) => s + (Number(i.amount) || 0), 0);
 
-        if (countBadge) countBadge.textContent = `${items.length} Kalem (${items.filter(i => !i.checked).length} Bekleyen)`;
+        if (countBadge) countBadge.textContent = `${activeItems.length} Bekleyen`;
+        if (activeBadge) activeBadge.textContent = activeItems.length;
+        if (historyBadge) historyBadge.textContent = purchasedItems.length;
         if (cartTotalEl) cartTotalEl.textContent = formatCurrency(checkedCost);
-        if (listTotalEl) listTotalEl.textContent = formatCurrency(totalListCost);
-        if (navBadge) navBadge.textContent = items.filter(i => !i.checked).length;
+        if (navBadge) navBadge.textContent = activeItems.length;
 
         if (tbody) {
-            if (items.length === 0) {
+            if (activeItems.length === 0) {
                 tbody.innerHTML = '';
                 emptyEl?.classList.remove('hidden');
             } else {
                 emptyEl?.classList.add('hidden');
-                tbody.innerHTML = items.map(item => {
-                    const cat = item.category || 'Diğer';
-                    const catColor = cat.includes('Süt') ? '#3b82f6'
-                        : cat.includes('Sebze') ? '#10b981'
-                        : cat.includes('Et') ? '#ef4444'
-                        : cat.includes('Temizlik') ? '#06b6d4'
-                        : cat.includes('Gıda') ? '#f59e0b'
-                        : cat.includes('İçecek') ? '#8b5cf6'
-                        : '#64748b';
-
-                    return `
+                tbody.innerHTML = activeItems.map(item => `
                     <tr class="table-row ${item.checked ? 'opacity-50 bg-white/[0.02]' : ''} hover:bg-white/5 transition-colors">
                         <td class="py-2.5 px-2.5 text-center">
                             <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleMarketItem('${escapeHTML(item.id)}')" class="w-4 h-4 rounded cursor-pointer accent-emerald-500">
@@ -2593,13 +2965,15 @@
                         <td class="py-2.5 px-2.5 font-medium ${item.checked ? 'line-through text-slate-400' : 'text-slate-200'}">
                             ${escapeHTML(item.name)}
                         </td>
-                        <td class="py-2.5 px-2.5">
-                            <span class="badge text-[10px]" style="background: ${catColor}20; color: ${catColor}; border: 1px solid ${catColor}40;">
-                                ${escapeHTML(item.category)}
-                            </span>
+                        <td class="py-2.5 px-2.5 text-center">
+                            <div class="inline-flex items-center gap-1 bg-white/5 px-2 py-0.5 rounded-lg border border-white/5">
+                                <button type="button" onclick="updateItemQty('${escapeHTML(item.id)}', -1)" class="text-slate-400 hover:text-white px-1 font-bold text-xs">-</button>
+                                <span class="font-semibold text-slate-200 min-w-[20px] text-center">${item.quantity || 1}</span>
+                                <button type="button" onclick="updateItemQty('${escapeHTML(item.id)}', 1)" class="text-slate-400 hover:text-white px-1 font-bold text-xs">+</button>
+                            </div>
                         </td>
-                        <td class="py-2.5 px-2.5 text-slate-400">
-                            ${escapeHTML(item.quantity || '1 Adet')}
+                        <td class="py-2.5 px-2.5 text-right text-slate-400 financial-value">
+                            ${formatCurrency(item.unitPrice || item.amount)}
                         </td>
                         <td class="py-2.5 px-2.5 text-right font-semibold ${item.checked ? 'text-slate-400' : 'text-emerald-400'} financial-value">
                             ${formatCurrency(item.amount)}
@@ -2610,12 +2984,12 @@
                             </button>
                         </td>
                     </tr>
-                    `;
-                }).join('');
+                `).join('');
             }
         }
 
-        updateMarketPaymentAdvisor(items, totalListCost, checkedCost, checkedItems);
+        updateMarketPaymentAdvisor(activeItems, totalActiveCost, checkedCost, checkedItems);
+        renderMarketHistoryView();
     }
 
     function updateMarketPaymentAdvisor(items, totalListCost, checkedCost, checkedItems) {
@@ -2677,10 +3051,9 @@
         const postPaymentCash = currentCash - targetAmount;
 
         // 1. NAKİT & KASA YETERLİLİK ANALİZİ
-        let recommendedMethod = 'Kredi Kartı';
+        let recommendedMethod = 'Kredi Kartı - İş Bankası Maximum';
         if (currentCash >= targetAmount && postPaymentCash >= 1000) {
-            // Güvenli Nakit
-            recommendedMethod = 'Banka Kartı';
+            recommendedMethod = 'Banka Kartı (Maaş / Vadesiz)';
             if (badgeEl) {
                 badgeEl.className = 'badge text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
                 badgeEl.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i> Nakit / Banka Kartı Önerilir';
@@ -2696,8 +3069,7 @@
                 cashDesc.textContent = 'Borçlanmadan veya ekstreye yük bindirmeden doğrudan nakit/banka kartı ile ödemeniz önerilir.';
             }
         } else if (currentCash >= targetAmount && postPaymentCash < 1000) {
-            // Sınırda Nakit
-            recommendedMethod = 'Kredi Kartı';
+            recommendedMethod = 'Kredi Kartı - İş Bankası Maximum';
             if (badgeEl) {
                 badgeEl.className = 'badge text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40';
                 badgeEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Kredi Kartı Önerilir (Nakit Koruması)';
@@ -2713,9 +3085,8 @@
                 cashDesc.textContent = `Nakit öderseniz kasada yalnızca ${formatCurrency(postPaymentCash)} kalır. Kredi kartı acil durum nakit tamponunuzu korur.`;
             }
         } else {
-            // Yetersiz Nakit
             const deficit = targetAmount - currentCash;
-            recommendedMethod = 'Kredi Kartı';
+            recommendedMethod = 'Kredi Kartı - İş Bankası Maximum';
             if (badgeEl) {
                 badgeEl.className = 'badge text-[10px] bg-red-500/20 text-red-300 border border-red-500/40';
                 badgeEl.innerHTML = '<i class="fa-solid fa-circle-xmark text-red-400"></i> Nakit Yetersiz - Kredi Kartı Kullanın';
@@ -2788,13 +3159,14 @@
 
     function checkoutMarketToExpense() {
         const items = getMarketList();
-        if (items.length === 0) {
-            showToast('Market listenizde ürün bulunmuyor!', 'error');
+        const activeItems = items.filter(i => i.status !== 'purchased');
+        if (activeItems.length === 0) {
+            showToast('Market listenizde bekleyen ürün bulunmuyor!', 'error');
             return;
         }
 
-        const checkedItems = items.filter(i => i.checked);
-        const targetItems = checkedItems.length > 0 ? checkedItems : items;
+        const checkedItems = activeItems.filter(i => i.checked);
+        const targetItems = checkedItems.length > 0 ? checkedItems : activeItems;
         const targetAmount = targetItems.reduce((s, i) => s + (Number(i.amount) || 0), 0);
 
         if (targetAmount <= 0) {
@@ -2802,35 +3174,88 @@
             return;
         }
 
-        const paymentMethod = document.getElementById('marketCheckoutPaymentMethod')?.value || 'Kredi Kartı';
-        const topNames = targetItems.slice(0, 3).map(i => i.name).join(', ') + (targetItems.length > 3 ? '...' : '');
+        const paymentMethod = document.getElementById('marketCheckoutPaymentMethod')?.value || 'Kredi Kartı - İş Bankası Maximum';
+        const topNames = targetItems.slice(0, 3).map(i => `${i.name} (${i.quantity}x${formatCurrency(i.unitPrice)})`).join(', ') + (targetItems.length > 3 ? '...' : '');
         const desc = `Market Alışverişi (${targetItems.length} Kalem: ${topNames})`;
 
         const today = getTodayStr();
+        const txId = genId();
+
+        // Snapshot of detailed items for receipt inspection
+        const marketItemsSnapshot = targetItems.map(i => ({
+            id: i.id,
+            name: i.name,
+            quantity: i.quantity,
+            unitPrice: i.unitPrice,
+            amount: i.amount
+        }));
+
         const newTx = {
-            id: genId(),
+            id: txId,
             date: today,
             type: 'expense',
             status: 'completed',
             category: 'Temel Yaşam',
             paymentMethod: paymentMethod,
             description: desc,
-            amount: targetAmount
+            amount: targetAmount,
+            marketItems: marketItemsSnapshot
         };
 
         addTransaction(newTx);
 
-        // Update market list items
-        if (checkedItems.length > 0) {
-            const remainingItems = items.filter(i => !i.checked);
-            saveMarketList(remainingItems);
-        } else {
-            saveMarketList([]);
+        // Mark items as 'purchased' and record purchase metadata
+        const checkoutTimestamp = new Date().toISOString();
+        const targetIds = new Set(targetItems.map(i => i.id));
+        items.forEach(i => {
+            if (targetIds.has(i.id)) {
+                i.status = 'purchased';
+                i.checked = false;
+                i.purchasedAt = checkoutTimestamp;
+                i.purchasedDate = today;
+                i.purchasedPaymentMethod = paymentMethod;
+                i.txId = txId;
+            }
+        });
+
+        saveMarketList(items);
+
+        showToast(`🛒 ${formatCurrency(targetAmount)} tutarındaki market alışverişi ${paymentMethod} ile gidere işlendi!`);
+        currentMarketTab = 'history';
+        setMarketTab('history');
+        refreshAll();
+        scrollToSection('marketSection');
+    }
+
+    function openMarketReceiptModal(txId) {
+        const all = getTransactions();
+        const tx = all.find(t => t.id === txId);
+        if (!tx || !tx.marketItems || tx.marketItems.length === 0) {
+            showToast('Bu işleme ait fiş detayı bulunamadı.', 'error');
+            return;
         }
 
-        showToast(`🛒 ${formatCurrency(targetAmount)} tutarındaki market harcaması ${paymentMethod} ile deftere işlendi!`);
-        refreshAll();
-        scrollToSection('kpiSection');
+        const titleEl = document.getElementById('receiptModalTitle');
+        const subtitleEl = document.getElementById('receiptModalSubtitle');
+        const totalEl = document.getElementById('receiptModalTotal');
+        const tbody = document.getElementById('receiptModalTableBody');
+
+        if (titleEl) titleEl.textContent = `Market Alışveriş Fişi (${tx.marketItems.length} Kalem)`;
+        if (subtitleEl) subtitleEl.textContent = `${formatDate(tx.date)} · ${tx.paymentMethod || 'Kredi Kartı'}`;
+        if (totalEl) totalEl.textContent = formatCurrency(tx.amount);
+
+        if (tbody) {
+            tbody.innerHTML = tx.marketItems.map(item => `
+                <tr class="table-row border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
+                    <td class="py-2 px-2 font-medium text-slate-200">${escapeHTML(item.name)}</td>
+                    <td class="py-2 px-2 text-center text-slate-400 font-semibold">${item.quantity || 1}</td>
+                    <td class="py-2 px-2 text-right text-slate-400 financial-value">${formatCurrency(item.unitPrice || item.amount)}</td>
+                    <td class="py-2 px-2 text-right font-semibold text-emerald-400 financial-value">${formatCurrency(item.amount)}</td>
+                </tr>
+            `).join('');
+        }
+
+        openModal('marketReceiptModal');
     }
 
     // ============================================================
@@ -3233,7 +3658,27 @@
     function applyQuickExpense(category, desc, payment) {
         document.getElementById('txCategory').value = category;
         document.getElementById('txDesc').value = desc;
-        if (payment) document.getElementById('txPaymentMethod').value = payment;
+        if (payment) {
+            const pmSelect = document.getElementById('txPaymentMethod');
+            if (pmSelect) {
+                let found = false;
+                for (let opt of pmSelect.options) {
+                    if (opt.value === payment) {
+                        pmSelect.value = opt.value;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    for (let opt of pmSelect.options) {
+                        if (opt.value.includes(payment)) {
+                            pmSelect.value = opt.value;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
         document.getElementById('txAmount').focus();
     }
 
@@ -3403,7 +3848,13 @@
         }
 
         if (bankOrPayFilter) {
-            list = list.filter(t => (t.bank === bankOrPayFilter) || (t.paymentMethod === bankOrPayFilter));
+            if (bankOrPayFilter === 'Kredi Kartı') {
+                list = list.filter(t => t.paymentMethod && t.paymentMethod.includes('Kredi Kartı'));
+            } else if (bankOrPayFilter === 'Banka Kartı') {
+                list = list.filter(t => t.paymentMethod && t.paymentMethod.includes('Banka Kartı'));
+            } else {
+                list = list.filter(t => (t.bank === bankOrPayFilter) || (t.paymentMethod === bankOrPayFilter));
+            }
         }
 
         if (typeFilter) {
@@ -3500,14 +3951,50 @@
                     ${saleText}
                 `;
             } else {
-                const payIcon = PAYMENT_ICONS[t.paymentMethod] || 'fa-solid fa-money-bill text-slate-400';
-                payOrBankDisplay = `
-                    <span class="inline-flex items-center gap-1 text-[11px]">
-                        <i class="${payIcon}"></i>
-                        <span>${escapeHTML(t.paymentMethod || 'Diğer')}</span>
-                    </span>
-                `;
+                const method = t.paymentMethod || 'Diğer';
+                if (method.includes('Kredi Kartı')) {
+                    const cleanName = method.replace('Kredi Kartı - ', '');
+                    payOrBankDisplay = `
+                        <span class="badge text-[10px] bg-amber-500/15 text-amber-300 border border-amber-500/30 whitespace-nowrap">
+                            <i class="fa-regular fa-credit-card text-amber-400"></i>
+                            <span>${escapeHTML(cleanName)}</span>
+                        </span>
+                    `;
+                } else if (method.includes('Banka Kartı')) {
+                    const cleanName = method.replace('Banka Kartı - ', '');
+                    payOrBankDisplay = `
+                        <span class="badge text-[10px] bg-blue-500/15 text-blue-300 border border-blue-500/30 whitespace-nowrap">
+                            <i class="fa-solid fa-credit-card text-blue-400"></i>
+                            <span>${escapeHTML(cleanName)}</span>
+                        </span>
+                    `;
+                } else if (method === 'Nakit') {
+                    payOrBankDisplay = `
+                        <span class="badge text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 whitespace-nowrap">
+                            <i class="fa-solid fa-money-bill-wave text-emerald-400"></i>
+                            <span>Nakit</span>
+                        </span>
+                    `;
+                } else {
+                    const payIcon = PAYMENT_ICONS[method] || 'fa-solid fa-money-bill text-slate-400';
+                    payOrBankDisplay = `
+                        <span class="inline-flex items-center gap-1 text-[11px] opacity-80 whitespace-nowrap">
+                            <i class="${payIcon}"></i>
+                            <span>${escapeHTML(method)}</span>
+                        </span>
+                    `;
+                }
             }
+
+            const hasReceipt = t.marketItems && Array.isArray(t.marketItems) && t.marketItems.length > 0;
+            const descHtml = hasReceipt ? `
+                <div class="flex items-center gap-1 flex-wrap">
+                    <span class="truncate max-w-[170px]">${escapeHTML(t.description)}</span>
+                    <button type="button" onclick="openMarketReceiptModal('${escapeHTML(t.id)}')" class="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/35 hover:bg-emerald-500/30 transition-all font-medium whitespace-nowrap" title="Alışveriş Fişini Aç">
+                        <i class="fa-solid fa-receipt text-[9px]"></i> Fiş (${t.marketItems.length} Kalem)
+                    </button>
+                </div>
+            ` : `<span class="truncate max-w-[200px] block">${escapeHTML(t.description)}</span>`;
 
             return `
                 <tr class="table-row border-b border-white/5 last:border-0 ${isPlanned ? 'bg-amber-500/[0.02]' : ''}">
@@ -3530,7 +4017,7 @@
                     <td class="py-2.5 px-2 sm:px-3 whitespace-nowrap">
                         ${categoryDisplay}
                     </td>
-                    <td class="py-2.5 px-2 sm:px-3 hidden sm:table-cell opacity-75 max-w-[200px] truncate">${escapeHTML(t.description)}</td>
+                    <td class="py-2.5 px-2 sm:px-3 hidden sm:table-cell opacity-75 max-w-[210px]">${descHtml}</td>
                     <td class="py-2.5 px-2 sm:px-3 hidden md:table-cell whitespace-nowrap opacity-90">
                         ${payOrBankDisplay}
                     </td>
